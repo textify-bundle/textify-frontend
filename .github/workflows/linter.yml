@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master/textify-frontend
+        uses: actions/checkout@v2
 
       - name: Setup node env
         uses: actions/setup-node@v2.1.2
@@ -33,9 +33,19 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Test Frontend
-        run: cd textify-frontend | npm ci | npm run lint
-      - name: Test Backend
-        run: cd textify-backend | npm run lint
-      # - uses: actions/checkout@v1
-      # - uses: stefanoeb/eslint-action@1.0.2
+
+      - name: Install dependencies Frontend
+        working-directory: ./textify-frontend
+        run: npm ci
+
+      - name: Lint Frontend
+        working-directory: ./textify-frontend
+        run: npm run lint
+
+      - name: Install dependencies Backend
+        working-directory: ./textify-backend
+        run: npm ci
+
+      - name: Lint Backend
+        working-directory: ./textify-backend
+        run: npm run lint
