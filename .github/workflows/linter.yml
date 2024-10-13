@@ -12,5 +12,9 @@ jobs:
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
+      - name: Test Frontend
+        run: cd textify-frontend | npm run lint
+      - name: Test Backend
+        run: cd textify-backend | npm run lint
+      # - uses: actions/checkout@v1
+      # - uses: stefanoeb/eslint-action@1.0.2
