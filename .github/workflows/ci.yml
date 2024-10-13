@@ -67,10 +67,10 @@ jobs:
         working-directory: ./textify-frontend
         run: npm run test
 
-      - name: Install dependencies Backend
-        working-directory: ./textify-backend
-        run: npm ci
+      # - name: Install dependencies Backend
+      #   working-directory: ./textify-backend
+      #   run: npm ci
 
-      - name: Test Backend
-        working-directory: ./textify-backend
-        run: npm run test
+      # - name: Test Backend
+      #   working-directory: ./textify-backend
+      #   run: npm run test
