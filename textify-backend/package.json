@@ -4,7 +4,8 @@
   "description": "backend of textify",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
