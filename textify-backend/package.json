@@ -1,0 +1,25 @@
+{
+  "name": "textify-backend",
+  "version": "1.0.0",
+  "description": "backend of textify",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "textify"
+  },
+  "author": "textify-team",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "sharedb": "^5.0.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "eslint": "^9.12.0",
+    "globals": "^15.11.0",
+    "typescript-eslint": "^8.8.1"
+  }
+}
