@@ -1,4 +1,4 @@
-name: eslint
+name: tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - 'master'
 
 jobs:
-  ci:
+  unit:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -26,26 +26,26 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      # - name: Cache node_modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-
+    #   - name: Cache node_modules
+    #     uses: actions/cache@v2
+    #     with:
+    #       path: ~/.npm
+    #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-node-
 
       - name: Install dependencies Frontend
         working-directory: ./textify-frontend
         run: npm ci
 
-      - name: Lint Frontend
+      - name: Test Frontend
         working-directory: ./textify-frontend
-        run: npm run lint
+        run: npm run test
 
       - name: Install dependencies Backend
         working-directory: ./textify-backend
         run: npm ci
 
-      - name: Lint Backend
+      - name: Test Backend
         working-directory: ./textify-backend
         run: npm run lint
