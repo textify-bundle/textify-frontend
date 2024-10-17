@@ -12,6 +12,7 @@ on:
 
 jobs:
   eslint:
+    name: ESLint Check
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -45,6 +46,7 @@ jobs:
         run: npm run lint
 
   unit-tests:
+    name: Unit Tests Check
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -77,6 +79,7 @@ jobs:
       #   working-directory: ./textify-backend
       #   run: npm run test
   e2e:
+    name: End-to-End Tests Check
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
