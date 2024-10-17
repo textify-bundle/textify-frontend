@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { computeResult } from './compute';
+import React from "react";
 
 
 function App() {
     const [num1, setNum1] = useState("");
-    const [num2, setNum2] = useState("");
+    const [num2, setNum2] = 
+    
+    
+    
+    
+    
+    
+    
+    
+    useState("");
     const [result, setResult] = useState(null);
 
     const handleNum1Change = (e) => {
