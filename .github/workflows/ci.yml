@@ -97,4 +97,5 @@ jobs:
 
       - name: Test Cypress
         working-directory: ./textify-frontend
-        run: cypress-io/github-action@5
+        uses: cypress-io/github-action@5
+        
