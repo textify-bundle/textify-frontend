@@ -87,6 +87,10 @@ jobs:
         working-directory: ./textify-frontend
         run: npm ci
 
+      - name: Run Server
+        working-directory: ./textify-frontend
+        run: npm run dev
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
