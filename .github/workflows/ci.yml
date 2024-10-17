@@ -77,7 +77,32 @@ jobs:
 
       # - name: Test Backend
       #   working-directory: ./textify-backend
-      #   run: npm run test
+  
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./textify-frontend
+        run: npm ci
+
+      - name: Run tests with coverage
+        working-directory: ./textify-frontend
+        run: npx vitest run --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ./textify-frontend/coverage
+
   e2e:
     name: End-to-End Tests Check
     runs-on: ubuntu-22.04
