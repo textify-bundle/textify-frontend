@@ -1,50 +1,10 @@
-import { useState } from "react";
-import { computeResult } from './compute';
+import ProjectCard from "./shared/ui/project-card/ProjectCard";
 
 
-function App() {
-    const [num1, setNum1] = useState("");
-    const [num2, setNum2] = useState("");
-    const [result, setResult] = useState(null);
-
-    const handleNum1Change = (e) => {
-        setNum1(e.target.value);
-    };
-
-    const handleNum2Change = (e) => {
-        setNum2(e.target.value);
-    };
-
-    const handleOperation = (op) => {
-        setResult(computeResult(num1,num2,op));
-    };
-
-    return (
-        <div className="App">
-            <h1>Calculator</h1>
-            <div>
-                <input
-                    type="text"
-                    value={num1}
-                    onChange={handleNum1Change}
-                    placeholder="First number"
-                />
-                <input
-                    type="text"
-                    value={num2}
-                    onChange={handleNum2Change}
-                    placeholder="Second number"
-                />
-            </div>
-            <div>
-                <button onClick={() => handleOperation("+")}>+</button>
-                <button onClick={() => handleOperation("-")}>-</button>
-                <button onClick={() => handleOperation("*")}>*</button>
-                <button onClick={() => handleOperation("/")}>/</button>
-            </div>
-             <h2>Result: {result}</h2>
-        </div>
-    );
+const App = () =>  {
+    return <>
+        <ProjectCard imageUrl={'https://ir-3.ozone.ru/s3/multimedia-m/c1000/6726566866.jpg'} lastEntryTime={new Date(2024, 9)} isRemoved={false}  />
+    </>;
 }
 
 export default App;
