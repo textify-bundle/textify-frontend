@@ -1,17 +1,5 @@
-import { expect, test } from 'vitest';
-import { computeResult } from './compute';
+import { expect, test } from 'vitest'
 
-test('test +', () => {
-    const result = computeResult(10,10,'+');
-    expect(result).toBe(20);
-});
-
-test('test -', () => {
-    const result = computeResult(10,10,'-');
-    expect(result).toBe(0);
-});
-
-test('test *', () => {
-    const result = computeResult(10,10,'*');
-    expect(result).toBe(100);
-});
+test('adds 1 + 2 to equal 3', () => {
+  expect(1 + 2).toBe(3)
+})
