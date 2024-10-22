@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import './ActionBar.css';
+import PropTypes from 'prop-types';
 
 // const users = [
 //     { id: 1, name: 'Heading 1', surname: 'Short description' },
@@ -72,6 +73,14 @@ const ActionBar = ({
             </Container>
         </AppBar>
     );
+};
+ActionBar.propTypes = {
+    users: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+        })
+    ).isRequired,  
 };
 
 export default ActionBar;
