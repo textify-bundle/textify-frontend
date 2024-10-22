@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -11,7 +10,6 @@ import PropTypes from 'prop-types';
 const PanelBlock = ({
     imageSrc,
     items,
-    onRestore = () => {},
     onClick = () => {},
 }) => {
     // Состояние для отслеживания выбранного элемента
