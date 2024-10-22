@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
+.custom-button {
+    font-family: 'SF Compact Rounded', sans-serif;
+}
+
+.action-bar {
+
+    background-color: transparent !important;
+    width: 345.5px !important; /* Устанавливаем ширину */
+    height: 31px !important; /* Устанавливаем высоту */
+    box-shadow: none !important;
+}
+
+.action-bar-container {
+    width: 100% !important;
+    padding: 0 !important; /* Убираем padding у контейнера */
+}
+
+.action-bar-toolbar {
+    height: 31px !important; /* Задаем высоту для Toolbar */
+    padding: 0 !important; /* Убираем padding у Toolbar */
+}
+
+.user-buttons-container {
+    flex-grow: 1 !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    display: flex !important;
+    height: 31px !important;  
+    position: relative !important; 
+}
+
+.user-button {
+    color: white !important;  
+    display: block !important;
+    height: 31px !important;  
+    min-width: 31px !important;  
+    padding: 0 !important; 
+    border-radius: 50% !important;  
+    position: absolute !important;  
+    z-index: 1 !important;  
+}
+
+.main-buttons-container {
+    display: flex !important;
+    flex-direction: row !important;
+    z-index: 0 !important;  
+}
+
+.main-button {
+    color: black !important;  
+    display: block !important;
+    height: 31px !important;  
+    min-width: auto !important;  
+    padding: 0 10px !important;  
+    text-transform: none !important;  
+    margin-left: 8px !important; 
+}
+
+.three-dots-button .dots-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.three-dots-button .dot {
+    width: 7px;
+    height: 7px;
+    background-color: black;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 2px; 
+}
+
