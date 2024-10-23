@@ -120,6 +120,7 @@ ActionBar.propTypes = {
             name: PropTypes.string.isRequired,
         })
     ).isRequired,
+    onClick: PropTypes.func,   
 };
 
 export default ActionBar;
