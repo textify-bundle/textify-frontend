@@ -1,5 +1,5 @@
 
-import ActionBar from "./shared/header/action-bar/ActionBar";
+import ActionBar from "./widgets/header/action-bar/ActionBar";
 
 const App = () =>  {
     const users = [
