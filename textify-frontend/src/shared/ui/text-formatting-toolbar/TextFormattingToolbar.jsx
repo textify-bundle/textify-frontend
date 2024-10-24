@@ -15,6 +15,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from '@mui/material/ToggleButtonGroup';
+import './index.scss';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
@@ -30,6 +31,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
       borderLeft: '1px solid transparent',
     },
 }));
+
 const handleLeftAlignClick = () => {};
 const handleCenterAlignClick = () => {};
 const handleRightAlignClick = () => {};
@@ -41,8 +43,7 @@ const handleItalicClick = () => {};
 const handleSizeClick = () => {};
 const handleListClick = () => {};
 
-
-const CustomizedDividers = () => {
+const TextFormattingToolbar = () => {
   const [alignment, setAlignment] = React.useState('left');
   const [formats, setFormats] = React.useState(() => ['italic']);
 
@@ -56,35 +57,26 @@ const CustomizedDividers = () => {
 
   return (
     <div>
-      <Paper
-        elevation={16}
-        sx={(theme) => ({
-          display: 'flex',
-          border: `1px solid ${theme.palette.divider}`,
-          flexWrap: 'wrap',
-          width: '362.36px' ,
-          height: '25.88px',
-          borderRadius: '9.71px',
-        })}
-      >
+      <Paper className="toolbar-paper">
         <StyledToggleButtonGroup
           size="small"
           value={alignment}
           exclusive
           onChange={handleAlignment}
           aria-label="text alignment"
+          className="toggle-button-group"
         >
-          <ToggleButton value="left" aria-label="left aligned"  onClick={handleLeftAlignClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatAlignLeftIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="left" aria-label="left aligned" onClick={handleLeftAlignClick} className="toggle-button">
+            <FormatAlignLeftIcon />
           </ToggleButton>
-          <ToggleButton value="center" aria-label="centered" onClick={handleCenterAlignClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatAlignCenterIcon sx={{ fontSize: 11.65 }} />
+          <ToggleButton value="center" aria-label="centered" onClick={handleCenterAlignClick} className="toggle-button">
+            <FormatAlignCenterIcon />
           </ToggleButton>
-          <ToggleButton value="right" aria-label="right aligned" onClick={handleRightAlignClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatAlignRightIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="right" aria-label="right aligned" onClick={handleRightAlignClick} className="toggle-button">
+            <FormatAlignRightIcon />
           </ToggleButton>
-          <ToggleButton value="justify" aria-label="justified" onClick={handleJustifyAlignClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatAlignJustifyIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="justify" aria-label="justified" onClick={handleJustifyAlignClick} className="toggle-button">
+            <FormatAlignJustifyIcon />
           </ToggleButton>
         </StyledToggleButtonGroup>
         <StyledToggleButtonGroup
@@ -92,24 +84,25 @@ const CustomizedDividers = () => {
           value={formats}
           onChange={handleFormat}
           aria-label="text formatting"
+          className="toggle-button-group"
         >
-          <ToggleButton value="bold" aria-label="bold"  onClick={handleBoldClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatBoldIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="bold" aria-label="bold" onClick={handleBoldClick} className="toggle-button">
+            <FormatBoldIcon />
           </ToggleButton>
-          <ToggleButton value="strikethrough" aria-label="strikethrough" onClick={handleStrikethroughClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-          <FormatStrikethroughIcon sx={{ fontSize: 11.65 }}/>
-        </ToggleButton>
-          <ToggleButton value="underlined" aria-label="underlined" onClick={handleUnderlinedClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatUnderlinedIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="strikethrough" aria-label="strikethrough" onClick={handleStrikethroughClick} className="toggle-button">
+            <FormatStrikethroughIcon />
           </ToggleButton>
-          <ToggleButton value="italic" aria-label="italic"  onClick={handleItalicClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatItalicIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="underlined" aria-label="underlined" onClick={handleUnderlinedClick} className="toggle-button">
+            <FormatUnderlinedIcon />
           </ToggleButton>
-          <ToggleButton value="size" aria-label="size"  onClick={handleSizeClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatSizeIcon sx={{ fontSize: 11.65 }} />
+          <ToggleButton value="italic" aria-label="italic" onClick={handleItalicClick} className="toggle-button">
+            <FormatItalicIcon />
           </ToggleButton>
-          <ToggleButton value="list" aria-label="list" onClick={handleListClick} style={{margin: '5.18px 10.35px 5.18px 10.35px'}} sx={{ width: '15.53px', height: '15.53px', minWidth: '15.53px', minHeight: '15.53px'}}>
-            <FormatListBulletedIcon sx={{ fontSize: 11.65 }}/>
+          <ToggleButton value="size" aria-label="size" onClick={handleSizeClick} className="toggle-button">
+            <FormatSizeIcon />
+          </ToggleButton>
+          <ToggleButton value="list" aria-label="list" onClick={handleListClick} className="toggle-button">
+            <FormatListBulletedIcon />
           </ToggleButton>
         </StyledToggleButtonGroup>
       </Paper>
@@ -117,4 +110,4 @@ const CustomizedDividers = () => {
   );
 };
 
-export default CustomizedDividers;
+export default TextFormattingToolbar;

@@ -1,6 +1,6 @@
 import ProjectCard from "./shared/ui/project-card/ProjectCard";
 
-import TextFormattingToolbar from "./shared/ui/toggle-button/TextFormattingToolbar";
+import TextFormattingToolbar from "./shared/ui/text-formatting-toolbar/TextFormattingToolbar";
 
 
 const App = () =>  {
