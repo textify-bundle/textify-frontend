@@ -16,6 +16,7 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from '@mui/material/ToggleButtonGroup';
 import './index.scss';
+import PropTypes from 'prop-types';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
@@ -108,6 +109,19 @@ const TextFormattingToolbar = () => {
       </Paper>
     </div>
   );
+};
+
+TextFormattingToolbar.propTypes = {
+  handleLeftAlignClick: PropTypes.func,
+  handleCenterAlignClick: PropTypes.func,
+  handleRightAlignClick: PropTypes.func,
+  handleJustifyAlignClick: PropTypes.func,
+  handleBoldClick: PropTypes.func,
+  handleStrikethroughClick: PropTypes.func,
+  handleUnderlinedClick: PropTypes.func,
+  handleItalicClick: PropTypes.func,
+  handleSizeClick: PropTypes.func,
+  handleListClick: PropTypes.func,
 };
 
 export default TextFormattingToolbar;
