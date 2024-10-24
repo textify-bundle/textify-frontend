@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Box } from '@mui/material';
+import { TextField, Box, FormControl } from '@mui/material';
 import './search.css';
 import MagnifyingGlass from './MagnifyingGlass';
 
@@ -8,9 +8,9 @@ const Search = ({
                     onClick = () => {},
                     onBlur = () => {},
                     placeholder = "Поиск",
-                    
                 }) => {
     const [searchBlock, setSearchBlock] = useState(false);
+    const [valueText, setValue] = useState('');
 
     const handleBlur = () => {
         setSearchBlock(false);
@@ -22,16 +22,28 @@ const Search = ({
         onClick();
     };
 
+    const handleChange = (e) => {
+        setValue(e.target.value);
+        console.log(e.target.value);
+    };
+     const handlePress = async(e) =>{
+         if(e.key ==='Enter'){
+             setValue('');
+             // реализуем отправку на сервер или перенаправляем куда надо
+         }
+     }
 
     return (
-        <Box className="searchContainer">
-            <form>
+        <Box className="search-container">
+            <FormControl>
                 {searchBlock ? (
                     <TextField
-                        className="sideBarSearch"
+                        className="search-side-bar"
                         variant="outlined"
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onKeyPress={handlePress}
+                        value={valueText}
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': { border: 'none' },
@@ -44,17 +56,12 @@ const Search = ({
                         }}
                     />
                 ) : (
-                    <Box
-                        className="searchBar"
-                        onClick={handleClick}
-                    >
-                        <div className="searchGlass"> {/* Changed from form to div */}
-                            <MagnifyingGlass />
-                            <p className="pre-search">{placeholder}</p>
-                        </div>
-                    </Box>
+                    <FormControl id="search-glass" onClick={handleClick}>
+                        <svg xmlns="/img/svg/Icon.svg" width="14" height="15" viewBox="0 0 14 15" fill="none"/>
+                        <p className="search-glass_presearch">{placeholder}</p>
+                    </FormControl>
                 )}
-            </form>
+            </FormControl>
         </Box>
     );
 };
