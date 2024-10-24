@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import {Box, Button, Menu, MenuList} from '@mui/material';
-import SwitchButton from '../../SwitchButton/SwitchButton';
-import ButtonInOut from '../../ButtonInOut/ButtonInOut';
-import '../style/Settings.css';
-import ButtDel from "../../ButtDel/ButtDel";
+import {Box,Button, Menu, MenuList} from '@mui/material';
+import SwitchButton from 'textify-frontend/src/widgets/header/settings/switch-button/SwitchButton.css';
+import ButtonInOut from 'textify-frontend/src/widgets/header/settings/butt/ButtonInOut.css';
+import 'Settings.css';
+import ButtDel from "textify-frontend/src/widgets/header/settings/butt/ButtDel";
 
 const TrashSettings = () => {
     const [anchorEl, setAnchorEl] = useState(null);
