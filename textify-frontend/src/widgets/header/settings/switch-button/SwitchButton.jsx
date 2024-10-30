@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@mui/material/Switch';
 import './SwitchButton.css';
 import {Box} from "@mui/material";
 
-export default function SwitchButton({checkedProp, onToggle}) {
+export default function SwitchButton({checkedProp, onToggle,}) {
     const [checked, setChecked] = useState(checkedProp);
 
     useEffect(() => {

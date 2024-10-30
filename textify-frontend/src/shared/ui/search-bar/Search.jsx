@@ -1,15 +1,12 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import PropTypes from 'prop-types';
-import {TextField, Box, FormControl} from '@mui/material';
+import { TextField, Box, FormControl } from '@mui/material';
 import './search.css';
 
 const Search = ({
-                    onClick = () => {
-                    },
-                    onBlur = () => {
-                    },
-                    onChange = () => {
-                    },
+                    onClick = () => {},
+                    onBlur = () => {},
+                    onChange = () => {},
                     placeholder = "Поиск",
                 }) => {
     const [searchBlock, setSearchBlock] = useState(false);
