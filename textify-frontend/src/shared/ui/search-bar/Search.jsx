@@ -6,6 +6,7 @@ import './search.scss';
 const Search = ({
                     onClick = () => {},
                     onBlur = () => {},
+                    onChange = () => {},
                     placeholder = "Поиск",
                 }) => {
     const [searchBlock, setSearchBlock] = useState(false);
