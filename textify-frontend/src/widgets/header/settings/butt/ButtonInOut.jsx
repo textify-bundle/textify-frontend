@@ -1,4 +1,5 @@
 import {Box, Button} from "@mui/material";
+import PropTypes from 'prop-types';
 import './ButtonInOut.css';
 
 const ButtonInOut = ({placeholder = "Выход", onClick}) => {
