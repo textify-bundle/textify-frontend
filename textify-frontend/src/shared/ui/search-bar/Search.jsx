@@ -3,19 +3,14 @@ import PropTypes from 'prop-types';
 import { TextField, Box, FormControl } from '@mui/material';
 import './search.scss';
 
-const Search = ({
+const Search = ({   imageSrc='./src/shared/ui/search-bar/magnifyingGlass.png',
                     onClick = () => {},
-                    onBlur = () => {},
                     onChange = () => {},
                     placeholder = "Поиск",
                 }) => {
     const [searchBlock, setSearchBlock] = useState(false);
     const [valueText, setValue] = useState('');
 
-    const handleBlur = () => {
-        setSearchBlock(false);
-        onBlur();
-    };
 
     const handleClick = () => {
         setSearchBlock(true);
@@ -39,7 +34,6 @@ const Search = ({
                 <TextField
                     id="search-form_side-bar"
                     variant="outlined"
-                    onBlur={handleBlur}
                     onChange={handleChange}
                     onKeyPress={handlePress}
                     value={valueText}
@@ -56,7 +50,7 @@ const Search = ({
                 />
             ) : (
                 <FormControl id="search-glass" onClick={handleClick}>
-                    <img className="search-glass_img" src="/images/magnifyingGlass.png" alt="glass"/>
+                    <img className="search-glass_img" src={imageSrc} alt="glass"/>
                     <p className="search-glass_presearch">{placeholder}</p>
                 </FormControl>
             )}
