@@ -59,8 +59,8 @@ const Search = ({   imageSrc='./src/shared/ui/search-bar/magnifyingGlass.png',
 };
 
 Search.propTypes = {
+    imageSrc: PropTypes.string,
     onClick: PropTypes.func,
-    onBlur: PropTypes.func,
     onChange: PropTypes.string,
     placeholder: PropTypes.string,
 };
