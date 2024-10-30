@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {Box, Button, Menu, MenuList} from '@mui/material';
-import Search from 'textify-frontend/src/shared/ui/search-bar/Search.jsx';
-import SwitchButton from 'textify-frontend/src/widgets/header/settings/switch-button/SwitchButton.css';
-import ButtonInOut from 'textify-frontend/src/widgets/header/settings/butt/ButtonInOut.css';
-import 'Settings.css';
-import ButtDel from "textify-frontend/src/widgets/header/settings/butt/ButtDel";
+import './Settings.css';
+import Search from "../../../../shared/ui/search-bar/Search.jsx";
+import ButtDel from "../butt/ButtDel.jsx";
+import SwitchButton from "../switch-button/SwitchButton.jsx";
+import ButtonInOut from "../butt/ButtonInOut.jsx";
 
 const PageSettings = () => {
     const [anchorEl, setAnchorEl] = useState(null);

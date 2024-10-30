@@ -59,7 +59,7 @@ const Search = ({
                 />
             ) : (
                 <FormControl id="search-glass" onClick={handleClick}>
-                    <img className="search-glass_img" src="/img/magnifyingGlass.png" alt="glass"/>
+                    <img className="search-glass_img" src="/images/magnifyingGlass.png" alt="glass"/>
                     <p className="search-glass_presearch">{placeholder}</p>
                 </FormControl>
             )}
