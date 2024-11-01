@@ -1,6 +1,6 @@
 #settings-menu {
     max-width: 210px;
-    height: auto;
+    height: 324px;
     padding: 0;
     font-family: 'SF Compact Rounded';
     font-size: 12px;
@@ -81,4 +81,5 @@
     width: 100%;
     padding: 0;
     border-radius: 0px 0px 12px 12px;
+    z-index: 1000;
 }

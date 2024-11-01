@@ -16,7 +16,7 @@ const ButtonInOut = ({placeholder = "Выход", onClick}) => {
 
 ButtonInOut.propTypes = {
     placeholder: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
 };
 
 export default ButtonInOut;

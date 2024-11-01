@@ -17,6 +17,10 @@ const Settings = ({isTrash}) => {
         setAnchorEl(event.currentTarget);
     }, []);
 
+    const handleButtonClick = () => {
+
+    };
+
 
     const handleClose = useCallback(() => {
         setAnchorEl(null);
@@ -47,17 +51,17 @@ const Settings = ({isTrash}) => {
                     <Search className="settings-case_search" placeholder="Поиск по файлу"/>
                 )}
                 { !isTrash &&(
-                    <ButtDel id="settings-case_custom-button" placeholder="Удалить проект"/>
+                    <ButtDel id="settings-case_custom-button" placeholder="Удалить проект" onClick={handleButtonClick}/>
                 
                 )}
-                    <ButtDel id="settings-case_custom-button" placeholder="Цвет фона"/>
+                    <ButtDel id="settings-case_custom-button" placeholder="Цвет фона" onClick={handleButtonClick}/>
 
-                    <ButtDel id="settings-case_custom-button" placeholder="Размер шрифта"/>
+                    <ButtDel id="settings-case_custom-button" placeholder="Размер шрифта" onClick={handleButtonClick}/>
 
-                    <ButtDel id="settings-case_custom-button" placeholder="Набор шрифтов"/>
+                    <ButtDel id="settings-case_custom-button" placeholder="Набор шрифтов" onClick={handleButtonClick}/>
                 <MenuList id="settings-case_theme">
                     <p>Тема:</p>
-                    <SwitchButton className="settings-case-theme-switch" />
+                    <SwitchButton className="settings-case-theme-switch" onClick={handleButtonClick}/>
                 </MenuList>
                     <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" />
             </Menu>
@@ -65,8 +69,8 @@ const Settings = ({isTrash}) => {
     );
 };
 
-Settings.PropTypes = {
-    isTrash: PropTypes.func.Boolean
+Settings.propTypes = {
+    isTrash: PropTypes.bool,
 };
 
 export default Settings;

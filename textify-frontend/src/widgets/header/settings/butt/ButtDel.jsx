@@ -14,8 +14,8 @@ const ButtDel = ({ placeholder ,
 };
 
 ButtDel.propTypes = {
-    placeholder: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
+    onClick: PropTypes.func,
 };
 
 export default ButtDel;
