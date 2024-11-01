@@ -16,19 +16,12 @@ const Search = ({
         onChange(e.target.value);
     };
 
-    const handlePress = async (e) => {
-        if (e.key === 'Enter') {
-           
-        }
-    };
-
     return (
         <Box className="search-container" onClick={onClick}>
             <TextField
                 className="search-form_side-bar"
                 variant="outlined"
                 onChange={handleChange}
-                onKeyPress={handlePress}
                 placeholder={placeholder}
                 value={valueText}
                 InputProps={{
