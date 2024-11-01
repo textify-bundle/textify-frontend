@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import {Box, Button, Menu, MenuList} from '@mui/material';
+import {Box, Button, Menu, MenuList } from '@mui/material';
 import './Settings.css';
 import Search from "../../../../shared/ui/search-bar/Search.jsx";
 import ButtDel from "../butt/ButtDel.jsx";
@@ -28,7 +28,9 @@ const Settings = ({isTrash}) => {
 
 
     return (
-        <Box id="settings">
+        <Box id="settings"
+        
+        >
             <Button
                 id="settings-button"
                 aria-controls={open ? 'settings-menu' : undefined}
@@ -44,8 +46,11 @@ const Settings = ({isTrash}) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+               
             >
-                <MenuList className="settings-case_name">Настройки</MenuList>
+                <MenuList className="settings-case_name"
+                
+                >Настройки</MenuList>
 
                 { !isTrash &&(
                     <Search className="settings-case_search" placeholder="Поиск по файлу"/>
@@ -61,9 +66,16 @@ const Settings = ({isTrash}) => {
                     <ButtDel id="settings-case_custom-button" placeholder="Набор шрифтов" onClick={handleButtonClick}/>
                 <MenuList id="settings-case_theme">
                     <p>Тема:</p>
-                    <SwitchButton className="settings-case-theme-switch" onClick={handleButtonClick}/>
+                    <SwitchButton className="settings-case-theme-switch"/>
                 </MenuList>
-                    <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" />
+                    <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" onClick={handleButtonClick} sx={{
+            border: '1px solid #ccc',       
+                                borderRadius: '8px',            
+            '& .MuiMenu-list': {
+                padding: 0,                 // Убирает отступы, если нужно
+                border: 'none',             // Убирает границу списка
+            }
+        }}/>
             </Menu>
         </Box>
     );
