@@ -11,6 +11,25 @@ const Search = ({
 }) => {
     const [valueText, setValue] = useState('');
 
+import {useState} from 'react';
+import PropTypes from 'prop-types';
+import { TextField, Box, FormControl } from '@mui/material';
+import './search.css';
+
+const Search = ({   imageSrc='./src/shared/ui/search-bar/magnifyingGlass.png',
+                    onClick = () => {},
+                    onChange = () => {},
+                    placeholder = "Поиск",
+                }) => {
+    const [searchBlock, setSearchBlock] = useState(false);
+    const [valueText, setValue] = useState('');
+
+
+    const handleClick = () => {
+        setSearchBlock(true);
+        onClick();
+    };
+
     const handleChange = (e) => {
         setValue(e.target.value);
         onChange(e.target.value);
@@ -49,6 +68,9 @@ const Search = ({
                     }
                 }}
             />
+        }
+    }
+
         </Box>
     );
 };
