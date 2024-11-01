@@ -1,5 +1,3 @@
-import Settings from "./widgets/header/settings/settings/Settings";
-
 import ProjectCard from "./shared/ui/project-card/ProjectCard";
 
 import TextFormattingToolbar from "./shared/ui/text-formatting-toolbar/TextFormattingToolbar";
