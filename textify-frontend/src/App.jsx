@@ -1,3 +1,4 @@
+import Settings from "./widgets/header/settings/settings/Settings";
 
 import ProjectCard from "./shared/ui/project-card/ProjectCard";
 
