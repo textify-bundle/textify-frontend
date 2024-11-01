@@ -65,7 +65,7 @@ const Settings = ({isTrash}) => {
     );
 };
 
-Settings.PropTypes = {
+Settings.propTypes = {
     isTrash: PropTypes.func.Boolean
 };
 
