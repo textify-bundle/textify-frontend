@@ -18,7 +18,7 @@ import ToggleButtonGroup, {
 import './index.scss';
 import PropTypes from 'prop-types';
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({}) => ({
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
     border: 0,
     borderRadius: 0,
