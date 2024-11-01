@@ -33,18 +33,18 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-const handleLeftAlignClick = () => {};
-const handleCenterAlignClick = () => {};
-const handleRightAlignClick = () => {};
-const handleJustifyAlignClick = () => {};
-const handleBoldClick = () => {};
-const handleStrikethroughClick = () => {};
-const handleUnderlinedClick = () => {};
-const handleItalicClick = () => {};
-const handleSizeClick = () => {};
-const handleListClick = () => {};
-
-const TextFormattingToolbar = () => {
+const TextFormattingToolbar = ({
+  handleLeftAlignClick,
+  handleCenterAlignClick,
+  handleRightAlignClick,
+  handleJustifyAlignClick,
+  handleBoldClick,
+  handleStrikethroughClick,
+  handleUnderlinedClick,
+  handleItalicClick,
+  handleSizeClick,
+  handleListClick,
+}) => {
   const [alignment, setAlignment] = React.useState('left');
   const [formats, setFormats] = React.useState(() => ['italic']);
 
@@ -122,6 +122,19 @@ TextFormattingToolbar.propTypes = {
   handleItalicClick: PropTypes.func,
   handleSizeClick: PropTypes.func,
   handleListClick: PropTypes.func,
+};
+
+TextFormattingToolbar.defaultProps = {
+  handleLeftAlignClick: () => {},
+  handleCenterAlignClick: () => {},
+  handleRightAlignClick: () => {},
+  handleJustifyAlignClick: () => {},
+  handleBoldClick: () => {},
+  handleStrikethroughClick: () => {},
+  handleUnderlinedClick: () => {},
+  handleItalicClick: () => {},
+  handleSizeClick: () => {},
+  handleListClick: () => {},
 };
 
 export default TextFormattingToolbar;
