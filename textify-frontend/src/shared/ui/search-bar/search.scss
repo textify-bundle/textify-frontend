@@ -9,41 +9,18 @@ $font-family_1: SF Pro Rounded;
 	border-radius: 6px;
 	background: rgba(255, 255, 255, 1);
 	box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.16);
-	#search-glass {
-		flex-direction: row;
-		position: unset;
-		margin: 0px;
-		display: flex;
-		padding-left: 12px;
-		padding-top: 9px;
-		width: 100%;
-		height: 50%;
-		gap: 12px;
-		top: 18px;
-		left: 20px;
-		cursor: pointer;
-	}
-	#search-form_side-bar {
-		width: 100%;
-	}
-}
-#search-glass {
-	.search-glass_presearch {
-		display: flex;
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		gap: 0px;
-		color: $color_1;
-		font-family: $font-family_1;
-		font-size: 12px;
-		font-weight: 300;
-		line-height: 17.47px;
-		letter-spacing: -0.3177175521850586px;
-		text-align: left;
-	}
+	align-items: center;
+
 	.search-glass_img {
 		width: 13.39px;
 		height: 13.36px;
 	}
+	.search-form_side-bar {
+		.MuiOutlinedInput-input {
+		padding: 11px 10px 9px 0;
+		height: 17px;
+		border: none;
+	  }
+	}
 }
+
