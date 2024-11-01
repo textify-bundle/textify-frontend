@@ -65,4 +65,8 @@ const Settings = ({isTrash}) => {
     );
 };
 
+Settings.PropTypes = {
+    isTrash: PropTypes.func.Boolean
+};
+
 export default Settings;
