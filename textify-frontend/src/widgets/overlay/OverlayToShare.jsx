@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -12,6 +13,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import './OverlayToShare.scss'; // Import the SCSS file
+
 
 const OverlayToShare = () => {
   const [selectedItem, setSelectedItem] = useState("Нет доступа");
@@ -81,5 +83,14 @@ const OverlayToShare = () => {
     </Box>
   );
 };
+
+
+
+OverlayToShare.propTypes = {
+  
+  title: PropTypes.string,
+};
+
+
 
 export default OverlayToShare;
