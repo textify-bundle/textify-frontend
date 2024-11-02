@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import './search.scss';
