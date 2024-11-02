@@ -57,6 +57,7 @@ Search.propTypes = {
     onClick: PropTypes.func,
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
+    value : PropTypes.string,
 };
 
 export default Search;
