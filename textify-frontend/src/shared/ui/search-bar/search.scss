@@ -11,12 +11,12 @@ $font-family_1: SF Pro Rounded;
 	box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.16);
 	align-items: center;
 
-	.search-glass_img {
+	&__img {
 		width: 13.39px;
 		height: 13.36px;
 	}
 	.search-form_side-bar {
-		.MuiOutlinedInput-input {
+	&__input {
 		padding: 11px 10px 9px 0;
 		height: 17px;
 		border: none;

@@ -1,20 +1,25 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import './search.css';
+import './search.scss';
 
 const Search = ({
     imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
     onClick = () => {},
     onChange = () => {},
     placeholder = "Поиск",
+    value = " ",
 }) => {
-    const [valueText, setValue] = useState('');
 
     const handleChange = (e) => {
-        setValue(e.target.value);
         onChange(e.target.value);
     };
+
+    const handlePress = async (e) => {
+        if (e.key === 'Enter') {
+            // console.log(e.target.value)
+        }
+    }
 
     return (
         <Box className="search-container" onClick={onClick}>
@@ -23,7 +28,8 @@ const Search = ({
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
-                value={valueText}
+                onKeyPress={handlePress}
+                value={value}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">

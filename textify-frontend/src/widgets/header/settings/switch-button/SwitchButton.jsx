@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import './SwitchButton.css';
 import {Box} from "@mui/material";
 
-export default function SwitchButton({checkedProp, onToggle,}) {
+export default function SwitchButton({checkedProp, onToggle}) {
     const [checked, setChecked] = useState(checkedProp);
 
     useEffect(() => {
