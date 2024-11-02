@@ -17,7 +17,7 @@ const Search = ({
 
     const handlePress = async (e) => {
         if (e.key === 'Enter') {
-            // console.log(e.target.value)
+            console.log(e.target.value)
         }
     }
 
