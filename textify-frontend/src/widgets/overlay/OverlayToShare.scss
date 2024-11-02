@@ -1,0 +1,41 @@
+.overlay-to-share {
+    width: 460px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start ;
+    transition: height 0.3s ease-in-out;
+  
+    &.expanded {
+      height: 300px;
+    }
+  
+    &__title {
+      font-size: 1.25rem;
+    }
+  
+    &__access-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    &__access-label {
+      font-size: 18px;
+    }
+  
+    &__accordion {
+      width: 200px;
+    }
+  
+    &__button {
+      width: 100%;
+      height: 36px;
+      border-radius: 12px;
+    }
+  }
+  

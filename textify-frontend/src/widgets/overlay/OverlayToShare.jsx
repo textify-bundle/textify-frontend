@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import * as React from 'react';
+import React, { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -12,6 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import './OverlayToShare.scss'; // Import the SCSS file
 
 const OverlayToShare = () => {
   const [selectedItem, setSelectedItem] = useState("Нет доступа");
@@ -26,36 +26,16 @@ const OverlayToShare = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: "460px",
-        height: expanded ? "300px" : "200px",
-        padding: "20px",
-        backgroundColor: "white",
-        borderRadius: "12px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        transition: "height 0.3s ease-in-out",
-      }}
-    >
-      <Typography variant="h6">Поделиться</Typography>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          marginBottom: "10px",
-        }}
-      >
-        <Typography variant="body1" sx={{ fontSize: "18px", marginRight: "90px" }}>
+    <Box className={`overlay-to-share${expanded ? ' expanded' : ''}`}>
+      <Typography variant="h6" className="overlay-to-share__title">Поделиться</Typography>
+      <Box className="overlay-to-share__access-container">
+        <Typography variant="body1" className="overlay-to-share__access-label" sx = { { marginRight : "110px"}}>
           У кого есть ссылка:
         </Typography>
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
-          sx={{ width: "200px" }}
+          className="overlay-to-share__accordion"
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -95,14 +75,7 @@ const OverlayToShare = () => {
           </AccordionDetails>
         </Accordion>
       </Box>
-      <Button
-        variant="contained"
-        sx={{
-          width: "100%",
-          height: "36px",
-          borderRadius: "12px",
-        }}
-      >
+      <Button variant="contained" className="overlay-to-share__button">
         Копировать ссылку
       </Button>
     </Box>
