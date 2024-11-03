@@ -15,57 +15,69 @@ import {
 } from 'react-router-dom';
 import './index.scss';
 
-const ListItemLink = ({ to, open, onClick, active, primary }) => {
+const ListItemLink = ({ item, open, onClick, active }) => {
   let icon = null;
-  if (open != null) {
-    icon = open ? <ExpandLess /> : <ExpandMore />;
+  if (item.type === 'dropdown') {
+    icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
+  } else if (item.type === 'action' && item.icon === 'plus') {
+    icon = <Add className="icon" />;
   }
 
   return (
     <li>
       <ListItemButton
-        component={RouterLink}
-        to={to}
-        onClick={onClick}
+        component={item.type === 'link' ? RouterLink : 'button'}
+        to={item.type === 'link' ? item.link : undefined}
+        onClick={() => onClick(item.link)}
         className={`listItemButton ${active ? 'active' : ''}`}
       >
         <ListItemText
-          primary={primary}
+          primary={item.name}
           className="listItemText"
         />
-        {icon}
+        {icon && <ListItemIcon className="addIcon">{icon}</ListItemIcon>}
       </ListItemButton>
     </li>
   );
 };
 
 ListItemLink.propTypes = {
+  item: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['link', 'action', 'dropdown']).isRequired,
+    link: PropTypes.string,
+    action: PropTypes.string,
+    icon: PropTypes.string,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['link']).isRequired,
+      link: PropTypes.string.isRequired,
+    })),
+  }).isRequired,
   open: PropTypes.bool,
-  to: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
   active: PropTypes.bool,
-  primary: PropTypes.string.isRequired,
 };
 
-const RouterBreadcrumbs = ({ projects, pagesPerProject }) => {
+const RouterBreadcrumbs = ({ tree }) => {
   const [openStates, setOpenStates] = React.useState(
-    projects.map(() => false)
+    tree.map(() => false)
   );
   const [activeItem, setActiveItem] = React.useState(null);
 
-  const handleClick = (to, projectIndex) => {
+  const handleClick = (to, index) => {
     setActiveItem(to);
-    if (projectIndex !== undefined) {
+    if (index !== undefined && tree[index].type === 'dropdown') {
       setOpenStates((prevOpenStates) => {
         const newOpenStates = [...prevOpenStates];
-        newOpenStates[projectIndex] = !newOpenStates[projectIndex];
+        newOpenStates[index] = !newOpenStates[index];
         return newOpenStates;
       });
     }
   };
 
   return (
-    <MemoryRouter initialEntries={[`/${projects[0]}`]} initialIndex={0}>
+    <MemoryRouter initialEntries={[tree[0].link]} initialIndex={0}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 }}>
         <Box
           sx={{ bgcolor: 'background.paper', mt: 1 }}
@@ -73,43 +85,28 @@ const RouterBreadcrumbs = ({ projects, pagesPerProject }) => {
           aria-label="mailbox folders"
         >
           <List>
-            <ListItemLink
-              to="/"
-              onClick={() => handleClick('/')}
-              active={activeItem === '/'}
-              primary="Главная"
-            />
-            <ListItemButton className="listItemButton">
-              <ListItemText
-                primary="Создать проект"
-                className="listItemText"
-              />
-              <ListItemIcon className="addIcon">
-                <Add />
-              </ListItemIcon>
-            </ListItemButton>
-            {projects.map((project, projectIndex) => (
-              <React.Fragment key={project}>
+            {tree.map((item, index) => (
+              <React.Fragment key={item.name}>
                 <ListItemLink
-                  to={`/${project}`}
-                  open={openStates[projectIndex]}
-                  onClick={() => handleClick(`/${project}`, projectIndex)}
-                  active={activeItem === `/${project}`}
-                  primary={project}
+                  item={item}
+                  open={openStates[index]}
+                  onClick={(to) => handleClick(to, index)}
+                  active={activeItem === item.link}
                 />
-                <Collapse component="li" in={openStates[projectIndex]} timeout="auto" unmountOnExit>
-                  <List disablePadding>
-                    {Array.from({ length: pagesPerProject[projectIndex] }, (_, pageIndex) => (
-                      <ListItemLink
-                        key={`${project}-Page ${pageIndex + 1}`}
-                        to={`/${project}/Page ${pageIndex + 1}`}
-                        onClick={() => handleClick(`/${project}/Page ${pageIndex + 1}`)}
-                        active={activeItem === `/${project}/Page ${pageIndex + 1}`}
-                        primary={`Page ${pageIndex + 1}`}
-                      />
-                    ))}
-                  </List>
-                </Collapse>
+                {item.type === 'dropdown' && (
+                  <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
+                    <List disablePadding>
+                      {item.items.map((subItem) => (
+                        <ListItemLink
+                          key={subItem.name}
+                          item={subItem}
+                          onClick={(to) => handleClick(to)}
+                          active={activeItem === subItem.link}
+                        />
+                      ))}
+                    </List>
+                  </Collapse>
+                )}
               </React.Fragment>
             ))}
           </List>
@@ -120,8 +117,18 @@ const RouterBreadcrumbs = ({ projects, pagesPerProject }) => {
 };
 
 RouterBreadcrumbs.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.string).isRequired,
-  pagesPerProject: PropTypes.arrayOf(PropTypes.number).isRequired,
+  tree: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['link', 'action', 'dropdown']).isRequired,
+    link: PropTypes.string,
+    action: PropTypes.string,
+    icon: PropTypes.string,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['link']).isRequired,
+      link: PropTypes.string.isRequired,
+    })),
+  })).isRequired,
 };
 
 export default RouterBreadcrumbs;
