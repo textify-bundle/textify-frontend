@@ -7,7 +7,7 @@
       background-color: #0751D80D;
     }
     & .MuiListItemText-primary {
-      font-family: 'SF Compact Rounded';
+      font-family: 'SF Compact Rounded', 'Roboto', 'Lato' !important;
       font-weight: 400 !important;
       font-size: 12px !important;
       line-height: 33.99px !important;
@@ -34,6 +34,10 @@
 }
 
 .icon {
-    width: 6.82px;
-    height: 7.15px;
+    width: 14.82px !important;
+    height: 15.15px !important;
+    position: absolute !important; // Добавлено для позиционирования иконок
+    right: 10px !important; // Расстояние от правого края кнопки
+    top: 50% !important; // Центрирование по вертикали
+    transform: translateY(-50%) !important; // Центрирование по вертикали
 }
