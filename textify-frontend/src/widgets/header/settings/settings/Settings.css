@@ -1,0 +1,81 @@
+#settings-menu {
+    max-width: 210px;
+    height: 324px;
+    padding: 0;
+    font-family: 'SF Compact Rounded';
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: left;
+}
+#settings-button{
+    font-size: 30px;
+    color: rgb(228, 219, 219);
+}
+
+#settings-menu .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+    position: relative;
+    gap: 0px;
+    border-radius: 12px;
+    border: 0 !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    border: 1px solid #ddd;
+    margin: 0;
+    background-color: rgba(251, 251, 251, 1);
+    box-shadow: rgba(0, 0, 0, 0.25);
+}
+
+#settings-menu .MuiMenu-list {
+    padding: 0;
+    width: 100%;
+}
+
+/* Стили для заголовка "Найстройки" */
+#settings-menu .settings-case_name {
+    margin: 0;
+    width: 100%;
+    height: 5%;
+    padding: 10px 10px 10px 10px;
+    gap: 0px;
+    font-size: 16px;
+}
+
+/* Стили для контейнера поиска */
+#settings-menu .search-container {
+    margin: 0px  10px  10px  10px;
+}
+
+
+#settings-case_theme .settings-case-theme-switch {
+    width: 100%;
+    padding-left: 26.75%;
+}
+
+/* Стили для темы и переключателя (SwitchButton) */
+#settings-case_theme {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+    padding-top: 0;
+    gap: 15px;
+}
+
+#settings-case_theme p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: 14px;
+    color: #000;
+    padding-left: 10px;
+}
+
+
+#settings-menu .settings-case_button-in-out {
+    align-items: self-end;
+    width: 100%;
+    padding: 0;
+    border-radius: 0px 0px 12px 12px;
+    z-index: 1000;
+}

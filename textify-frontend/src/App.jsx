@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import RouterBreadcrumbs from "./shared/ui/pages-tree/PagesTree";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
+const tree = [
+    {
+      name: 'Главная',
+      type: 'link',
+      link: '/main'
+    },
+    {
+      name: 'Создать проект',
+      type: 'action',
+      action: 'create',
+      icon: 'plus'
+    },
+    {
+      name: 'Nomer 1',
+      type: 'dropdown',
+      link: '/nomer1',
+      items: [
+        { name: 'Page 1', type: 'link', link: '/nomer1/page1' },
+        { name: 'Page 2', type: 'link', link: '/nomer1/page2' },
+        { name: 'Page 3', type: 'link', link: '/nomer1/page3' }
+      ]
+    },
+    {
+      name: 'Nomer 2',
+      type: 'dropdown',
+      link: '/nomer2',
+      items: [
+        { name: 'Page 1', type: 'link', link: '/nomer2/page1' },
+        { name: 'Page 2', type: 'link', link: '/nomer2/page2' },
+        { name: 'Page 3', type: 'link', link: '/nomer2/page3' }
+      ]
+    }
+  ];
+  
+  const App = () => {
+    return (
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <RouterBreadcrumbs tree={tree} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    );
+  };
 
-export default App
+export default App;
