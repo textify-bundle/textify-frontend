@@ -11,17 +11,24 @@ import PropTypes from 'prop-types';
 const Settings = ({isTrash}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const [valueText, setValue] = useState('');
 
+    const handleSearchChange = useCallback((newValue) => {
+        setValue(newValue); 
+    }, []);
 
     const handleClick = useCallback((event) => {
         setAnchorEl(event.currentTarget);
     }, []);
 
+
+
     const handleButtonClick = () => {
 
     };
 
-
+    console.log(event.target.value)
+    
     const handleClose = useCallback(() => {
         setAnchorEl(null);
     }, []);
@@ -48,12 +55,15 @@ const Settings = ({isTrash}) => {
                 onClose={handleClose}
                
             >
-                <MenuList className="settings-case_name"
-                
-                >Настройки</MenuList>
+                <MenuList className="settings-case_name">Настройки</MenuList>
 
                 { !isTrash &&(
-                    <Search className="settings-case_search" placeholder="Поиск по файлу"/>
+                   <Search
+                   className="settings-case_search"
+                   placeholder="Поиск по файлу"
+                   value={valueText} 
+                   onChange={handleSearchChange} 
+                   />
                 )}
                 { !isTrash &&(
                     <ButtDel id="settings-case_custom-button" placeholder="Удалить проект" onClick={handleButtonClick}/>
@@ -68,14 +78,7 @@ const Settings = ({isTrash}) => {
                     <p>Тема:</p>
                     <SwitchButton className="settings-case-theme-switch"/>
                 </MenuList>
-                    <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" onClick={handleButtonClick} sx={{
-            border: '1px solid #ccc',       
-                                borderRadius: '8px',            
-            '& .MuiMenu-list': {
-                padding: 0,                 // Убирает отступы, если нужно
-                border: 'none',             // Убирает границу списка
-            }
-        }}/>
+                    <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" onClick={handleButtonClick} />
             </Menu>
         </Box>
     );

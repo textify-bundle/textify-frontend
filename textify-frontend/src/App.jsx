@@ -9,6 +9,5 @@ const App = () =>  {
         
         <TextFormattingToolbar />
     </>;
-}
-
+};
 export default App;
