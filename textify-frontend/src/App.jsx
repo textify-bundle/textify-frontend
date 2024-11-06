@@ -1,8 +1,8 @@
-import Settings from "./widgets/header/settings/settings/Settings";
+import OverlayToShare from "./widgets/overlay/OverlayToShare";
 
 const App = () =>  {
     return (
-        <Settings isTrash ={true}/>
+        <OverlayToShare  />
     );
 };
 
