@@ -1,0 +1,50 @@
+.node-container{
+    width: 100%;
+    min-height: 30px;
+    background-color: #FFF;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &__line {
+        // margin-left: 10px;
+        // margin-right: 5px;
+        min-height: 20px;
+        height: 100%;
+        width: 4px;
+        background-color: #0751D8;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -ms-border-radius: 25px;
+        -o-border-radius: 25px;
+    }
+
+    &__editor {
+        width: 100%;
+        margin-left: 30px;
+        min-height: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        &_hover {
+            // background-color: rgba(0, 0, 0, 0.05);
+            // margin-left: 5px;
+            padding-left: 10px;
+            border-radius: 6px;
+            // width: 93%;
+        }
+    }
+
+    &_hover {
+        
+    }
+
+    &__icon{
+        margin-left: 20px;
+    }
+}
+
+.base-Input-input{
+    // width: 320px;
+}
