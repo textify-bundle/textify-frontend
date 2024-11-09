@@ -1,9 +1,9 @@
-import Editor from "./widgets/editor/Editor";
+import Index from "./shared/api/auth";
 
 const App = () => {
 
   return (
-    <Editor />
+    <Index />
   );
 };
 
