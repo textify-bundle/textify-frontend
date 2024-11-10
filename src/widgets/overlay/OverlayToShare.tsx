@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -12,26 +11,34 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import './OverlayToShare.scss'; // Import the SCSS file
+import './OverlayToShare.scss'; 
+
+interface OverlayToShareProps {
+  title?: string;
+}
 
 
-const OverlayToShare = () => {
-  const [selectedItem, setSelectedItem] = useState("Нет доступа");
-  const [expanded, setExpanded] = useState(false);
 
-  const handleItemClick = (event) => {
+const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделиться" }) => {
+
+const [selectedItem, setSelectedItem] = useState<string>('Нет доступа');
+const [expanded, setExpanded] = useState<string | false>(false);
+  console.log(selectedItem); 
+
+  const handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedItem(event.target.value);
+    console.log(selectedItem); 
   };
 
-  const handleChange = (panel) => (event, isExpanded) => {
+  const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   return (
     <Box className={`overlay-to-share${expanded ? ' expanded' : ''}`}>
-      <Typography variant="h6" className="overlay-to-share__title">Поделиться</Typography>
+      <Typography variant="h6" className="overlay-to-share__title">{title}</Typography>
       <Box className="overlay-to-share__access-container">
-        <Typography variant="body1" className="overlay-to-share__access-label" sx = { { marginRight : "110px"}}>
+        <Typography variant="body1" className="overlay-to-share__access-label" sx={{ marginRight: "110px" }}>
           У кого есть ссылка:
         </Typography>
         <Accordion
@@ -51,23 +58,21 @@ const OverlayToShare = () => {
               <FormLabel id="access-radio-buttons-group-label">Доступ</FormLabel>
               <RadioGroup
                 aria-labelledby="access-radio-buttons-group-label"
-                value={selectedItem}
+                value={selectedItem}  
+                onChange={handleItemChange}
                 name="access-radio-buttons-group"
               >
                 <FormControlLabel
-                  onClick={handleItemClick}
                   value="Нет доступа"
                   control={<Radio />}
                   label="Нет доступа"
                 />
                 <FormControlLabel
-                  onClick={handleItemClick}
                   value="Только чтение"
                   control={<Radio />}
                   label="Только чтение"
                 />
                 <FormControlLabel
-                  onClick={handleItemClick}
                   value="Редактирование"
                   control={<Radio />}
                   label="Редактирование"
@@ -83,14 +88,5 @@ const OverlayToShare = () => {
     </Box>
   );
 };
-
-
-
-OverlayToShare.propTypes = {
-  
-  title: PropTypes.string,
-};
-
-
 
 export default OverlayToShare;
