@@ -24,10 +24,21 @@ describe('ProjectCard Component', () => {
         expect(image).toHaveAttribute('src', defaultProps.imageUrl);
         expect(image).toHaveAttribute('alt', defaultProps.projectName);
     });
-    
+
     it('calls onRestore when the restore button is clicked', () => {
         render(<ProjectCard {...defaultProps} isRemoved={true} />);
         fireEvent.click(screen.getByText('Восстановить'));
         expect(defaultProps.onRestore).toHaveBeenCalled();
+    });
+
+    it('handles missing imageUrl gracefully', () => {
+        render(<ProjectCard {...defaultProps} />);
+        const image = screen.getByRole('img');
+        expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
+    });
+    
+    it('does not show restore button when isRemoved is false', () => {
+        render(<ProjectCard {...defaultProps} isRemoved={false} />);
+        expect(screen.queryByText('Восстановить')).not.toBeInTheDocument();
     });
 });

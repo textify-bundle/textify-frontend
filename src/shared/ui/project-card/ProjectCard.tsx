@@ -32,7 +32,7 @@ const timeFromDate = (date: string | number): string => {
  */
 const ProjectCard: FC<ProjectCardProps> = ({
   isRemoved = false,
-  imageUrl,
+  imageUrl = 'default-placeholder.jpg',
   lastEntryTime = Date.now(),
   projectName = 'Unknown Project',
   onRestore = () => {},
@@ -73,7 +73,9 @@ const ProjectCard: FC<ProjectCardProps> = ({
           image={imageUrl}
           alt={projectName}
         />
-        <CardContent className="project-card__content">
+        <CardContent sx={{
+          padding: '10px 10px 0 9px',
+        }} className="project-card__content">
           <div className="project-card__name">{projectName}</div>
           <div className="project-card__last-entry">
             Последний вход - {timeFromDate(lastEntryTime)}
