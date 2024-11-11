@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { supabase } from '../api/auth/client';
-
+import { WritableDraft } from 'immer';
+import { AuthService } from '../../shared/api/auth/AuthService';
 
 interface User {
   id: string;
@@ -31,14 +31,9 @@ export const signUp = createAsyncThunk(
   'user/signUp',
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: credentials.email,
-        password: credentials.password,
-      });
-
+      const { data, error } = await AuthService.registration(credentials.email, credentials.password);
       if (error) throw new Error(error.message);
       return { user: data.user, session: data.session };
-      
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -49,14 +44,9 @@ export const signIn = createAsyncThunk(
   'user/signIn',
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password,
-      });
-
+      const { data, error } = await AuthService.login(credentials.email, credentials.password);
       if (error) throw new Error(error.message);
       return { user: data.user, session: data.session };
-
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -65,7 +55,7 @@ export const signIn = createAsyncThunk(
 
 export const logOut = createAsyncThunk('user/logOut', async (_, { rejectWithValue }) => {
   try {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await AuthService.logout();
     if (error) throw new Error(error.message);
     return null; // null для очистки данных о пользователе и сессии
   } catch (error: any) {
@@ -89,24 +79,21 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Обработчики для асинхронных экшенов
     builder
       .addCase(signUp.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.session = action.payload;
+        state.user = action.payload.user as WritableDraft<User | null>;
+        state.session = action.payload.session as WritableDraft<Session> | null;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.error = action.payload as string;
       })
-
       .addCase(signIn.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.session = action.payload;
+        state.user = action.payload.user as WritableDraft<User | null>;
+        state.session = action.payload.session as WritableDraft<Session> | null;
       })
       .addCase(signIn.rejected, (state, action) => {
         state.error = action.payload as string;
       })
-
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
         state.session = null;
@@ -117,6 +104,5 @@ const userSlice = createSlice({
   },
 });
 
-// Экспорты экшенов и редьюсера
 export const { setUser, setSession, setError } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Box, Typography, CircularProgress } from '@mui/material';
-import { signUp } from '../../shared/store/authSlice';
-import { AppDispatch, RootState } from '../../shared/store/store';
-import '../../shared/api/auth/components/styles/index.scss';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { TextField, Button, CircularProgress, Box, Typography } from "@mui/material";
+import './loginPage.scss';
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signIn } from "../../store/slices/authSlice";
+import { AppDispatch, RootState } from "../../store";
 
 interface FormData {
   email: string;
   password: string;
 }
 
-const SignUpPage: React.FC = () => {
+
+const LoginPage = () => {
   const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState<boolean>(false); // Состояние загрузки в компоненте
 
   const dispatch = useDispatch<AppDispatch>(); // Используем тип AppDispatch
   const { user, session, error } = useSelector((state: RootState) => state.user);
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     setIsLoading(true);
     try {
-      await dispatch(signUp({ email: formData.email, password: formData.password })).unwrap();
+      await dispatch(signIn({ email: formData.email, password: formData.password })).unwrap();
     } catch (e) {
       // Ошибка будет обработана через extraReducers
     } finally {
@@ -35,24 +36,22 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-   
-    
-      <Box  className="sign-up-page"
-        sx={{
-          backgroundColor: 'white',
-          paddingLeft: '100px',
-          paddingRight: '100px',
-          borderRadius: 2,
-          
-          width: '300px',
-        }}
-      >
-              <h1>Вход в личный кабинет</h1>
+    <Box  className="sign-up-page"
+    sx={{
+      backgroundColor: 'white',
+      paddingLeft: '100px',
+      paddingRight: '100px',
+      borderRadius: 2,
+      
+      width: '300px',
+    }}
+  >
+          <h1>Вход в личный кабинет</h1>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSignUp();
+            handleSignIn();
           }}
           className="sign-up-form">
          <TextField 
@@ -83,10 +82,10 @@ const SignUpPage: React.FC = () => {
             disabled={isLoading}
             sx={{ mt: 2 }}
           >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Регистрация'}
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Войти'}
           </Button>
         </form>
-
+     
         {error && (
           <Typography color="error" align="center" sx={{ mt: 2 }}>
             {error}
@@ -117,9 +116,9 @@ const SignUpPage: React.FC = () => {
             fontFamily: 'Tinkoff Sans',
           }}
         >
-          <span style={{ marginRight: '5px', color: '#000' }}>Уже есть аккаунт?</span>
+          <span style={{ marginRight: '5px', color: '#000' }}> Еще нет аккаунта?</span>
           <Link 
-            to="/" 
+            to="/signUp" 
             style={{
               color: '#0751D8',
               background: 'white',
@@ -128,12 +127,11 @@ const SignUpPage: React.FC = () => {
               fontFamily: 'Tinkoff Sans',
             }}
           >
-            Войти
+            Зарегистрироваться
           </Link>
         </Box>
-      </Box>
-
+    </Box>
   );
 };
 
-export default SignUpPage;
+export default LoginPage;

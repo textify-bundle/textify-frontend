@@ -5,7 +5,7 @@ import './index.scss';
 // Импортируем Provider и BrowserRouter
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import store from './shared/store/store';
+import store from './store';
 
 // Получаем корневой элемент
 const rootElement = document.getElementById('root');

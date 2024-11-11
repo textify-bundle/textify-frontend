@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "../../../widgets/pages/LoginPage";
-import SignUpPage from '../../../widgets/pages/SignUpPage';
+import LoginPage from "../../../pages/LoginPgae/LoginPage";
+import SignUpPage from '../../../pages/SignUpPage/SignUpPage';
 
 const Index = () => {
     return (

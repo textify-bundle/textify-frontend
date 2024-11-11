@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+$font-main: 'Varela Round';
+$color-primary: #0751D8;
+
+// Стили для страницы регистрации/входа
+html, body {
+  height: 100%; /* Устанавливаем высоту body и html на 100% */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-up-page {
+  flex-direction: column;
+  padding: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 260px; /* Минимальная высота для блока с формой */
+  width: 510px; /* Устанавливаем ширину блока с формой */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 20px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 500;
+    font-family: $font-main;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .sign-up-form {
+    width: 300px;
+
+    .input-field {
+      margin-top: 5px;
+
+      .MuiInputBase-input {
+        font-size: 14px;
+        font-family: $font-main;
+      }
+    }
+
+    .button-submit {
+      margin-top: 15px;
+      box-shadow: none;
+      background: $color-primary;
+      border-radius: 8px;
+      font-family: $font-main;
+      color: white;
+      text-transform: none;
+
+  
+    }
+
+    .button-redirect {
+      font-family: $font-main;
+      
+      box-shadow: none;
+      color: $color-primary;
+      background: white;
+      border-radius: 8px;
+      text-decoration: none;
+      text-transform: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+   
+    }
+  }
+}

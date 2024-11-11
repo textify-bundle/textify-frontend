@@ -1,23 +1,9 @@
 // Объявление переменных для шрифтов и основного цвета
 
-@font-face {
-  font-family: 'SF Compact Rounded';
-  src: url('../fonnts-2/fonts/fonnts.com-SF_Compact_Rounded_Regular.ttf') format('woff2'),
-       url('/path-to-your-fonts-folder/SFCompactRounded-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
 
-@font-face {
-  font-family: 'Tinkoff Sans'; // Название шрифта
-  src: url('../fonnts-2/fonts/tinkoffsans-regular.ttf') format('woff2'),
-       url('../path-to-your-fonts-folder/TinkoffSans-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
 
-$font-main: 'SF Compact Rounded';
-$font-alt: 'Tinkoff Sans';
+$font-main: 'Varela Round';
+
 $color-primary: #0751D8;
 
 // Стили для страницы регистрации/входа
@@ -57,7 +43,7 @@ html, body {
 
       .MuiInputBase-input {
         font-size: 14px;
-        font-family: 'SF Compact Rounded';
+        font-family: $font-main;
       }
     }
 
@@ -66,7 +52,7 @@ html, body {
       box-shadow: none;
       background: $color-primary;
       border-radius: 8px;
-      font-family: $font-alt;
+      font-family: $font-main;
       color: white;
       text-transform: none;
 
@@ -74,7 +60,7 @@ html, body {
     }
 
     .button-redirect {
-      font-family: $font-alt;
+      font-family: $font-main;
       
       box-shadow: none;
       color: $color-primary;
