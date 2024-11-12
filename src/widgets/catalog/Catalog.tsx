@@ -1,26 +1,36 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import './ItemPanel.scss';
-import PropTypes from 'prop-types';
+import './Catalog.scss';
 
-const ItemPanel = ({
+interface Item {
+    title: string;
+    description: string;
+}
+
+interface CatalogProps {
+    imageSrc: string;
+    items: Item[];
+    onClick?: (index: number) => void;
+}
+
+const Catalog: React.FC<CatalogProps> = ({
     imageSrc,
     items,
     onClick = () => {},
 }) => {
-     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-     const handleItemClick = (index) => {
+    const handleItemClick = (index: number) => {
         if (selectedIndex === index) {
             setSelectedIndex(null);
         } else {
             setSelectedIndex(index);
         }
-        onClick(index); 
+        onClick(index);
     };
 
     return (
@@ -37,7 +47,7 @@ const ItemPanel = ({
                             sx={{
                                 paddingLeft: 0,
                                 '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.08)', 
+                                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
                                 }
                             }}
                         >
@@ -69,15 +79,4 @@ const ItemPanel = ({
     );
 };
 
-ItemPanel.propTypes = {
-    imageSrc: PropTypes.string, 
-    items: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string.isRequired,   
-            description: PropTypes.string.isRequired  
-        })
-    ).isRequired,  
-    onClick: PropTypes.func,  
-};
-
-export default ItemPanel;
+export default Catalog;

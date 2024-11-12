@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ItemPanel from './Catalog';
+import Catalog from './Catalog';
 
-describe('ItemPanel', () => {
+describe('Catalog', () => {
     const items = [
         { title: 'Nomer 1', description: 'Description 1' },
         { title: 'Nomer 2', description: 'Description 2' },
@@ -10,7 +10,7 @@ describe('ItemPanel', () => {
     const imageSrc = '';
 
     it('renders text correctly with given data', () => {
-        render(<ItemPanel imageSrc={imageSrc} items={items} />);
+        render(<Catalog imageSrc={imageSrc} items={items} />);
 
         const listItems = screen.getAllByRole('listitem');
         expect(listItems).toHaveLength(items.length);
@@ -23,7 +23,7 @@ describe('ItemPanel', () => {
     it('should call onClick with the correct index when an item is clicked', () => {
         const onClickMock = vi.fn();
         const { getAllByRole } = render(
-            <ItemPanel imageSrc={imageSrc} items={items} onClick={onClickMock} />
+            <Catalog imageSrc={imageSrc} items={items} onClick={onClickMock} />
         );
 
         const listItems = getAllByRole('button');
@@ -36,7 +36,7 @@ describe('ItemPanel', () => {
     });
     it('should toggle the active state when an item is clicked', () => {
         const { getAllByRole } = render(
-            <ItemPanel imageSrc={imageSrc} items={items} />
+            <Catalog imageSrc={imageSrc} items={items} />
         );
 
         const listItems = getAllByRole('button');
