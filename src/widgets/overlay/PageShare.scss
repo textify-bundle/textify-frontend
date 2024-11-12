@@ -2,13 +2,13 @@
     width: 460px;
     padding: 20px;
     background-color: white;
+    box-shadow: -1px 1px 25px 2px rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start ;
-    transition: height 0.3s ease-in-out;
-  
+
     &.expanded {
       height: 300px;
     }
@@ -16,12 +16,18 @@
     &__title {
       font-size: 1.25rem;
     }
-  
+
     &__access-container {
       display: flex;
       align-items: center;
       width: 100%;
       margin-bottom: 10px;
+      
+    }
+    .css-1808mag-MuiPaper-root-MuiAccordion-root:first-of-type{
+      border-radius: 12px;
+      background-color: #F8F7F5;
+      justify-self: space-between;
     }
   
     &__access-label {
@@ -30,6 +36,7 @@
   
     &__accordion {
       width: 200px;
+      
     }
   
     &__button {
@@ -37,5 +44,5 @@
       height: 36px;
       border-radius: 12px;
     }
-  }
+}
   

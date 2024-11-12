@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -11,27 +11,40 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import './OverlayToShare.scss'; 
+import './PageShare.scss';
 
 interface OverlayToShareProps {
   title?: string;
+  link?: string;
 }
 
+const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделиться", link }) => {
+  const [selectedItem, setSelectedItem] = useState<string>('Нет доступа');
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const [generatedLink, setGeneratedLink] = useState<string>('');
 
-
-const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделиться" }) => {
-
-const [selectedItem, setSelectedItem] = useState<string>('Нет доступа');
-const [expanded, setExpanded] = useState<string | false>(false);
-  console.log(selectedItem); 
+  useEffect(() => {
+    link = `${window.location.origin}/shared/resource`; 
+    setGeneratedLink(link);
+  }, []);
 
   const handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedItem(event.target.value);
-    console.log(selectedItem); 
   };
 
   const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(generatedLink)
+      .then(() => {
+        console.log("Link copied to clipboard!");
+        console.log(generatedLink);
+      })
+      .catch(err => {
+        console.error("Failed to copy link", err);
+      });
   };
 
   return (
@@ -47,6 +60,7 @@ const [expanded, setExpanded] = useState<string | false>(false);
           className="overlay-to-share__accordion"
         >
           <AccordionSummary
+            className='overlay-to-share_panel1-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
             id="panel1-header"
@@ -58,7 +72,7 @@ const [expanded, setExpanded] = useState<string | false>(false);
               <FormLabel id="access-radio-buttons-group-label">Доступ</FormLabel>
               <RadioGroup
                 aria-labelledby="access-radio-buttons-group-label"
-                value={selectedItem}  
+                value={selectedItem}
                 onChange={handleItemChange}
                 name="access-radio-buttons-group"
               >
@@ -82,7 +96,11 @@ const [expanded, setExpanded] = useState<string | false>(false);
           </AccordionDetails>
         </Accordion>
       </Box>
-      <Button variant="contained" className="overlay-to-share__button">
+      <Button 
+        variant="contained" 
+        className="overlay-to-share__button" 
+        onClick={handleCopyLink}
+      >
         Копировать ссылку
       </Button>
     </Box>
