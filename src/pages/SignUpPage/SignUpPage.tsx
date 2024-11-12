@@ -22,8 +22,9 @@ const SignUpPage: React.FC = () => {
     setIsLoading(true);
     try {
       await dispatch(signUp({ email: formData.email, password: formData.password })).unwrap();
-    } catch (e) {
-      // Ошибка будет обработана через extraReducers
+    } catch (error: unknown) {
+      console.error('Sign up error:', error);
+      
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +73,11 @@ const SignUpPage: React.FC = () => {
           onChange={handleChange}
           value={formData.password}
           type="password"
+          inputProps={{
+          minLength: 8,
+          pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"
+          }}
+          helperText="Password must be at least 6 characters long and contain letters and numbers"
           fullWidth
         />
           <Button

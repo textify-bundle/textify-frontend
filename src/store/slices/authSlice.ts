@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-import { AuthService } from '../../shared/api/auth/AuthService';
+import { AuthService } from '../../features/Auth/AuthService';
 
 interface User {
   id: string;
@@ -19,14 +19,18 @@ interface UserState {
   error: string | null;
 }
 
-// Начальное состояние
+interface SupabaseError extends Error {
+  statusCode?: number;
+  code?: string;
+  status?: number;
+}
+
 const initialState: UserState = {
   user: null,
   session: null,
   error: null,
 };
 
-// Асинхронные экшены для регистрации, логина и логаута
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
@@ -34,8 +38,12 @@ export const signUp = createAsyncThunk(
       const { data, error } = await AuthService.registration(credentials.email, credentials.password);
       if (error) throw new Error(error.message);
       return { user: data.user, session: data.session };
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error) {
+      const authError = error as SupabaseError;
+      if (authError.message) {
+        return rejectWithValue(authError.message); 
+      }
+      return rejectWithValue('An unexpected error occurred');
     }
   }
 );
@@ -48,7 +56,7 @@ export const signIn = createAsyncThunk(
       if (error) throw new Error(error.message);
       return { user: data.user, session: data.session };
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.message || 'An unexpected error occurred');
     }
   }
 );
@@ -57,13 +65,13 @@ export const logOut = createAsyncThunk('user/logOut', async (_, { rejectWithValu
   try {
     const { error } = await AuthService.logout();
     if (error) throw new Error(error.message);
-    return null; // null для очистки данных о пользователе и сессии
+    return null;  
   } catch (error: any) {
-    return rejectWithValue(error.message);
+    return rejectWithValue(error.message || 'Logout failed');
   }
 });
 
-// Слайс Redux с редьюсерами и асинхронными экшенами
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -85,21 +93,24 @@ const userSlice = createSlice({
         state.session = action.payload.session as WritableDraft<Session> | null;
       })
       .addCase(signUp.rejected, (state, action) => {
-        state.error = action.payload as string;
+
+        state.error = typeof action.payload === 'string' ? action.payload : 'Sign up failed';
       })
       .addCase(signIn.fulfilled, (state, action) => {
         state.user = action.payload.user as WritableDraft<User | null>;
         state.session = action.payload.session as WritableDraft<Session> | null;
       })
       .addCase(signIn.rejected, (state, action) => {
-        state.error = action.payload as string;
+
+        state.error = typeof action.payload === 'string' ? action.payload : 'Sign in failed';
       })
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
         state.session = null;
       })
       .addCase(logOut.rejected, (state, action) => {
-        state.error = action.payload as string;
+
+        state.error = typeof action.payload === 'string' ? action.payload : 'Logout failed';
       });
   },
 });

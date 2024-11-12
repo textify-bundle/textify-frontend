@@ -23,8 +23,8 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       await dispatch(signIn({ email: formData.email, password: formData.password })).unwrap();
-    } catch (e) {
-      // Ошибка будет обработана через extraReducers
+    }  catch (error) {
+      console.error('Sign-in error:', error);
     } finally {
       setIsLoading(false);
     }
