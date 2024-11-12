@@ -2,9 +2,9 @@
   display: flex;
   border: 1px solid #e0e0e0;
   flex-wrap: wrap;
-  width: 362.36px;
-  height: 25.88px;
-  border-radius: 9.71px;
+  width: 362.36px !important;
+  height: 25.88px !important;
+  border-radius: 9.71px !important;
 }
 
 .toggle-button-group {
@@ -24,12 +24,12 @@
 
 .toggle-button {
   margin: 5.18px 10.35px !important;
-  width: 15.53px;
-  height: 15.53px;
-  min-width: 15.53px;
-  min-height: 15.53px;
+  width: 15.53px !important;
+  height: 15.53px !important;
+  min-width: 15.53px !important;
+  min-height: 15.53px !important;
 }
 
 .toggle-button .MuiSvgIcon-root {
-  font-size: 11.65px;
+  font-size: 14.65px !important;
 }

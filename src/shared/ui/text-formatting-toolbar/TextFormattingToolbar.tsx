@@ -16,7 +16,6 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from '@mui/material/ToggleButtonGroup';
 import './index.scss';
-import PropTypes from 'prop-types';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
@@ -33,7 +32,20 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
     },
 }));
 
-const TextFormattingToolbar = ({
+type TextFormattingToolbarProps = {
+  handleLeftAlignClick: () => void;
+  handleCenterAlignClick: () => void;
+  handleRightAlignClick: () => void;
+  handleJustifyAlignClick: () => void;
+  handleBoldClick: () => void;
+  handleStrikethroughClick: () => void;
+  handleUnderlinedClick: () => void;
+  handleItalicClick: () => void;
+  handleSizeClick: () => void;
+  handleListClick: () => void;
+};
+
+const TextFormattingToolbar: React.FC<TextFormattingToolbarProps> = ({
   handleLeftAlignClick,
   handleCenterAlignClick,
   handleRightAlignClick,
@@ -46,13 +58,13 @@ const TextFormattingToolbar = ({
   handleListClick,
 }) => {
   const [alignment, setAlignment] = React.useState('left');
-  const [formats, setFormats] = React.useState(() => ['italic']);
+  const [formats, setFormats] = React.useState<string[]>(['italic']);
 
-  const handleFormat = (event, newFormats) => {
+  const handleFormat = (event: React.MouseEvent<HTMLElement>, newFormats: string[]) => {
     setFormats(newFormats);
   };
 
-  const handleAlignment = (event, newAlignment) => {
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment);
   };
 
@@ -109,19 +121,6 @@ const TextFormattingToolbar = ({
       </Paper>
     </div>
   );
-};
-
-TextFormattingToolbar.propTypes = {
-  handleLeftAlignClick: PropTypes.func,
-  handleCenterAlignClick: PropTypes.func,
-  handleRightAlignClick: PropTypes.func,
-  handleJustifyAlignClick: PropTypes.func,
-  handleBoldClick: PropTypes.func,
-  handleStrikethroughClick: PropTypes.func,
-  handleUnderlinedClick: PropTypes.func,
-  handleItalicClick: PropTypes.func,
-  handleSizeClick: PropTypes.func,
-  handleListClick: PropTypes.func,
 };
 
 TextFormattingToolbar.defaultProps = {
