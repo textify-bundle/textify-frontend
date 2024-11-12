@@ -1,13 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ItemPanel from './ItemPanel';
+import ItemPanel from './Catalog';
 
 describe('ItemPanel', () => {
     const items = [
         { title: 'Nomer 1', description: 'Description 1' },
         { title: 'Nomer 2', description: 'Description 2' },
     ];
-    const imageSrc = 'test-image.png';
+    const imageSrc = '';
 
     it('renders text correctly with given data', () => {
         render(<ItemPanel imageSrc={imageSrc} items={items} />);

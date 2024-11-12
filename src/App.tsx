@@ -1,4 +1,4 @@
-import ItemPanel from './widgets/catalog/ItemPanel';
+import ItemPanel from './widgets/catalog/Catalog';
 const App = () => {
   const items = [
     { title: 'Nomer 1', description: 'Description for nomer 1' },
