@@ -31,10 +31,10 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({ item, open, onClick, active
   return (
     <li className="list-item">
     <ListItemButton
-  component={item.type === 'link' ? RouterLink : 'button'}
-  to={item.type === 'link' ? item.link : undefined}
-  onClick={() => onClick(item.link ?? '', undefined)}
-  className={`list-item__button ${active ? 'active' : ''}`}
+     component={item.type === 'link' ? RouterLink : 'button'}
+     to={item.type === 'link' ? item.link : undefined}
+     onClick={() => onClick(item.link ?? '', undefined)}
+     className={`list-item__button ${active ? 'active' : ''}`}
     >
         <ListItemText primary={item.name} className="list-item__text" />
         {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
@@ -66,7 +66,7 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree }) => {
   };
 
   return (
-    <MemoryRouter initialEntries={[tree[0].link || '/']} initialIndex={0}>
+    <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 }}>
         <Box sx={{ bgcolor: 'background.paper', mt: 1 }} component="nav" aria-label="mailbox folders">
           <List>
