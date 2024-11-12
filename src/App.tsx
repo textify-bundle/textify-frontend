@@ -1,4 +1,4 @@
-import Catalog from './widgets/catalog/Catalog';
+import ProjectListPanel from './widgets/project-list-panel/ProjectListPanel';
 const App = () => {
   const items = [
     { title: 'Nomer 1', description: 'Description for nomer 1' },
@@ -12,9 +12,9 @@ const handleItemClick = (index: number) => {
   
   return (
     <div> 
-      <Catalog
-                imageSrc="./widgets/catalog/img.png"
-                items={items}
+      <ProjectListPanel
+                imageSrc="./widgets/project-list-panel/img.png"
+                projects={items}
                 onClick={handleItemClick}
             />
     </div>

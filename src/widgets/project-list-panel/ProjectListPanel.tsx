@@ -4,44 +4,44 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import './Catalog.scss';
+import './ProjectListPanel.scss';
 
 /**
- * Interface representing an item in the catalog.
- * @typedef {Object} Item
- * @property {string} title - The title of the item.
- * @property {string} description - The description of the item.
+ * Interface representing a project in the list.
+ * @typedef {Object} Project
+ * @property {string} title - The title of the project.
+ * @property {string} description - The description of the project.
  */
 
 /**
- * Interface representing the props for the Catalog component.
- * @typedef {Object} CatalogProps
+ * Interface representing the props for the ProjectListPanel component.
+ * @typedef {Object} ProjectListPanelProps
  * @property {string} imageSrc - The URL of the image to be displayed.
- * @property {Item[]} items - An array of items to be displayed in the catalog.
- * @property {Function} [onClick] - Optional callback function to handle item click. Default is an empty function.
+ * @property {Project[]} projects - An array of projects to be displayed in the list.
+ * @property {Function} [onClick] - Optional callback function to handle project click. Default is an empty function.
  */
 
 /**
- * Catalog component displays a list of items with images and descriptions.
+ * ProjectListPanel component displays a list of projects with images and descriptions.
  *
- * @param {CatalogProps} props - The props for the Catalog component.
- * @returns {JSX.Element} The rendered Catalog component.
+ * @param {ProjectListPanelProps} props - The props for the ProjectListPanel component.
+ * @returns {JSX.Element} The rendered ProjectListPanel component.
  */
 
-interface Item {
+interface Project {
     title: string;
     description: string;
 }
 
-interface CatalogProps {
+interface ProjectListPanelProps {
     imageSrc: string;
-    items: Item[];
+    projects: Project[];
     onClick?: (index: number) => void;
 }
 
-const Catalog: React.FC<CatalogProps> = ({
+const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
     imageSrc,
-    items,
+    projects,
     onClick = () => {},
 }) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -58,7 +58,7 @@ const Catalog: React.FC<CatalogProps> = ({
     return (
         <Box className="panel-box">
             <List>
-                {items.map((item, index) => (
+                {projects.map((project, index) => (
                     <ListItem key={index} className="panel-list-item"
                     sx={{ width: '173.06px',
                         padding: '0'}}
@@ -76,11 +76,11 @@ const Catalog: React.FC<CatalogProps> = ({
                             <img
                                 src={imageSrc}
                                 className="panel-image"
-                                alt="item"
+                                alt="project"
                             />
                             <ListItemText
-                                primary={item.title}
-                                secondary={item.description}
+                                primary={project.title}
+                                secondary={project.description}
                                 className="panel-list-item_text"
                                 sx={{
                                     '& .MuiTypography-body1': {
@@ -101,4 +101,4 @@ const Catalog: React.FC<CatalogProps> = ({
     );
 };
 
-export default Catalog;
+export default ProjectListPanel;
