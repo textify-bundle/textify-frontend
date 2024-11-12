@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-import { AuthService } from '../../features/Auth/AuthService';
+import { AuthService } from '../../shared/api/auth/AuthService';
 
 interface User {
   id: string;
