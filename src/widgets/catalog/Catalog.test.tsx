@@ -15,7 +15,7 @@ describe('Catalog', () => {
         const listItems = screen.getAllByRole('listitem');
         expect(listItems).toHaveLength(items.length);
 
-        items.forEach((item, index) => {
+        items.forEach((item) => {
             expect(screen.getByText(item.title)).toBeInTheDocument();
             expect(screen.getByText(item.description)).toBeInTheDocument();
         });
