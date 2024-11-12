@@ -6,6 +6,28 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import './Catalog.scss';
 
+/**
+ * Interface representing an item in the catalog.
+ * @typedef {Object} Item
+ * @property {string} title - The title of the item.
+ * @property {string} description - The description of the item.
+ */
+
+/**
+ * Interface representing the props for the Catalog component.
+ * @typedef {Object} CatalogProps
+ * @property {string} imageSrc - The URL of the image to be displayed.
+ * @property {Item[]} items - An array of items to be displayed in the catalog.
+ * @property {Function} [onClick] - Optional callback function to handle item click. Default is an empty function.
+ */
+
+/**
+ * Catalog component displays a list of items with images and descriptions.
+ *
+ * @param {CatalogProps} props - The props for the Catalog component.
+ * @returns {JSX.Element} The rendered Catalog component.
+ */
+
 interface Item {
     title: string;
     description: string;
