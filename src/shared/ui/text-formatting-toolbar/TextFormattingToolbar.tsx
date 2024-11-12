@@ -1,20 +1,18 @@
-import * as React from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatItalicIcon from '@mui/icons-material/FormatItalic';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
-import FormatStrikethroughIcon from '@mui/icons-material/FormatStrikethrough';
-import FormatSizeIcon from '@mui/icons-material/FormatSize';
-import Paper from '@mui/material/Paper';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup, {
-  toggleButtonGroupClasses,
-} from '@mui/material/ToggleButtonGroup';
+import {
+  FormatAlignLeft as FormatAlignLeftIcon,
+  FormatAlignCenter as FormatAlignCenterIcon,
+  FormatAlignRight as FormatAlignRightIcon,
+  FormatAlignJustify as FormatAlignJustifyIcon,
+  FormatBold as FormatBoldIcon,
+  FormatItalic as FormatItalicIcon,
+  FormatListBulleted as FormatListBulletedIcon,
+  FormatUnderlined as FormatUnderlinedIcon,
+  FormatStrikethrough as FormatStrikethroughIcon,
+  FormatSize as FormatSizeIcon
+} from '@mui/icons-material';
+import { Paper, ToggleButton, ToggleButtonGroup, toggleButtonGroupClasses } from '@mui/material';
 import './index.scss';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
