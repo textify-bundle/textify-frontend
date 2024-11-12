@@ -1,43 +1,53 @@
-.listItemButton {
-    width: 197.02px !important;
-    height: 31px !important;
-    background-color: inherit;
+.list-item {
+  &__button {
+    width: 197px;
+    height: 31px;
+    background-color: transparent;
     color: inherit;
-    &:hover {
-      background-color: #0751D80D;
-    }
-    & .MuiListItemText-primary {
-      font-family: 'SF Compact Rounded', 'Roboto', 'Lato' !important;
-      font-weight: 400 !important;
-      font-size: 12px !important;
-      line-height: 33.99px !important;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0;
     margin: 0;
-}
-  
-.listItemText {
-    padding-left: 13.99px !important;
-}
-  
-.active {
-    background-color: #0751D8 !important;
-    color: white;
-    &:hover {
-      background-color: #0751D8 !important;
-    }
-}
-  
-.addIcon {
-    min-width: 0 !important;
-    margin-right: 13.99px !important;
-}
 
-.icon {
-    width: 14.82px !important;
-    height: 15.15px !important;
-    position: absolute !important; // Добавлено для позиционирования иконок
-    right: 10px !important; // Расстояние от правого края кнопки
-    top: 50% !important; // Центрирование по вертикали
-    transform: translateY(-50%) !important; // Центрирование по вертикали
+    &:hover {
+      background-color: #0751D80D;
+      color: #000000;
+    }
+    
+    &.active {
+      background-color: #0751D8;
+      color: #FFFFFF;
+      ;
+      &:hover {
+        background-color: #0751D80D;
+        color: #000000;
+      }
+    }
+
+    .MuiListItemText-primary {
+      font-family: 'SF Compact Rounded';
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 34px;
+    }
+  }
+
+  &__text {
+    padding-left: 14px;
+  }
+
+  &__add-icon {
+    min-width: 0;
+    margin-right: 14px;
+  }
+
+  .icon {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
