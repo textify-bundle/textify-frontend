@@ -1,22 +1,20 @@
-import {Box, Button} from "@mui/material";
-import PropTypes from 'prop-types';
-import './ButtonInOut.css';
+import React from 'react';
+import { Box, Button } from '@mui/material';
 
-const ButtonInOut = ({placeholder = "Выход", onClick}) => {
+interface ButtonInOutProps {
+    placeholder: string;
+    onClick: () => void;
+    className?: string; 
+}
 
-
+const ButtonInOut: React.FC<ButtonInOutProps> = ({ placeholder = 'Выход', onClick, className = '' }) => {
     return (
-        <Box className="butt" >
-            <Button id="butt_in-out" onClick={onClick}>
+        <Box className="butt">
+            <Button className={className} onClick={onClick}>
                 {placeholder}
             </Button>
         </Box>
     );
-};
-
-ButtonInOut.propTypes = {
-    placeholder: PropTypes.string.isRequired,
-    onClick: PropTypes.func,
 };
 
 export default ButtonInOut;

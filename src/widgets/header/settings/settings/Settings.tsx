@@ -1,43 +1,44 @@
-import { useState, useCallback } from 'react';
-import {Box, Button, Menu, MenuList } from '@mui/material';
-import './Settings.css';
-import Search from "../../../../shared/ui/search-bar/Search.js";
-import ButtDel from "../butt/ButtDel.js";
-import SwitchButton from "../switch-button/SwitchButton.js";
-import ButtonInOut from "../butt/ButtonInOut.js";
+import React, { useState, useCallback } from 'react';
+import { Box, Button, Menu, MenuList } from '@mui/material';
+import './Settings.scss'
+import Search from "../../../../shared/ui/search-bar/Search.tsx";
+import ButtDel from "../butt/ButtDel.tsx";
+import SwitchButton from "../switch-button/SwitchButton.tsx";
+import ButtonInOut from "../butt/ButtonInOut.tsx";
 import PropTypes from 'prop-types';
 
+interface SettingsProps {
+    isTrash?: boolean;
+}
 
-const Settings = ({isTrash}) => {
-    const [anchorEl, setAnchorEl] = useState(null);
+interface ButtDel {
+    placeholder: string;
+    onClick: () => void;
+    className?: string; // Добавляем className
+}
+const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const [valueText, setValue] = useState('');
+    const [valueText, setValue] = useState<string>('');
 
-    const handleSearchChange = useCallback((newValue) => {
-        setValue(newValue); 
+    const handleSearchChange = useCallback((newValue: string) => {
+        setValue(newValue);
     }, []);
 
-    const handleClick = useCallback((event) => {
+    const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     }, []);
 
-
-
     const handleButtonClick = () => {
-
+        // Implement your button click logic here
     };
 
-    console.log(event.target.value)
-    
     const handleClose = useCallback(() => {
         setAnchorEl(null);
     }, []);
 
-
     return (
-        <Box id="settings"
-        
-        >
+        <Box id="settings">
             <Button
                 id="settings-button"
                 aria-controls={open ? 'settings-menu' : undefined}
@@ -53,32 +54,28 @@ const Settings = ({isTrash}) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-               
             >
                 <MenuList className="settings-case_name">Настройки</MenuList>
 
-                { !isTrash &&(
-                   <Search
-                   className="settings-case_search"
-                   placeholder="Поиск по файлу"
-                   value={valueText} 
-                   onChange={handleSearchChange} 
-                   />
+                {!isTrash && (
+                    <Search
+                        className="settings-case_search"
+                        placeholder="Поиск по файлу"
+                        value={valueText}
+                        onChange={handleSearchChange}
+                    />
                 )}
-                { !isTrash &&(
-                    <ButtDel id="settings-case_custom-button" placeholder="Удалить проект" onClick={handleButtonClick}/>
-                
+                {!isTrash && (
+                    <ButtDel className="settings-case_custom-button" placeholder="Удалить проект" onClick={handleButtonClick} />
                 )}
-                    <ButtDel id="settings-case_custom-button" placeholder="Цвет фона" onClick={handleButtonClick}/>
-
-                    <ButtDel id="settings-case_custom-button" placeholder="Размер шрифта" onClick={handleButtonClick}/>
-
-                    <ButtDel id="settings-case_custom-button" placeholder="Набор шрифтов" onClick={handleButtonClick}/>
-                <MenuList id="settings-case_theme">
+                <ButtDel className="settings-case_buttdel" placeholder="Цвет фона" onClick={handleButtonClick} />
+                <ButtDel className="settings-case_custom-button" placeholder="Размер шрифта" onClick={handleButtonClick} />
+                <ButtDel className="settings-case_custom-button" placeholder="Набор шрифтов" onClick={handleButtonClick} />
+                <MenuList className="settings-case_theme">
                     <p>Тема:</p>
-                    <SwitchButton className="settings-case-theme-switch"/>
+                    <SwitchButton className="settings-case-theme-switch" />
                 </MenuList>
-                    <ButtonInOut className="settings-case_button-in-out" placeholder="Выход" onClick={handleButtonClick} />
+                <ButtonInOut className="buttout" placeholder="Выход" onClick={handleButtonClick} />
             </Menu>
         </Box>
     );

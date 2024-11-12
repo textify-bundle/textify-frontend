@@ -1,29 +1,40 @@
-import PropTypes from 'prop-types';
+import React from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import './search.scss';
 
-const Search = ({
+interface SearchProps {
+    imageSrc?: string;
+    onClick?: () => void;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    value?: string;
+    className?: string; // Добавлен className
+}
+
+const Search: React.FC<SearchProps> = ({
     imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
     onClick = () => {},
     onChange = () => {},
     placeholder = "Поиск",
     value = " ",
+    className = "", // Дефолтное значение для className
 }) => {
 
-    const handleChange = (e) => {
-        onChange(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChange) {
+            onChange(e.target.value); // вызываем переданный onChange
+        }
     };
 
-    const handlePress = async (e) => {
+    const handlePress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            console.log(e.target.value)
+            console.log(e.currentTarget.value);
         }
-    }
+    };
 
     return (
-        <Box className="search-container" onClick={onClick}>
+        <Box className={`search-container ${className}`} onClick={onClick}>
             <TextField
-                className="search-form_side-bar"
+                className={`search-form_side-bar ${className}`}  // Передаем className сюда
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
@@ -49,14 +60,6 @@ const Search = ({
             />
         </Box>
     );
-};
-
-Search.propTypes = {
-    imageSrc: PropTypes.string,
-    onClick: PropTypes.func,
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-    value : PropTypes.string,
 };
 
 export default Search;

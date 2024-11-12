@@ -1,25 +1,29 @@
-import {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { Box } from '@mui/material';
 import Switch from '@mui/material/Switch';
-import './SwitchButton.css';
-import {Box} from "@mui/material";
 
-export default function SwitchButton({checkedProp, onToggle}) {
-    const [checked, setChecked] = useState(checkedProp);
+interface SwitchButtonProps {
+    checkedProp?: boolean;
+    onToggle?: (newChecked: boolean) => void;
+    className?: string;
+}
+
+const SwitchButton: React.FC<SwitchButtonProps> = ({ checkedProp = false, onToggle, className = '' }) => {
+    const [checked, setChecked] = useState<boolean>(checkedProp);
 
     useEffect(() => {
         setChecked(checkedProp);
     }, [checkedProp]);
 
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newChecked = event.target.checked;
         setChecked(newChecked);
         const switchContainer = document.querySelector('.switch-block');
 
         if (newChecked) {
-            switchContainer.classList.add('active');
+            switchContainer?.classList.add('active');
         } else {
-            switchContainer.classList.remove('active');
+            switchContainer?.classList.remove('active');
         }
 
         if (onToggle) {
@@ -28,7 +32,7 @@ export default function SwitchButton({checkedProp, onToggle}) {
     };
 
     return (
-        <Box className="switch-container">
+        <Box className={`switch-container ${className}`}>
             <Box className="switch-block">
                 <Switch
                     checked={checked}
@@ -43,14 +47,6 @@ export default function SwitchButton({checkedProp, onToggle}) {
             </Box>
         </Box>
     );
-}
-
-SwitchButton.defaultProps = {
-    checkedProp: false,
-    onToggle: null,
 };
 
-SwitchButton.propTypes = {
-    checkedProp: PropTypes.bool,
-    onToggle: PropTypes.func,
-};
+export default SwitchButton;

@@ -1,21 +1,20 @@
 import {Box, Button} from "@mui/material";
-import PropTypes from 'prop-types';
-import './ButtDel.css';
 
-const ButtDel = ({ placeholder , 
-    onClick }) => {
+interface ButtDelProps {
+    placeholder: string;
+    onClick: () => void;
+    className?: string; // Добавляем className
+}
+
+const ButtDel: React.FC<ButtDelProps> = ({ placeholder , 
+    onClick, className }) => {
     return (
         <Box className="butt">
-            <Button id="butt_del" onClick={onClick}>
+            <Button className = {className} onClick={onClick}>
                 {placeholder}
             </Button>
         </Box>
     );
-};
-
-ButtDel.propTypes = {
-    placeholder: PropTypes.string,
-    onClick: PropTypes.func,
 };
 
 export default ButtDel;

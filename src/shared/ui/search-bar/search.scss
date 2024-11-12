@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 $color_1: rgba(0, 0, 0, 0.6);
-$font-family_1: SF Pro Rounded;
+    
 
 .search-container {
 	display: flex;
 	height: 36px;
+	font-family: "Varela Round", sans-serif;
 	gap: 0px;
 	padding: 0;
 	border-radius: 6px;
