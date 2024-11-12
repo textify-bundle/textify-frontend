@@ -6,7 +6,7 @@ import './PagesTree.scss';
 
 interface Item {
   name: string;
-  type: string ;
+  type: 'link' | 'action' | 'dropdown' ;
   link?: string;
   action?: string;
   icon?: string;
@@ -29,15 +29,15 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({ item, open, onClick, active
   }
 
   return (
-    <li>
-      <ListItemButton
-        component={item.type === 'link' ? RouterLink : 'button'}
-        to={item.type === 'link' ? item.link : undefined}
-        onClick={() => onClick(item.link ?? '', undefined)}
-        className={`listItemButton ${active ? 'active' : ''}`}
-      >
-        <ListItemText primary={item.name} className="listItemText" />
-        {icon && <ListItemIcon className="addIcon">{icon}</ListItemIcon>}
+    <li className="list-item">
+    <ListItemButton
+  component={item.type === 'link' ? RouterLink : 'button'}
+  to={item.type === 'link' ? item.link : undefined}
+  onClick={() => onClick(item.link ?? '', undefined)}
+  className={`list-item__button ${active ? 'active' : ''}`}
+    >
+        <ListItemText primary={item.name} className="list-item__text" />
+        {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
       </ListItemButton>
     </li>
   );
@@ -49,10 +49,13 @@ interface PagesTreeProps {
 
 const PagesTree: React.FC<PagesTreeProps> = ({ tree }) => {
   const [openStates, setOpenStates] = React.useState<boolean[]>(tree.map(() => false));
-  const [activeItem, setActiveItem] = React.useState<string | null>(null);
+  const [activeLink, setActiveLink] = React.useState<string | null>(null);
 
-  const handleClick = (to: string, index?: number) => {
-    setActiveItem(to);
+  const handleClick = (link: string | undefined, index?: number) => {
+    if (link) {
+      setActiveLink(link);
+    }
+
     if (index !== undefined && tree[index].type === 'dropdown') {
       setOpenStates((prevOpenStates) => {
         const newOpenStates = [...prevOpenStates];
@@ -73,17 +76,17 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree }) => {
                   item={item}
                   open={openStates[index]}
                   onClick={(to) => handleClick(to, index)}
-                  active={activeItem === item.link}
+                  active={activeLink === item.link}
                 />
                 {item.type === 'dropdown' && item.items && (
                   <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
                     <List disablePadding>
-                      {item.items.map((item) => (
+                      {item.items.map((subItem) => (
                         <ListItemLink
-                          key={item.name}
-                          item={item}
+                          key={subItem.name}
+                          item={subItem}
                           onClick={(to) => handleClick(to)}
-                          active={activeItem === item.link}
+                          active={activeLink === subItem.link} 
                         />
                       ))}
                     </List>
