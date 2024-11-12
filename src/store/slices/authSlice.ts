@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-import { AuthService } from '../../features/Auth/AuthService';
+import { AuthService } from '../../shared/api/auth/AuthService';
 
 interface User {
   id: string;
@@ -43,7 +43,7 @@ export const signUp = createAsyncThunk(
       if (authError.message) {
         return rejectWithValue(authError.message); 
       }
-      return rejectWithValue('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred!');
     }
   }
 );
