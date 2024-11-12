@@ -77,19 +77,19 @@ const TextFormattingToolbar: React.FC<TextFormattingToolbarProps> = ({
           exclusive
           onChange={handleAlignment}
           aria-label="text alignment"
-          className="toggle-button-group"
+          className="toolbar-paper__toggle-button-group"
         >
-          <ToggleButton value="left" aria-label="left aligned" onClick={handleLeftAlignClick} className="toggle-button">
-            <FormatAlignLeftIcon />
+          <ToggleButton value="left" aria-label="left aligned" onClick={handleLeftAlignClick} className="toolbar-paper__toggle-button">
+            <FormatAlignLeftIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="center" aria-label="centered" onClick={handleCenterAlignClick} className="toggle-button">
-            <FormatAlignCenterIcon />
+          <ToggleButton value="center" aria-label="centered" onClick={handleCenterAlignClick} className="toolbar-paper__toggle-button">
+            <FormatAlignCenterIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="right" aria-label="right aligned" onClick={handleRightAlignClick} className="toggle-button">
-            <FormatAlignRightIcon />
+          <ToggleButton value="right" aria-label="right aligned" onClick={handleRightAlignClick} className="toolbar-paper__toggle-button">
+            <FormatAlignRightIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="justify" aria-label="justified" onClick={handleJustifyAlignClick} className="toggle-button">
-            <FormatAlignJustifyIcon />
+          <ToggleButton value="justify" aria-label="justified" onClick={handleJustifyAlignClick} className="toolbar-paper__toggle-button">
+            <FormatAlignJustifyIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
         </StyledToggleButtonGroup>
         <StyledToggleButtonGroup
@@ -97,25 +97,25 @@ const TextFormattingToolbar: React.FC<TextFormattingToolbarProps> = ({
           value={formats}
           onChange={handleFormat}
           aria-label="text formatting"
-          className="toggle-button-group"
+          className="toolbar-paper__toggle-button-group"
         >
-          <ToggleButton value="bold" aria-label="bold" onClick={handleBoldClick} className="toggle-button">
-            <FormatBoldIcon />
+          <ToggleButton value="bold" aria-label="bold" onClick={handleBoldClick} className="toolbar-paper__toggle-button">
+            <FormatBoldIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="strikethrough" aria-label="strikethrough" onClick={handleStrikethroughClick} className="toggle-button">
-            <FormatStrikethroughIcon />
+          <ToggleButton value="strikethrough" aria-label="strikethrough" onClick={handleStrikethroughClick} className="toolbar-paper__toggle-button">
+            <FormatStrikethroughIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="underlined" aria-label="underlined" onClick={handleUnderlinedClick} className="toggle-button">
-            <FormatUnderlinedIcon />
+          <ToggleButton value="underlined" aria-label="underlined" onClick={handleUnderlinedClick} className="toolbar-paper__toggle-button">
+            <FormatUnderlinedIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="italic" aria-label="italic" onClick={handleItalicClick} className="toggle-button">
-            <FormatItalicIcon />
+          <ToggleButton value="italic" aria-label="italic" onClick={handleItalicClick} className="toolbar-paper__toggle-button">
+            <FormatItalicIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="size" aria-label="size" onClick={handleSizeClick} className="toggle-button">
-            <FormatSizeIcon />
+          <ToggleButton value="size" aria-label="size" onClick={handleSizeClick} className="toolbar-paper__toggle-button">
+            <FormatSizeIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
-          <ToggleButton value="list" aria-label="list" onClick={handleListClick} className="toggle-button">
-            <FormatListBulletedIcon />
+          <ToggleButton value="list" aria-label="list" onClick={handleListClick} className="toolbar-paper__toggle-button">
+            <FormatListBulletedIcon className="toolbar-paper__toggle-button__icon" />
           </ToggleButton>
         </StyledToggleButtonGroup>
       </Paper>

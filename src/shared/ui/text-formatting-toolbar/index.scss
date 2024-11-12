@@ -7,22 +7,22 @@
   border-radius: 9.71px !important;
 }
 
-.toggle-button-group {
+.toolbar-paper__toggle-button-group {
   border: 0;
   border-radius: 0;
 }
 
-.toggle-button-group .MuiToggleButtonGroup-disabled {
+.toolbar-paper__toggle-button-group--disabled {
   border: 0;
 }
 
-.toggle-button-group .MuiToggleButtonGroup-middleButton,
-.toggle-button-group .MuiToggleButtonGroup-lastButton {
+.toolbar-paper__toggle-button-group__middle-button,
+.toolbar-paper__toggle-button-group__last-button {
   margin-left: -1px;
   border-left: 1px solid transparent;
 }
 
-.toggle-button {
+.toolbar-paper__toggle-button {
   margin: 5.18px 10.35px !important;
   width: 15.53px !important;
   height: 15.53px !important;
@@ -30,6 +30,6 @@
   min-height: 15.53px !important;
 }
 
-.toggle-button .MuiSvgIcon-root {
+.toolbar-paper__toggle-button__icon {
   font-size: 14.65px !important;
 }
