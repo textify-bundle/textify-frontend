@@ -2,8 +2,8 @@ import ProjectListPanel from './widgets/project-list-panel/ProjectListPanel';
 const App = () => {
   const items = [
     { title: 'Nomer 1', description: 'Description for nomer 1' },
-    { title: 'Nomer 2', description: 'Description for nomer 2' },
-    { title: 'Nomer 3', description: 'Description for nomer 3' },
+    { title: 'Nomer 2 too long, need check', description: 'Description for nomer 2' },
+    { title: 'Nomer 3', description: 'Description for nomer 3 too long, need check' },
 ];
 
 const handleItemClick = (index: number) => {

@@ -56,44 +56,23 @@ const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
     };
 
     return (
-        <Box className="panel-box" sx={{ width: '185.06px', maxHeight: '208px', overflowY: 'auto' }}>
+        <Box className="panel-box">
             <List>
                 {projects.map((project, index) => (
-                    <ListItem key={index} className="panel-list-item"
-                    sx={{ width: '173.06px', height: '39.56px', padding: '0', paddingLeft: '8px' }}
-                    >
+                    <ListItem key={index} className="panel-list-item">
                         <ListItemButton
                             className={`panel-list-item_button ${selectedIndex === index ? 'active' : ''}`}
                             onClick={() => handleItemClick(index)}
-                            sx={{
-                                width: '173.06px',
-                                height: '39.56px',
-                                paddingLeft: '8px',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                                }
-                            }}
                         >
                             <img
                                 src={imageSrc}
                                 className="panel-image"
                                 alt="project"
-                                style={{ width: '26.37px', height: '26.37px' }}
                             />
                             <ListItemText
                                 primary={project.title}
                                 secondary={project.description}
                                 className="panel-list-item_text"
-                                sx={{
-                                    '& .MuiTypography-body1': {
-                                        fontFamily: 'SF Compact Rounded, sans-serif',
-                                    },
-                                    '& .MuiTypography-body2': {
-                                        marginTop: '3.5px',
-                                        fontSize: '9px',
-                                        fontFamily: 'SF Compact Rounded, sans-serif',
-                                    },
-                                }}
                             />
                         </ListItemButton>
                     </ListItem>
