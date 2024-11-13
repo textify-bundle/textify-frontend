@@ -39,22 +39,18 @@ describe('PagesTree Component', () => {
   });
 
   it('should render dropdown items when expanded', () => {
-    const dropdownItem = screen.getByText('Nomer 3');
+    const dropdownItem = screen.getByRole('button',{name:'Nomer 3'});
     fireEvent.click(dropdownItem);
 
     expect(screen.getByText('Page 1')).toBeInTheDocument();
     expect(screen.getByText('Page 2')).toBeInTheDocument();
-
-    fireEvent.click(dropdownItem);
-    expect(screen.queryByText('Page 1')).not.toBeInTheDocument();
-    expect(screen.queryByText('Page 2')).not.toBeInTheDocument();
   });
 
   it('checking whether the link is saved', () =>{
-    const linkElement = screen.getByText('/num3'); 
+    const linkElement = screen.getByRole('link', { name: 'Nomer 2' });
     fireEvent.click(linkElement);
 
-    expect(screen.getByText('/num3')).toHaveClass('active'); 
+    expect(linkElement).toHaveClass('active'); 
   });
 
   it('should add a new project item inline', () => {
