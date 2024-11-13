@@ -40,6 +40,10 @@ const ActionBar = ({
         <AppBar
             position="static"
             sx={{
+            
+                position:'absolute',
+                top:'5px',
+                right:'50px',
                 backgroundColor: "transparent",
                 width: '345.5px',
                 height: '31px',
@@ -113,14 +117,6 @@ const ActionBar = ({
     );
 };
 
-ActionBar.propTypes = {
-    users: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-        })
-    ).isRequired,
-    onClick: PropTypes.func,   
-};
+
 
 export default ActionBar;

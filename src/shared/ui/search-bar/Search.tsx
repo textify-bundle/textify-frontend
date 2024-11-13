@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import './search.scss';
 
+
+
 const Search = ({
     imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
     onClick = () => {},
@@ -21,7 +23,7 @@ const Search = ({
     }
 
     return (
-        <Box className="search-container" onClick={onClick}>
+        <Box sx={{ width:'183px',}} className="search-container" onClick={onClick}>
             <TextField
                 className="search-form_side-bar"
                 variant="outlined"
@@ -29,6 +31,7 @@ const Search = ({
                 placeholder={placeholder}
                 onKeyPress={handlePress}
                 value={value}
+                
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -37,6 +40,7 @@ const Search = ({
                     ),
                 }}
                 sx={{
+                    width:'183px',
                     '& .MuiOutlinedInput-root': {
                         '& fieldset': { border: '0' },
                         '&:hover fieldset': { border: '0' },
@@ -51,12 +55,6 @@ const Search = ({
     );
 };
 
-Search.propTypes = {
-    imageSrc: PropTypes.string,
-    onClick: PropTypes.func,
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-    value : PropTypes.string,
-};
+
 
 export default Search;

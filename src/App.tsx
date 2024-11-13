@@ -1,10 +1,7 @@
-import Editor from "./widgets/editor/Editor";
+import LayoutWrapper from './widgets/layoutWrapper/index.tsx';
 
 const App = () => {
-
-  return (
-    <Editor />
-  );
+  return <LayoutWrapper />;
 };
 
 export default App;
