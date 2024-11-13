@@ -44,6 +44,17 @@ describe('PagesTree Component', () => {
 
     expect(screen.getByText('Page 1')).toBeInTheDocument();
     expect(screen.getByText('Page 2')).toBeInTheDocument();
+
+    fireEvent.click(dropdownItem);
+    expect(screen.queryByText('Page 1')).not.toBeInTheDocument();
+    expect(screen.queryByText('Page 2')).not.toBeInTheDocument();
+  });
+
+  it('checking whether the link is saved', () =>{
+    const linkElement = screen.getByText('/num3'); 
+    fireEvent.click(linkElement);
+
+    expect(screen.getByText('/num3')).toHaveClass('active'); 
   });
 
   it('should add a new project item inline', () => {
