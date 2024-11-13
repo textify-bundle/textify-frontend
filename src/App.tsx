@@ -1,8 +1,8 @@
-const App = () => {
-  
+import { Search } from '@mui/icons-material';
+
+const App: React.FC = () => {
   return (
-    <div> 
-    </div>
+    <Search />
   );
 };
 
