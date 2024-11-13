@@ -13,18 +13,18 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import './PageShare.scss';
 
-interface OverlayToShareProps {
+interface PageShareProps {
   title?: string;
   link?: string;
 }
 
-const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделиться", link }) => {
+const  PageShare: React.FC< PageShareProps > = ({ title = "Поделиться", link }) => {
   const [selectedItem, setSelectedItem] = useState<string>('Нет доступа');
   const [expanded, setExpanded] = useState<string | false>(false);
   const [generatedLink, setGeneratedLink] = useState<string>('');
 
   useEffect(() => {
-    link = `${window.location.origin}/shared/resource`; 
+    link = `${window.location.origin}/shared`; 
     setGeneratedLink(link);
   }, []);
 
@@ -55,6 +55,7 @@ const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделит
           У кого есть ссылка:
         </Typography>
         <Accordion
+        data-testid="accordion-header"
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
           className="overlay-to-share__accordion"
@@ -107,4 +108,4 @@ const OverlayToShare: React.FC<OverlayToShareProps> = ({ title = "Поделит
   );
 };
 
-export default OverlayToShare;
+export default PageShare;
