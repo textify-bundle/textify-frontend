@@ -1,20 +1,12 @@
 import * as React from 'react';
-import {
-  Box,
-  List,
-  ListItemButton,
-  Collapse,
-  ListItemText,
-  ListItemIcon,
-  TextField,
-} from '@mui/material';
+import {Box,  List,  ListItemButton,  Collapse,  ListItemText,  ListItemIcon,  TextField,} from '@mui/material';
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
 import { Link as RouterLink, MemoryRouter } from 'react-router-dom';
 import './PagesTree.scss';
 
 interface Item {
   name: string;
-  type: string;
+  type: 'link' | 'action' | 'dropdown' | string;
   link?: string;
   action?: string;
   icon?: string;
