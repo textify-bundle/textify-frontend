@@ -14,7 +14,7 @@ interface SettingsProps {
 interface ButtDel {
     placeholder: string;
     onClick: () => void;
-    className?: string; // Добавляем className
+    className?: string; 
 }
 const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -75,7 +75,30 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                     <p>Тема:</p>
                     <SwitchButton className="settings-case-theme-switch" />
                 </MenuList>
-                <ButtonInOut className="buttout" placeholder="Выход" onClick={handleButtonClick} />
+                <ButtonInOut
+  className="buttout"
+  placeholder="Выход"
+  onClick={handleButtonClick}
+  sx={{
+    width: '100%',
+    height: '36px',
+    textTransform: 'none',
+    borderRadius: '0px',
+    padding: '0px',
+    gap: '10px',
+    backgroundColor: 'rgba(7, 81, 216, 1)',
+    color: 'white',
+    fontFamily: '"Varela Round", sans-serif',
+    fontSize: '12px',
+    fontWeight: 400,
+    lineHeight: '16px',
+    textAlign: 'left',
+    '&:hover': {
+      backgroundColor: 'rgba(7, 58, 151, 1)',
+    },
+  }}
+/>
+
             </Menu>
         </Box>
     );

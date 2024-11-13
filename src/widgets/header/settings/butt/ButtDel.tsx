@@ -1,9 +1,10 @@
 import {Box, Button} from "@mui/material";
+import "./ButtDel.scss"
 
 interface ButtDelProps {
     placeholder: string;
-    onClick: () => void;
-    className?: string; // Добавляем className
+    onClick?: () => void;
+    className?: string; 
 }
 
 const ButtDel: React.FC<ButtDelProps> = ({ placeholder , 
