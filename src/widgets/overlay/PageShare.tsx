@@ -24,9 +24,8 @@ const  PageShare: React.FC< PageShareProps > = ({ title = "Поделиться"
   const [generatedLink, setGeneratedLink] = useState<string>('');
 
   useEffect(() => {
-    link = `${window.location.origin}/shared`; 
-    setGeneratedLink(link);
-  }, []);
+    setGeneratedLink(link || `${window.location.origin}/shared/resource`);
+  }, [link]);
 
   const handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedItem(event.target.value);
