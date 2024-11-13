@@ -1,9 +1,7 @@
+import LayoutWrapper from './widgets/layoutWrapper/index.tsx';
+
 const App = () => {
-  
-  return (
-    <div> 
-    </div>
-  );
+  return <LayoutWrapper />;
 };
 
 export default App;
