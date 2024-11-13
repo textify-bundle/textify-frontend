@@ -11,7 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import './PageShare.scss';
+import './ShareOverlay.scss';
 
 interface PageShareProps {
   title?: string;
