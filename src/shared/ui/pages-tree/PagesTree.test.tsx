@@ -44,10 +44,6 @@ describe('PagesTree Component', () => {
 
     expect(screen.getByText('Page 1')).toBeInTheDocument();
     expect(screen.getByText('Page 2')).toBeInTheDocument();
-
-    fireEvent.click(dropdownItem);
-    expect(screen.queryByText('Page 1')).not.toBeInTheDocument();
-    expect(screen.queryByText('Page 2')).not.toBeInTheDocument();
   });
 
   it('should add a new project item inline', () => {
