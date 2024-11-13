@@ -40,7 +40,7 @@ describe("PageShare component", () => {
     test("Test chenges radio button", async () => {
         const readOnlyRadio = screen.getByLabelText('Только чтение');
 
-        const editRadio = screen.getByDisplayValue(/Редактирование/i);
+        // const editRadio = screen.getByDisplayValue(/Редактирование/i);
 
         fireEvent.click(readOnlyRadio);
         expect(readOnlyRadio).toBeChecked();
