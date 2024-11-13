@@ -18,7 +18,7 @@ interface PageShareProps {
   link?: string;
 }
 
-const  PageShare: React.FC< PageShareProps > = ({ title = "Поделиться", link }) => {
+const  ShareOverlay: React.FC< PageShareProps > = ({ title = "Поделиться", link }) => {
   const [selectedItem, setSelectedItem] = useState<string>('Нет доступа');
   const [expanded, setExpanded] = useState<string | false>(false);
   const [generatedLink, setGeneratedLink] = useState<string>('');
@@ -107,4 +107,4 @@ const  PageShare: React.FC< PageShareProps > = ({ title = "Поделиться"
   );
 };
 
-export default PageShare;
+export default ShareOverlay;

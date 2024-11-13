@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
 import { fireEvent, render, screen, cleanup } from '@testing-library/react';
-import PageShare from './PageShare';
+import ShareOverlay from './ShareOverlay';
 
 describe("PageShare component", () => {
     beforeEach(() => {
@@ -11,7 +11,7 @@ describe("PageShare component", () => {
             writable: true
         });
 
-        render(<PageShare />);
+        render(<ShareOverlay />);
     });
 
     afterEach(cleanup);
@@ -36,6 +36,7 @@ describe("PageShare component", () => {
         expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expectedLink);
     });
 
+    
     test("Test chenges radio button", async () => {
         const readOnlyRadio = screen.getByLabelText('Только чтение');
 
