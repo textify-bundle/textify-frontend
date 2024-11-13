@@ -6,7 +6,7 @@ import './PagesTree.scss';
 
 interface Item {
   name: string;
-  type: 'link' | 'action' | 'dropdown' ;
+  type: string ;
   link?: string;
   action?: string;
   icon?: string;
