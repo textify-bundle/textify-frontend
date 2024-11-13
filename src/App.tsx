@@ -13,9 +13,8 @@ const handleItemClick = (index: number) => {
   return (
     <div> 
       <ProjectListPanel
-                imageSrc="./widgets/project-list-panel/img.png"
+                imageSrc=""
                 projects={items}
-                onClick={handleItemClick}
             />
     </div>
   );
