@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Button, CircularProgress, Typography, Box } from "@mui/material";
+import { TextField, Button, CircularProgress, Typography } from "@mui/material";
 
 interface AuthFormProps {
   formData: { email: string; password: string };

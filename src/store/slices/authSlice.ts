@@ -1,119 +1,250 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer';
-import { AuthService } from '../../shared/api/auth/AuthService';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { supabase } from "../../utils/client";
+import { User, Session } from "@supabase/supabase-js";
 
-interface User {
-  id: string;
-  email: string;
-}
-
-interface Session {
-  access_token: string;
-  refresh_token: string;
-  user: User | null;
-}
-
-interface UserState {
+interface AuthState {
   user: User | null;
   session: Session | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   error: string | null;
+  lastRefreshTime: number | null;  
+
 }
 
-interface SupabaseError extends Error {
-  statusCode?: number;
-  code?: string;
-  status?: number;
-}
-
-const initialState: UserState = {
-  user: null,
-  session: null,
+const initialState: AuthState = {
+  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
+  session: localStorage.getItem("session") ? JSON.parse(localStorage.getItem("session")!) : null,
+  accessToken: localStorage.getItem("accessToken"),
+  refreshToken: localStorage.getItem("refreshToken"),
+  lastRefreshTime: null,
   error: null,
 };
 
+ export const signIn = createAsyncThunk(
+  "auth/signIn",
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return rejectWithValue(error.message);
+
+    const { user, session } = data;
+    return {
+      user,
+      session,
+      accessToken: session?.access_token,
+      refreshToken: session?.refresh_token,
+    };
+  }
+);
+
+// Регистрация
 export const signUp = createAsyncThunk(
-  'user/signUp',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+  "auth/signUp",
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) return rejectWithValue(error.message);
+
+    const { user, session } = data;
+    return {
+      user,
+      session,
+      accessToken: session?.access_token,
+      refreshToken: session?.refresh_token,
+    };
+  }
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
     try {
-      const { data, error } = await AuthService.registration(credentials.email, credentials.password);
-      if (error) throw new Error(error.message);
-      return { user: data.user, session: data.session };
-    } catch (error) {
-      const authError = error as SupabaseError;
-      if (authError.message) {
-        return rejectWithValue(authError.message); 
+      await supabase.auth.signOut();
+      return {}; 
+    } catch (error: unknown) {
+      
+      if (error instanceof Error) {
+        return rejectWithValue(error.message); 
       }
-      return rejectWithValue('An unexpected error occurred!');
+      
+      return rejectWithValue("An unknown error occurred during logout");
     }
   }
 );
 
-export const signIn = createAsyncThunk(
-  'user/signIn',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
-    try {
-      const { data, error } = await AuthService.login(credentials.email, credentials.password);
-      if (error) throw new Error(error.message);
-      return { user: data.user, session: data.session };
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'An unexpected error occurred');
+
+export const restoreSession = createAsyncThunk(
+  "auth/restoreSession",
+  async (_, { dispatch, rejectWithValue }) => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session) {
+      dispatch(logout());
+      return {};
     }
+
+    const { session } = data;
+    const now = Math.floor(Date.now() / 1000);
+    if (session.expires_at && session.expires_at <= now) {
+      dispatch(logout());
+      return rejectWithValue("Session expired");
+    }
+
+    const user = session.user;
+
+    return {
+      user,
+      session,
+      accessToken: session.access_token,
+      refreshToken: session.refresh_token,
+    };
   }
 );
 
-export const logOut = createAsyncThunk('user/logOut', async (_, { rejectWithValue }) => {
-  try {
-    const { error } = await AuthService.logout();
-    if (error) throw new Error(error.message);
-    return null;  
-  } catch (error: any) {
-    return rejectWithValue(error.message || 'Logout failed');
+
+export const validateToken = createAsyncThunk(
+  "auth/validateToken",
+  async (_, { getState, dispatch, rejectWithValue }) => {
+    const { session } = (getState() as { auth: AuthState }).auth;
+
+    if (!session || !session.expires_at) {
+      dispatch(logout());
+      return rejectWithValue("Session expired");
+    }
+
+    const now = Math.floor(Date.now() / 1000); 
+    if (session.expires_at <= now) {
+      dispatch(logout());
+      return rejectWithValue("Session expired");
+    }
   }
-});
+);
+const REFRESH_INTERVAL = 60000; 
 
+export const refreshTokens = createAsyncThunk(
+  "auth/refreshTokens",
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState() as { auth: AuthState };
+    const { lastRefreshTime } = state.auth;
 
-const userSlice = createSlice({
-  name: 'user',
+    
+    const now = Date.now();
+    if (lastRefreshTime && now - lastRefreshTime < REFRESH_INTERVAL) {
+      return rejectWithValue("Запрос на обновление слишком частый");
+    }
+
+    const { data, error } = await supabase.auth.refreshSession();
+    if (error || !data.session) {
+      return rejectWithValue("Не удалось обновить токены");
+    }
+
+    const { session } = data;
+    return {
+      user: session.user,
+      session,
+      accessToken: session.access_token,
+      refreshToken: session.refresh_token,
+    };
+  }
+);
+
+const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<User | null>) {
-      state.user = action.payload;
-    },
-    setSession(state, action: PayloadAction<Session | null>) {
-      state.session = action.payload;
-    },
-    setError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload;
+    logout: (state) => {
+      state.user = null;
+      state.session = null;
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.lastRefreshTime = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("session");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(signUp.fulfilled, (state, action) => {
-        state.user = action.payload.user as WritableDraft<User | null>;
-        state.session = action.payload.session as WritableDraft<Session> | null;
-      })
-      .addCase(signUp.rejected, (state, action) => {
+      .addCase(refreshTokens.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.session = action.payload.session;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        state.lastRefreshTime = Date.now();
 
-        state.error = typeof action.payload === 'string' ? action.payload : 'Sign up failed';
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("session", JSON.stringify(action.payload.session));
+        localStorage.setItem("accessToken", action.payload.accessToken || "");
+        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        state.error = null;
       })
-      .addCase(signIn.fulfilled, (state, action) => {
-        state.user = action.payload.user as WritableDraft<User | null>;
-        state.session = action.payload.session as WritableDraft<Session> | null;
+      .addCase(refreshTokens.rejected, (state, action) => {
+        state.error = action.payload as string;
       })
-      .addCase(signIn.rejected, (state, action) => {
-
-        state.error = typeof action.payload === 'string' ? action.payload : 'Sign in failed';
-      })
-      .addCase(logOut.fulfilled, (state) => {
+      .addCase(validateToken.rejected, (state) => {
         state.user = null;
         state.session = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        localStorage.clear();
       })
-      .addCase(logOut.rejected, (state, action) => {
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.session = action.payload.session;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
 
-        state.error = typeof action.payload === 'string' ? action.payload : 'Logout failed';
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("session", JSON.stringify(action.payload.session));
+        localStorage.setItem("accessToken", action.payload.accessToken || "");
+        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        state.error = null;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.session = action.payload.session;
+        state.accessToken = action.payload.accessToken || null;
+        state.refreshToken = action.payload.refreshToken ?? null;
+
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("session", JSON.stringify(action.payload.session));
+        localStorage.setItem("accessToken", action.payload.accessToken || "");
+        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        state.error = null;
+      })
+      .addCase(restoreSession.fulfilled, (state, action) => {
+        state.user = action.payload.user || null;
+        state.session = action.payload.session || null;
+        state.accessToken = action.payload.accessToken || null;
+        state.refreshToken = action.payload.refreshToken || null;
+
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("session", JSON.stringify(action.payload.session));
+        localStorage.setItem("accessToken", action.payload.accessToken || "");
+        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        state.error = null;
+      })
+      .addCase(signIn.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(restoreSession.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.session = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.lastRefreshTime = null;
+        localStorage.removeItem("user");
+        localStorage.removeItem("session");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
       });
   },
 });
 
-export const { setUser, setSession, setError } = userSlice.actions;
-export default userSlice.reducer;
+export const { logout: logoutAction } = authSlice.actions; 
+export default authSlice.reducer;
