@@ -68,7 +68,7 @@ const AuthPage: React.FC = () => {
         handleAuth={handleAuth}
         error={error}
       />
-      {user && <UserInfo user={user} session={session} />}
+      {user && session && <UserInfo user={user} session={session} />}
       <AuthSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
     </div>
