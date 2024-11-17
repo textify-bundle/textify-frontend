@@ -6,21 +6,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import './BlockListPanel.scss';
 
-/**
- * Interface representing a block in the list.
- * @typedef {Object} Block
- * @property {string} title - The title of the block.
- * @property {string} description - The description of the block.
- * @property {string} imageSrc - The URL of the image to be displayed.
- */
-
-/**
- * Interface representing the props for the BlockListPanel component.
- * @typedef {Object} BlockListPanelProps
- * @property {Block[]} blocks - An array of blocks to be displayed in the list.
- * @property {Function} [onClick] - Optional callback function to handle block click. Default is an empty function.
- */
-
 interface Block {
     title: string;
     description: string;
@@ -32,6 +17,14 @@ interface BlockListPanelProps {
     onClick?: (index: number) => void;
 }
 
+/**
+ * BlockListPanel component displays a list of blocks with titles, descriptions, and images.
+ *
+ * @param {Block[]} blocks - An array of block objects, each containing a title, description, and image source.
+ * @param {Function} onClick - Callback function to handle item click action. Default is an empty function.
+ *
+ * @returns {JSX.Element} The rendered BlockListPanel component.
+ */
 const BlockListPanel: React.FC<BlockListPanelProps> = ({
     blocks,
     onClick = () => {},
