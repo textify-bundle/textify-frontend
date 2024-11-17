@@ -15,7 +15,7 @@ const initialState: UserSettingsState = {
   fontSize: 'medium',
 };
 
-const loadedSettings = loadSettingsFromLocalStorage();
+const loadedSettings: UserSettingsState = loadSettingsFromLocalStorage() as UserSettingsState;
 const initialStateFromStorage: UserSettingsState = loadedSettings || initialState;
 
 const userSettingsSlice = createSlice({
