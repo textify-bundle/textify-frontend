@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ProjectListPanel from './ProjectListPanel';
+import BlockListPanel from './BlockListPanel';
 
 describe('ProjectListPanel', () => {
     const items = [
@@ -10,7 +10,7 @@ describe('ProjectListPanel', () => {
     const imageSrc = '';
 
     it('renders text correctly with given data', () => {
-        render(<ProjectListPanel imageSrc={imageSrc} projects={items} />);
+        render(<BlockListPanel imageSrc={imageSrc} blocks={items} />);
 
         const listItems = screen.getAllByRole('listitem');
         expect(listItems).toHaveLength(items.length);
@@ -23,7 +23,7 @@ describe('ProjectListPanel', () => {
     it('should call onClick with the correct index when an item is clicked', () => {
         const onClickMock = vi.fn();
         const { getAllByRole } = render(
-            <ProjectListPanel imageSrc={imageSrc} projects={items} onClick={onClickMock} />
+            <BlockListPanel imageSrc={imageSrc} blocks={items} onClick={onClickMock} />
         );
 
         const listItems = getAllByRole('button');
@@ -36,7 +36,7 @@ describe('ProjectListPanel', () => {
     });
     it('should toggle the active state when an item is clicked', () => {
         const { getAllByRole } = render(
-            <ProjectListPanel imageSrc={imageSrc} projects={items} />
+            <BlockListPanel imageSrc={imageSrc} blocks={items} />
         );
 
         const listItems = getAllByRole('button');

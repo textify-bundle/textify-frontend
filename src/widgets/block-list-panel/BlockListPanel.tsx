@@ -4,44 +4,44 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import './ProjectListPanel.scss';
+import './BlockListPanel.scss';
 
 /**
- * Interface representing a project in the list.
- * @typedef {Object} Project
- * @property {string} title - The title of the project.
- * @property {string} description - The description of the project.
+ * Interface representing a block in the list.
+ * @typedef {Object} Block
+ * @property {string} title - The title of the block.
+ * @property {string} description - The description of the block.
  */
 
 /**
- * Interface representing the props for the ProjectListPanel component.
- * @typedef {Object} ProjectListPanelProps
+ * Interface representing the props for the BlockListPanel component.
+ * @typedef {Object} BlockListPanelProps
  * @property {string} imageSrc - The URL of the image to be displayed.
- * @property {Project[]} projects - An array of projects to be displayed in the list.
- * @property {Function} [onClick] - Optional callback function to handle project click. Default is an empty function.
+ * @property {Block[]} blocks - An array of blocks to be displayed in the list.
+ * @property {Function} [onClick] - Optional callback function to handle block click. Default is an empty function.
  */
 
 /**
- * ProjectListPanel component displays a list of projects with images and descriptions.
+ * BlockListPanel component displays a list of blocks with images and descriptions.
  *
- * @param {ProjectListPanelProps} props - The props for the ProjectListPanel component.
- * @returns {JSX.Element} The rendered ProjectListPanel component.
+ * @param {BlockListPanelProps} props - The props for the BlockListPanel component.
+ * @returns {JSX.Element} The rendered BlockListPanel component.
  */
 
-interface Project {
+interface Block {
     title: string;
     description: string;
 }
 
-interface ProjectListPanelProps {
+interface BlockListPanelProps {
     imageSrc: string;
-    projects: Project[];
+    blocks: Block[];
     onClick?: (index: number) => void;
 }
 
-const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
+const BlockListPanel: React.FC<BlockListPanelProps> = ({
     imageSrc,
-    projects,
+    blocks,
     onClick = () => {},
 }) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -58,7 +58,7 @@ const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
     return (
         <Box className="panel-box">
             <List>
-                {projects.map((project, index) => (
+                {blocks.map((block, index) => (
                     <ListItem key={index} className="panel-list-item">
                         <ListItemButton
                             className={`panel-list-item_button ${selectedIndex === index ? 'active' : ''}`}
@@ -67,11 +67,11 @@ const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
                             <img
                                 src={imageSrc}
                                 className="panel-image"
-                                alt="project"
+                                alt="block"
                             />
                             <ListItemText
-                                primary={project.title}
-                                secondary={project.description}
+                                primary={block.title}
+                                secondary={block.description}
                                 className="panel-list-item_text"
                             />
                         </ListItemButton>
@@ -82,4 +82,4 @@ const ProjectListPanel: React.FC<ProjectListPanelProps> = ({
     );
 };
 
-export default ProjectListPanel;
+export default BlockListPanel;
