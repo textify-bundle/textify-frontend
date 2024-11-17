@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
+.panel-box {
+    background: white !important;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1) !important;
+    width: 185.06px !important;
+    height: auto !important;
+    max-height: 208px !important;
+    overflow-y: auto !important;
+    border-radius: 12px !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: transparent transparent !important;
+}
+  
+.panel-list-item {
+    width: 173.06px !important;
+    height: 39.56px !important;
+    padding: 0 !important;
+    padding-left: 8px !important;
+    display: flex !important;
+  
+    &_button {
+      width: 173.06px !important;
+      height: 39.56px !important;
+      padding-left: 8px !important;
+      display: flex !important;
+      align-items: center !important;
+  
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.08) !important;
+      }
+  
+      &.active {
+        background-color: #e0e0e0 !important;
+      } 
+    }
+  
+    &_text {
+      .MuiTypography-body1 {
+        font-family: 'SF Compact Rounded', sans-serif !important;
+        min-width: 122px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+  
+      .MuiTypography-body2 {
+        margin-top: 0px !important;
+        font-size: 9px !important;
+        font-family: 'SF Compact Rounded', sans-serif !important;
+        min-width: 122px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+    }
+}
+  
+.panel-image {
+    width: 26.37px !important;
+    height: 26.37px !important;
+    margin-right: 5.8px !important;
+    margin-left: 5px !important;
+    border-radius: 3.3px !important;
+}
