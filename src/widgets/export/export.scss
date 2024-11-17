@@ -1,0 +1,22 @@
+.export-box {
+    width: 454px;
+    height: 176px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  .export-text {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    margin: 0;
+  }
+  
+  .export-button {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+  }
+  
