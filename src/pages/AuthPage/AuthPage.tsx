@@ -42,7 +42,7 @@ const AuthPage: React.FC = () => {
   const toggleMode = () => setIsSignUp((prev) => !prev);
 
   return (
-
+    <div className='auth-page-container'>
     <Box className="auth-page" sx={{ padding: "20px", maxWidth: "400px", margin: "auto", mt: 5 }}>
         <Button sx={{
         color:'white',
@@ -71,6 +71,7 @@ const AuthPage: React.FC = () => {
       {user && <UserInfo user={user} session={session} />}
       <AuthSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
+    </div>
   );
 };
 

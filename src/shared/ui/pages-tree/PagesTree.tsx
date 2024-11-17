@@ -111,7 +111,7 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
   };
 
   return (
-    <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
+    // <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 }}>
         <Box sx={{ bgcolor: 'background.paper', mt: 1 }} component="nav" aria-label="mailbox folders">
           <List>
@@ -166,7 +166,7 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
           </List>
         </Box>
       </Box>
-    </MemoryRouter>
+    // </MemoryRouter>
   );
 };
 
