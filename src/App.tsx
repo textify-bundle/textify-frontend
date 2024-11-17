@@ -1,9 +1,8 @@
-import Editor from "./widgets/editor/Editor";
+import { Search } from '@mui/icons-material';
 
-const App = () => {
-
+const App: React.FC = () => {
   return (
-    <Editor />
+    <Search />
   );
 };
 
