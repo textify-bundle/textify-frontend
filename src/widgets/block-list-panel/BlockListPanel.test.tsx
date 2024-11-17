@@ -3,19 +3,32 @@ import { describe, it, expect, vi } from 'vitest';
 import BlockListPanel from './BlockListPanel';
 
 describe('ProjectListPanel', () => {
-    const items = [
-        { title: 'Nomer 1', description: 'Description 1' },
-        { title: 'Nomer 2', description: 'Description 2' },
+    const blocks = [
+        {
+            title: 'Block 1',
+            description: 'This is the description for block 1.',
+            imageSrc: '',
+        },
+        {
+            title: 'Block 2, too long, need check',
+            description: 'This is the description for block 2.',
+            imageSrc: '',
+        },
+        {
+            title: 'Block 3',
+            description: 'This is the description for block 3.',
+            imageSrc: '',
+        },
     ];
     const imageSrc = '';
 
     it('renders text correctly with given data', () => {
-        render(<BlockListPanel imageSrc={imageSrc} blocks={items} />);
+        render(<BlockListPanel blocks={blocks} />);
 
         const listItems = screen.getAllByRole('listitem');
-        expect(listItems).toHaveLength(items.length);
+        expect(listItems).toHaveLength(blocks.length);
 
-        items.forEach((item) => {
+        blocks.forEach((item) => {
             expect(screen.getByText(item.title)).toBeInTheDocument();
             expect(screen.getByText(item.description)).toBeInTheDocument();
         });
@@ -23,7 +36,7 @@ describe('ProjectListPanel', () => {
     it('should call onClick with the correct index when an item is clicked', () => {
         const onClickMock = vi.fn();
         const { getAllByRole } = render(
-            <BlockListPanel imageSrc={imageSrc} blocks={items} onClick={onClickMock} />
+            <BlockListPanel blocks={blocks} onClick={onClickMock} />
         );
 
         const listItems = getAllByRole('button');
@@ -36,7 +49,7 @@ describe('ProjectListPanel', () => {
     });
     it('should toggle the active state when an item is clicked', () => {
         const { getAllByRole } = render(
-            <BlockListPanel imageSrc={imageSrc} blocks={items} />
+            <BlockListPanel blocks={blocks} />
         );
 
         const listItems = getAllByRole('button');
