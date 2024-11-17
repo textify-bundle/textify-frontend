@@ -20,7 +20,6 @@ describe('ProjectListPanel', () => {
             imageSrc: '',
         },
     ];
-    const imageSrc = '';
 
     it('renders text correctly with given data', () => {
         render(<BlockListPanel blocks={blocks} />);
