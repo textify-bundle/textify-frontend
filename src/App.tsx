@@ -1,3 +1,9 @@
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import AuthPage from "./pages/AuthPage/AuthPage";
+import LayoutWrapper from "./pages/LayoutWrapper/LayoutWrapper";
+import ProtectedRoute from "./app/ProtectedRoute";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store";
 import { restoreSession, refreshTokens } from "./store/slices/authSlice";
 import { supabase } from "./utils/client";
