@@ -15,8 +15,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from '@mui/material/ToggleButtonGroup';
-import './index.scss';
-import PropTypes from 'prop-types';
+import './TextFormattingToolbar.scss';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
@@ -33,32 +32,60 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
     },
 }));
 
-const TextFormattingToolbar = ({
-  handleLeftAlignClick,
-  handleCenterAlignClick,
-  handleRightAlignClick,
-  handleJustifyAlignClick,
-  handleBoldClick,
-  handleStrikethroughClick,
-  handleUnderlinedClick,
-  handleItalicClick,
-  handleSizeClick,
-  handleListClick,
-}) => {
-  const [alignment, setAlignment] = React.useState('left');
-  const [formats, setFormats] = React.useState(() => ['italic']);
+type TextFormattingToolbarProps = {
+  handleLeftAlignClick?: () => void;
+  handleCenterAlignClick?: () => void;
+  handleRightAlignClick?: () => void;
+  handleJustifyAlignClick?: () => void;
+  handleBoldClick?: () => void;
+  handleStrikethroughClick?: () => void;
+  handleUnderlinedClick?: () => void;
+  handleItalicClick?: () => void;
+  handleSizeClick?: () => void;
+  handleListClick?: () => void;
+};
 
-  const handleFormat = (event, newFormats) => {
+const TextFormattingToolbar: React.FC<TextFormattingToolbarProps> = ({
+  handleLeftAlignClick = () => {},
+  handleCenterAlignClick = () => {},
+  handleRightAlignClick = () => {},
+  handleJustifyAlignClick = () => {},
+  handleBoldClick = () => {},
+  handleStrikethroughClick = () => {},
+  handleUnderlinedClick = () => {},
+  handleItalicClick = () => {},
+  handleSizeClick = () => {},
+  handleListClick = () => {},
+}) => {
+  const [alignment, setAlignment] = React.useState<string>('left');
+  const [formats, setFormats] = React.useState<string[]>(['italic']);
+
+  const handleFormat = (event: React.MouseEvent<HTMLElement>, newFormats: string[]) => {
     setFormats(newFormats);
   };
 
-  const handleAlignment = (event, newAlignment) => {
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment);
+  };
+
+  const iconStyle = {
+    fontSize: '11.65px',
+    width: '11.65px',
+    height: '11.65px',
   };
 
   return (
     <div>
-      <Paper className="toolbar-paper">
+      <Paper
+      sx={{
+        display: 'flex',
+        border: '1px solid #e0e0e0',
+        flexWrap: 'wrap',
+        width: '362.36px',
+        height: '25.88px',
+        borderRadius: '9.71px',
+      }}
+    >
         <StyledToggleButtonGroup
           size="small"
           value={alignment}
@@ -68,16 +95,16 @@ const TextFormattingToolbar = ({
           className="toggle-button-group"
         >
           <ToggleButton value="left" aria-label="left aligned" onClick={handleLeftAlignClick} className="toggle-button">
-            <FormatAlignLeftIcon />
+            <FormatAlignLeftIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="center" aria-label="centered" onClick={handleCenterAlignClick} className="toggle-button">
-            <FormatAlignCenterIcon />
+            <FormatAlignCenterIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="right" aria-label="right aligned" onClick={handleRightAlignClick} className="toggle-button">
-            <FormatAlignRightIcon />
+            <FormatAlignRightIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="justify" aria-label="justified" onClick={handleJustifyAlignClick} className="toggle-button">
-            <FormatAlignJustifyIcon />
+            <FormatAlignJustifyIcon style={iconStyle} />
           </ToggleButton>
         </StyledToggleButtonGroup>
         <StyledToggleButtonGroup
@@ -88,40 +115,27 @@ const TextFormattingToolbar = ({
           className="toggle-button-group"
         >
           <ToggleButton value="bold" aria-label="bold" onClick={handleBoldClick} className="toggle-button">
-            <FormatBoldIcon />
+            <FormatBoldIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="strikethrough" aria-label="strikethrough" onClick={handleStrikethroughClick} className="toggle-button">
-            <FormatStrikethroughIcon />
+            <FormatStrikethroughIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="underlined" aria-label="underlined" onClick={handleUnderlinedClick} className="toggle-button">
-            <FormatUnderlinedIcon />
+            <FormatUnderlinedIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="italic" aria-label="italic" onClick={handleItalicClick} className="toggle-button">
-            <FormatItalicIcon />
+            <FormatItalicIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="size" aria-label="size" onClick={handleSizeClick} className="toggle-button">
-            <FormatSizeIcon />
+            <FormatSizeIcon style={iconStyle} />
           </ToggleButton>
           <ToggleButton value="list" aria-label="list" onClick={handleListClick} className="toggle-button">
-            <FormatListBulletedIcon />
+            <FormatListBulletedIcon style={iconStyle} />
           </ToggleButton>
         </StyledToggleButtonGroup>
       </Paper>
     </div>
   );
-};
-
-TextFormattingToolbar.propTypes = {
-  handleLeftAlignClick: PropTypes.func,
-  handleCenterAlignClick: PropTypes.func,
-  handleRightAlignClick: PropTypes.func,
-  handleJustifyAlignClick: PropTypes.func,
-  handleBoldClick: PropTypes.func,
-  handleStrikethroughClick: PropTypes.func,
-  handleUnderlinedClick: PropTypes.func,
-  handleItalicClick: PropTypes.func,
-  handleSizeClick: PropTypes.func,
-  handleListClick: PropTypes.func,
 };
 
 TextFormattingToolbar.defaultProps = {
