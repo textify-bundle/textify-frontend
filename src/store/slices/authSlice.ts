@@ -37,7 +37,6 @@ const initialState: AuthState = {
   }
 );
 
-// Регистрация
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
