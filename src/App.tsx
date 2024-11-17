@@ -1,9 +1,9 @@
-import Editor from "./widgets/editor/Editor";
+import React from 'react';
+import Export from './widgets/export/export';
 
-const App = () => {
-
+const App: React.FC = () => {
   return (
-    <Editor />
+    <Export />
   );
 };
 
