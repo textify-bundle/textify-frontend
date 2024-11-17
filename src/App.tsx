@@ -1,4 +1,4 @@
-import ProjectListPanel from './widgets/block-list-panel/BlockListPanel';
+import NodeTypeList from './widgets/node-type-list/NodeTypeList';
 const App = () => {
   const blocks = [
     {
@@ -18,13 +18,10 @@ const App = () => {
     },
 ];
 
-const handleItemClick = (index: number) => {
-    console.log(`Item clicked: ${index}`);
-};
   
   return (
     <div> 
-      <ProjectListPanel
+      <NodeTypeList
                 blocks={blocks}
             />
     </div>

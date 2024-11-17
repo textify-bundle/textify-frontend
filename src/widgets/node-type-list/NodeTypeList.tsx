@@ -4,7 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import './BlockListPanel.scss';
+import './NodeTypeList.scss';
 
 interface Block {
     title: string;
@@ -12,20 +12,20 @@ interface Block {
     imageSrc: string;
 }
 
-interface BlockListPanelProps {
+interface NodeTypeListProps {
     blocks: Block[];
     onClick?: (index: number) => void;
 }
 
 /**
- * BlockListPanel component displays a list of blocks with titles, descriptions, and images.
+ * NodeTypeList component displays a list of blocks with titles, descriptions, and images.
  *
  * @param {Block[]} blocks - An array of block objects, each containing a title, description, and image source.
  * @param {Function} onClick - Callback function to handle item click action. Default is an empty function.
  *
- * @returns {JSX.Element} The rendered BlockListPanel component.
+ * @returns {JSX.Element} The rendered NodeTypeList component.
  */
-const BlockListPanel: React.FC<BlockListPanelProps> = ({
+const NodeTypeList: React.FC<NodeTypeListProps> = ({
     blocks,
     onClick = () => {},
 }) => {
@@ -67,4 +67,4 @@ const BlockListPanel: React.FC<BlockListPanelProps> = ({
     );
 };
 
-export default BlockListPanel;
+export default NodeTypeList;
