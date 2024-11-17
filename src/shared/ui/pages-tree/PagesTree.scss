@@ -1,0 +1,58 @@
+.list-item {
+  --primary-color: #0751D8;
+  --hover-bg: #0751D80D;
+  --text-dark: #000000;
+  --text-light: #FFFFFF;
+
+  &__button {
+    width: 197px;
+    height: 31px;
+    background-color: transparent;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+
+    &:hover {
+      background-color: var(--hover-bg);
+      color: var(--text-dark);
+    }
+    
+    &.active {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      ;
+      &:hover {
+        background-color: var(--hover-bg);
+        color: var(--text-dark);
+      }
+    }
+
+    .MuiListItemText-primary {
+      font-family: 'SF Compact Rounded', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+  }
+
+  &__text {
+    padding-left: 14px;
+  }
+
+  &__add-icon {
+    min-width: 0;
+    margin-right: 14px;
+  }
+
+  .icon {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
