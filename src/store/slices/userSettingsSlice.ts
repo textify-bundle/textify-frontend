@@ -15,7 +15,6 @@ const initialState: UserSettingsState = {
   fontSize: 'medium',
 };
 
-// Загружаем настройки из localStorage
 const loadedSettings = loadSettingsFromLocalStorage();
 const initialStateFromStorage: UserSettingsState = loadedSettings || initialState;
 
@@ -25,7 +24,7 @@ const userSettingsSlice = createSlice({
   reducers: {
     setTheme(state, action: PayloadAction<'light' | 'dark'>) {
       state.theme = action.payload;
-      saveSettingsToLocalStorage(state); // Сохраняем изменения в localStorage
+      saveSettingsToLocalStorage(state);
     },
     setLanguage(state, action: PayloadAction<string>) {
       state.language = action.payload;
