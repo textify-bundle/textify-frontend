@@ -11,36 +11,28 @@ import './BlockListPanel.scss';
  * @typedef {Object} Block
  * @property {string} title - The title of the block.
  * @property {string} description - The description of the block.
+ * @property {string} imageSrc - The URL of the image to be displayed.
  */
 
 /**
  * Interface representing the props for the BlockListPanel component.
  * @typedef {Object} BlockListPanelProps
- * @property {string} imageSrc - The URL of the image to be displayed.
  * @property {Block[]} blocks - An array of blocks to be displayed in the list.
  * @property {Function} [onClick] - Optional callback function to handle block click. Default is an empty function.
- */
-
-/**
- * BlockListPanel component displays a list of blocks with images and descriptions.
- *
- * @param {BlockListPanelProps} props - The props for the BlockListPanel component.
- * @returns {JSX.Element} The rendered BlockListPanel component.
  */
 
 interface Block {
     title: string;
     description: string;
+    imageSrc: string;
 }
 
 interface BlockListPanelProps {
-    imageSrc: string;
     blocks: Block[];
     onClick?: (index: number) => void;
 }
 
 const BlockListPanel: React.FC<BlockListPanelProps> = ({
-    imageSrc,
     blocks,
     onClick = () => {},
 }) => {
@@ -65,9 +57,9 @@ const BlockListPanel: React.FC<BlockListPanelProps> = ({
                             onClick={() => handleItemClick(index)}
                         >
                             <img
-                                src={imageSrc}
+                                src={block.imageSrc}
                                 className="panel-image"
-                                alt="block"
+                                alt={block.title}
                             />
                             <ListItemText
                                 primary={block.title}
