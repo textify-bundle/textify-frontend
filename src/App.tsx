@@ -1,30 +1,31 @@
-import NodeTypeList from './widgets/node-type-list/NodeTypeList';
-const App = () => {
-  const blocks = [
-    {
-        title: 'Block 1',
-        description: 'This is the description for block 1.',
-        imageSrc: '',
-    },
-    {
-        title: 'Block 2, too long, need check',
-        description: 'This is the description for block 2.',
-        imageSrc: '',
-    },
-    {
-        title: 'Block 3',
-        description: 'This is the description for block 3.',
-        imageSrc: '',
-    },
-];
+import { AppDispatch } from "./store";
+import { restoreSession, refreshTokens } from "./store/slices/authSlice";
+import { supabase } from "./utils/client";
 
-  
+const App: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(restoreSession());
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "TOKEN_REFRESHED" && session) {
+        dispatch(refreshTokens());
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [dispatch]);
+
   return (
-    <div> 
-      <NodeTypeList
-                blocks={blocks}
-            />
-    </div>
+    <Routes>
+      <Route path="/" element={<AuthPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/main" element={<LayoutWrapper />} />
+      </Route>
+    </Routes>
   );
 };
 
