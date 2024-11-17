@@ -4,37 +4,44 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import './ActionBar.scss';
-import PropTypes from 'prop-types';
 
-const ActionBar = ({
-    users,
-    onClick = () => {},
-}) => {
+interface User {
+    id: string;
+    name: string;
+}
+
+interface ActionBarProps {
+    users: User[];
+    onClick?: (index: number) => void;
+}
+
+const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
     const pages = ['Отправить', 'Экспортировать', '...'];
-
     const colors = ['#4C84EA', '#2B8643', '#0751D8'];
+
     const getRandomColor = () => {
         return colors[Math.floor(Math.random() * colors.length)];
     };
 
-    const calculateMarginLeft = (userCount) => {
+    const calculateMarginLeft = (userCount: number) => {
         return `${Math.min(userCount, 4) * 21 + 8}px`;
     };
 
-     const shuffleArray = (array) => {
+    const shuffleArray = (array: User[]) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];  
+            [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
     };
 
-     
     const randomUsers = shuffleArray([...users]).slice(0, 4);
 
-    const handleClick = (index) => {
-        onClick(index);
-    }
+    const handleClick = (index: number) => {
+        if (onClick) {
+            onClick(index);
+        }
+    };
 
     return (
         <AppBar
@@ -43,7 +50,6 @@ const ActionBar = ({
                 backgroundColor: "transparent",
                 width: '345.5px',
                 height: '31px',
-                boxShadow: 'none',
             }}
         >
             <Container
@@ -55,7 +61,7 @@ const ActionBar = ({
             >
                 <Toolbar disableGutters>
                     <Box>
-                        {randomUsers.map((user, index) => (
+                        {randomUsers.map((user: User, index: number) => (
                             <Button
                                 key={user.id}
                                 className="user-button"
@@ -93,7 +99,7 @@ const ActionBar = ({
                                         textTransform: 'none',
                                         marginLeft: '8px',
                                     }}
-                                    onClick={() => (handleClick(index))}
+                                    onClick={() => handleClick(index)}
                                 >
                                     {page === '...' ? (
                                         <span className="dots-container">
@@ -111,16 +117,6 @@ const ActionBar = ({
             </Container>
         </AppBar>
     );
-};
-
-ActionBar.propTypes = {
-    users: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-        })
-    ).isRequired,
-    onClick: PropTypes.func,   
 };
 
 export default ActionBar;

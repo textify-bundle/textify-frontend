@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Box,  List,  ListItemButton,  Collapse,  ListItemText,  ListItemIcon,  TextField,} from '@mui/material';
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
-import { Link as RouterLink, MemoryRouter } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import './PagesTree.scss';
 
 interface Item {
