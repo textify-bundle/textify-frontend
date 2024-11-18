@@ -1,24 +1,40 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import './search.scss';
 
-const Search = ({
-    imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
-    onClick = () => {},
-    onChange = () => {},
-    placeholder = "Поиск",
-    value = " ",
-}) => {
+interface SearchProps {
+    imageSrc?: string;
+    onClick?: () => void;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    value?: string;
+}
 
-    const handleChange = (e) => {
-        onChange(e.target.value);
+const Search: React.FC<SearchProps> = ({
+    imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
+    onClick,
+    onChange,
+    placeholder = "Поиск",
+    value = "",
+}) => {
+    const [internalValue, setInternalValue] = useState(value);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+
+        if (onChange) {
+            onChange(newValue); 
+        } else {
+            setInternalValue(newValue); 
+        }
     };
 
-    const handlePress = async (e) => {
+    const handlePress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            console.log(e.target.value)
+            console.log(internalValue);
         }
-    }
+    };
 
     return (
         <Box className="search-container" onClick={onClick}>
@@ -28,11 +44,15 @@ const Search = ({
                 onChange={handleChange}
                 placeholder={placeholder}
                 onKeyPress={handlePress}
-                value={value}
+                value={onChange ? value : internalValue} 
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
-                            <img className="search-glass_img" src={imageSrc} alt="glass" />
+                            <img
+                                className="search-glass_img"
+                                src={imageSrc}
+                                alt="glass"
+                            />
                         </InputAdornment>
                     ),
                 }}
@@ -49,14 +69,6 @@ const Search = ({
             />
         </Box>
     );
-};
-
-Search.propTypes = {
-    imageSrc: PropTypes.string,
-    onClick: PropTypes.func,
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-    value : PropTypes.string,
 };
 
 export default Search;
