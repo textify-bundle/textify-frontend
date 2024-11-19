@@ -1,28 +1,26 @@
 import React from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import "./search.scss"
+import "./NewSearch.scss"
 
-interface SearchProps {
+interface NewSearchProps {
     imageSrc?: string;
     onClick?: () => void;
     onChange?: (value: string) => void;
     placeholder?: string;
     value?: string;
-    className?: string; // Добавлен className
 }
 
-const Search: React.FC<SearchProps> = ({
-    imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
+const NewSearch: React.FC<NewSearchProps> = ({
+    imageSrc = './src/shared/ui/search/magnifyingGlass.png', //ПИШУ ОТ САМ (АРТЕМ), по идее можно и не передавать пропсом картинку, но вроде и так норм
     onClick = () => {},
-    onChange = () => {},
+    onChange = () => {},    
     placeholder = "Поиск",
-    value = " ",
-    className = "", // Дефолтное значение для className
+    value = "",
 }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) {
-            onChange(e.target.value); // вызываем переданный onChange
+            onChange(e.target.value); 
         }
     };
 
@@ -33,9 +31,10 @@ const Search: React.FC<SearchProps> = ({
     };
 
     return (
-        <Box className={`search-container ${className}`} onClick={onClick}>
+        <Box className={`search-container `} onClick={onClick} sx = {{ 
+            width: "184px",
+        }}> 
             <TextField
-                className={`search-form_side-bar ${className}`}  // Передаем className сюда
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
@@ -56,6 +55,7 @@ const Search: React.FC<SearchProps> = ({
                     },
                     '& .MuiOutlinedInput-notchedOutline': {
                         border: 'none',
+                        
                     },
                 }}
             />
@@ -63,4 +63,4 @@ const Search: React.FC<SearchProps> = ({
     );
 };
 
-export default Search;
+export default NewSearch;

@@ -1,8 +1,8 @@
-import { Search } from '@mui/icons-material';
+import NewSearch from './shared/ui/search/NewSearch';
 
 const App: React.FC = () => {
   return (
-    <Search />
+    <NewSearch />
   );
 };
 
