@@ -1,80 +1,79 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-const ExportBox: React.FC = () => {
+interface ExportBoxProps {
+  filename: string;
+  onClick?: (index: number) => void;
+}
+
+const ExportBox: React.FC<ExportBoxProps> = ({ filename, onClick = () => {} }) => {
+  const handleClick = (index: number) => {
+    if (onClick) {
+      onClick(index);
+    }
+  };
+
   return (
     <Box
-      sx={{
-        width: 454,
-        height: 176,
-        border: '1px solid #ccc',
-        padding: 2,
-        boxSizing: 'border-box',
-        position: 'relative',
-        borderRadius: 4, 
-      }}
+    sx={{
+      width: '400px',
+      height: '160px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      padding: '20px',
+      boxSizing: 'border-box',
+      boxShadow: 3,
+      borderRadius: '12px',
+    }}
     >
-      <Typography
-        variant="body1"
-        sx={{
-          position: 'absolute',
-          top: 20,
-          left: 20,
-          margin: 0,
-          fontSize: '20px',
-        }}
-      >
+      <div>
         Экспортировать
-      </Typography>
+      </div>
+      
       <Button
         variant="contained"
-        color="primary"
         sx={{
-            fontSize: '16px',
-          position: 'absolute',
-          top: 64,
-          left: 20,
-          width: 'calc(100% - 40px)', 
-          paddingLeft: '20px', 
+          width: '360px',
+          height: '36px',
+          marginLeft: '0px',
+          marginTop: '10px',
+          display: 'flex',
+          justifyContent: 'flex-start',
           backgroundColor: 'white', 
           color: 'black', 
-          textAlign: 'left',
           boxShadow: 'none',
           '&:hover': {
-            backgroundColor: '#e0e0e0', 
-            boxShadow: 'none', 
+            backgroundColor: '#F5F5F5', 
+            boxShadow: 'none',
           },
         }}
+        onClick={() => handleClick(index)}
       >
-        <Box sx={{ textAlign: 'left', width: '100%' }}>
-          Экспортировать в HTML
-        </Box>
+        Экспортировать в HTML
       </Button>
+
       <Button
         variant="contained"
-        color="primary"
         sx={{
-            fontSize: '16px',
-          position: 'absolute',
-          top: 114,
-          left: 20,
-          width: 'calc(100% - 40px)', 
-          paddingLeft: '20px',
+          width: '360px',
+          height: '36px',
+          marginLeft: '0px',
+          marginTop: '10px',
+          display: 'flex',
+          justifyContent: 'flex-start',
           backgroundColor: 'white', 
           color: 'black', 
-          textAlign: 'left', 
-          boxShadow: 'none', 
+          boxShadow: 'none',
           '&:hover': {
-            backgroundColor: '#e0e0e0',
-            boxShadow: 'none', 
+            backgroundColor: '#F5F5F5', 
+            boxShadow: 'none',
           },
         }}
+        onClick={() => handleClick(index)}
       >
-        <Box sx={{ textAlign: 'left', width: '100%' }}>
-          Экспортировать в PDF
-        </Box>
+        Экспортировать в PDF
       </Button>
     </Box>
   );
