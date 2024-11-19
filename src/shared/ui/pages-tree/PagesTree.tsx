@@ -112,8 +112,8 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
 
   return (
     // <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 }}>
-        <Box sx={{ bgcolor: 'background.paper', mt: 1 }} component="nav" aria-label="mailbox folders">
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 ,}}>
+        <Box sx={{ mt: 1 }} component="nav" aria-label="mailbox folders">
           <List>
             {tree.map((item, index) => (
               <React.Fragment key={item.name}>
@@ -127,6 +127,7 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
                 {item.type === 'dropdown' && item.items && (
                   <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
                     <List disablePadding>
+                      
                       {item.items.map((subItem) => (
                         <ListItemLink
                           key={subItem.name}

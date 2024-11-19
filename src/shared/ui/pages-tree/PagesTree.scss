@@ -1,12 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 .list-item {
   --primary-color: #0751D8;
   --hover-bg: #0751D80D;
   --text-dark: #000000;
   --text-light: #FFFFFF;
 
-  &__button {
-    width: 197px;
-    height: 31px;
+  background:#F8F7F5 ;
+  font-size: 20;
+
+  &__button { 
+    width: 217px;
+    height: 38px;
     background-color: transparent;
     color: inherit;
     display: flex;
@@ -31,7 +36,8 @@
     }
 
     .MuiListItemText-primary {
-      font-family: 'SF Compact Rounded', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      font-family: "Varela Round", sans-serif;
       font-weight: 400;
       font-size: 0.75rem;
       line-height: 1.5;
@@ -40,6 +46,7 @@
 
   &__text {
     padding-left: 14px;
+
   }
 
   &__add-icon {

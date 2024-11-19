@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../../utils/userSettingsUtils';
 
 interface UserSettingsState {
+  name : string;
   theme: 'light' | 'dark';
   language: string;
   notificationsEnabled: boolean;
@@ -9,6 +10,7 @@ interface UserSettingsState {
 }
 
 const initialState: UserSettingsState = {
+  name:'',
   theme: 'light',
   language: 'en',
   notificationsEnabled: true,

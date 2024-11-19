@@ -48,6 +48,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
             position="static"
             sx={{
                 backgroundColor: "transparent",
+                boxShadow:'none',
                 width: '345.5px',
                 height: '31px',
             }}
