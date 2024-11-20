@@ -31,4 +31,6 @@ export const AuthService = {
         const { data, error } = await supabase.auth.getSession();
         return { data, error };
     }
+
+    
 };

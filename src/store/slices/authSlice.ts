@@ -19,7 +19,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Логика для входа
 export const signIn = createAsyncThunk(
   "auth/signIn",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
@@ -36,7 +35,6 @@ export const signIn = createAsyncThunk(
   }
 );
 
-// Логика для регистрации
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
@@ -53,18 +51,17 @@ export const signUp = createAsyncThunk(
   }
 );
 
-// Логика для выхода
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     const { error } = await AuthService.logout();
     if (error) return rejectWithValue(error.message);
 
-    return {}; // Успешный выход
+    return {};  
   }
 );
 
-// Восстановление сессии
+
 export const restoreSession = createAsyncThunk(
   "auth/restoreSession",
   async (_, { dispatch, rejectWithValue }) => {
@@ -91,7 +88,6 @@ export const restoreSession = createAsyncThunk(
   }
 );
 
-// Логика для валидации токена
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
   async (_, { getState, dispatch, rejectWithValue }) => {
@@ -110,7 +106,6 @@ export const validateToken = createAsyncThunk(
   }
 );
 
-// Логика для обновления токенов
 const REFRESH_INTERVAL = 60000; 
 export const refreshTokens = createAsyncThunk(
   "auth/refreshTokens",
@@ -182,7 +177,7 @@ const authSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
-        state.accessToken = action.payload.accessToken;
+        state.accessToken = action.payload.accessToken ;
         state.refreshToken = action.payload.refreshToken;
 
         localStorage.setItem("user", JSON.stringify(action.payload.user));

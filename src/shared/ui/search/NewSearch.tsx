@@ -1,27 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import "./NewSearch.scss"
-
+import "./NewSearch.scss";
+import Src from './magnifyingGlass.jpg';
 interface NewSearchProps {
-    imageSrc?: string;
     onClick?: () => void;
-    onChange?: (value: string) => void;
     placeholder?: string;
-    value?: string;
+    onValueChange?: (value: string) => void;
 }
 
 const NewSearch: React.FC<NewSearchProps> = ({
-    imageSrc = './src/shared/ui/search/magnifyingGlass.png', //ПИШУ ОТ САМ (АРТЕМ), по идее можно и не передавать пропсом картинку, но вроде и так норм
-    onClick = () => {},
-    onChange = () => {},    
-    placeholder = "Поиск",
-    value = "",
+onClick = () => {},
+placeholder = "Поиск",
+onValueChange = () => {},
 }) => {
+    const [value, setValue] = useState<string>('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (onChange) {
-            onChange(e.target.value); 
-        }
+        const newValue = e.target.value;
+        setValue(newValue);
+        onValueChange(newValue); 
     };
 
     const handlePress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,12 +27,8 @@ const NewSearch: React.FC<NewSearchProps> = ({
         }
     };
 
-    
-
     return (
-        <Box className={`search-container `} onClick={onClick} sx = {{ 
-            width: "184px",
-        }}> 
+        <Box className={`search-container`} onClick={onClick}  >
             <TextField
                 variant="outlined"
                 onChange={handleChange}
@@ -45,9 +38,11 @@ const NewSearch: React.FC<NewSearchProps> = ({
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
-                            <img className="search-glass_img" src={imageSrc} alt="glass" />
+                            <img  src={Src}  />
                         </InputAdornment>
                     ),
+                    style: {fontSize: 12, gap: "5px", marginLeft: 2}
+
                 }}
                 sx={{
                     '& .MuiOutlinedInput-root': {
@@ -57,7 +52,6 @@ const NewSearch: React.FC<NewSearchProps> = ({
                     },
                     '& .MuiOutlinedInput-notchedOutline': {
                         border: 'none',
-                        
                     },
                 }}
             />

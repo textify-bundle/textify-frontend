@@ -1,81 +1,42 @@
-import * as React from 'react';
-import {Box,  List,  ListItemButton,  Collapse,  ListItemText,  ListItemIcon,  TextField,} from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, List, ListItemButton, Collapse, ListItemText, ListItemIcon, TextField, CircularProgress } from '@mui/material';
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTreeData } from '../../../store/slices/pagesSlice'; 
 import './PagesTree.scss';
+import { AppDispatch } from '../../../store';
 
-interface Item {
+interface TreeItem {
   name: string;
-  type: 'link' | 'action' | 'dropdown' | string;
+  type: 'link' | 'dropdown' | 'action';
   link?: string;
-  action?: string;
   icon?: string;
-  items?: Item[];
+  items?: TreeItem[];  
 }
 
-interface ListItemLinkProps {
-  item: Item;
-  open?: boolean;
-  onClick: (to: string, index?: number) => void;
-  active?: boolean;
-  onAddNewItem?: (parentItem: Item) => void;
-}
 
-const ListItemLink: React.FC<ListItemLinkProps> = ({
-  item,
-  open,
-  onClick,
-  active,
-  onAddNewItem,
-}) => {
-  let icon = null;
-  if (item.type === 'dropdown') {
-    icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
-  } else if (item.type === 'action' && item.icon === 'plus') {
-    icon = <Add className="icon" />;
-  }
 
-  const handleItemClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (item.type === 'action' && item.icon === 'plus') {
-      onAddNewItem?.(item);
-    } else {
-      onClick(item.link ?? '', undefined);
-    }
-  };
+const PagesTree: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { tree, loading } = useSelector((state: any) => state.pages);  
 
-  return (
-    <li className="list-item">
-      <ListItemButton
-        component={item.type === 'link' ? RouterLink : 'button'}
-        to={item.type === 'link' ? item.link : undefined}
-        onClick={handleItemClick}
-        className={`list-item__button ${active ? 'active' : ''}`}
-      >
-        <ListItemText primary={item.name} className="list-item__text" />
-        {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
-      </ListItemButton>
-    </li>
-  );
-};
-
-interface PagesTreeProps {
-  tree: Item[];
-}
-
-const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
-  const [tree, setTree] = React.useState<Item[]>(initialTree);
-  const [openStates, setOpenStates] = React.useState<boolean[]>(tree.map(() => false));
+  const [openStates, setOpenStates] = React.useState<boolean[]>([]);
   const [activeLink, setActiveLink] = React.useState<string | null>(null);
   const [isEditingNewItem, setIsEditingNewItem] = React.useState<boolean>(false);
   const [newItemName, setNewItemName] = React.useState('');
-  const [parentItem, setParentItem] = React.useState<Item | null>(null);
+  const [parentItem, setParentItem] = React.useState<any | null>(null);
+
+  
+  useEffect(() => {
+    dispatch(fetchTreeData()); 
+  }, [dispatch]);
 
   const handleClick = (link: string | undefined, index?: number) => {
     if (link) {
       setActiveLink(link);
     }
-
+  
     if (index !== undefined && tree[index].type === 'dropdown') {
       setOpenStates((prevOpenStates) => {
         const newOpenStates = [...prevOpenStates];
@@ -85,89 +46,137 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
     }
   };
 
-  const handleAddNewItem = (item: Item) => {
+  const handleAddNewItem = (item: any) => {
     setParentItem(item);
-    setIsEditingNewItem(true); 
+    setIsEditingNewItem(true);
   };
 
   const handleSaveNewItem = () => {
     const itemName = newItemName.trim() || `New Project ${tree.length + 1}`;
-    const newItem: Item = {
+    const newItem: TreeItem = {
       name: itemName,
-      type: 'link',
+      type: 'link',   
       link: `/new-project-${Date.now()}`,
     };
-
-    setTree((prevTree) => {
-      const updatedTree = [...prevTree];
-      if (parentItem && parentItem.type === 'action') {
-        updatedTree.push(newItem);
+  
+     dispatch({
+      type: 'pages/updateTree',
+      payload: (prevTree: TreeItem[]) => {
+        const updatedTree = [...prevTree];
+        if (parentItem && parentItem.type === 'action') {
+          updatedTree.push(newItem);
+        }
+        return updatedTree;
       }
-      return updatedTree;
     });
-
+  
     setNewItemName('');
     setIsEditingNewItem(false);
   };
+  
+  
+
+  if (loading) {
+    return (
+      <div>
+        <CircularProgress sx={{ position: 'absolute', left: '6.5vw', top: '45vh' }} size={24} color="inherit" />
+      </div>
+    );
+  }
+
+  const ListItemLink = ({ item, open, onClick, active, onAddNewItem }: any) => {
+    let icon = null;
+    if (item.type === 'dropdown') {
+      icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
+    } else if (item.type === 'action' && item.icon === 'plus') {
+      icon = <Add className="icon" />;
+    }
+
+    const handleItemClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (item.type === 'action' && item.icon === 'plus') {
+        onAddNewItem?.(item);
+      } else {
+        onClick(item.link ?? '', undefined);
+      }
+    };
+
+    return (
+      <li className="list-item">
+        <ListItemButton
+          component={item.type === 'link' ? RouterLink : 'button'}
+          to={item.type === 'link' ? item.link : undefined}
+          onClick={handleItemClick}
+          className={`list-item__button ${active ? 'active' : ''}`}
+        >
+          <ListItemText primary={item.name} className="list-item__text" />
+          {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
+        </ListItemButton>
+      </li>
+    );
+  };
 
   return (
-    // <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 ,}}>
-        <Box sx={{ mt: 1 }} component="nav" aria-label="mailbox folders">
-          <List>
-            {tree.map((item, index) => (
-              <React.Fragment key={item.name}>
-                <ListItemLink
-                  item={item}
-                  open={openStates[index]}
-                  onClick={(to) => handleClick(to, index)}
-                  active={activeLink === item.link}
-                  onAddNewItem={handleAddNewItem}
-                />
-                {item.type === 'dropdown' && item.items && (
-                  <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
-                    <List disablePadding>
-                      
-                      {item.items.map((subItem) => (
-                        <ListItemLink
-                          key={subItem.name}
-                          item={subItem}
-                          onClick={(to) => handleClick(to)}
-                          active={activeLink === subItem.link}
-                          onAddNewItem={handleAddNewItem}
-                        />
-                      ))}
-                    </List>
-                  </Collapse>
-                )}
-              </React.Fragment>
-            ))}
-            {isEditingNewItem && (
-              <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
-                <TextField
-                  placeholder="New Project Name"
-                  value={newItemName}
-                  onChange={(e) => setNewItemName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSaveNewItem();
-                    }
-                  }}
-                  fullWidth
-                  autoFocus
-                  variant="standard"
-                  sx={{
-                    '& .MuiInput-underline:before': { borderBottom: 'none' },
-                    '& .MuiInput-underline:after': { borderBottom: 'none' },
-                    '& .MuiInputBase-input': { padding: 0 },
-                  }}
-                />
-              </ListItemButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: 224 }}>
+      <Box sx={{ mt: 1 }} component="nav" aria-label="mailbox folders">
+        <List>
+                {tree.map((item: TreeItem, index:number) => (
+                  
+          <React.Fragment key={item.name}>
+             {index == 2 && <div style={{width: "100%", height: "1px", backgroundColor: "rgba(0, 0, 0, 0.17)"}}></div>}
+            <ListItemLink
+              item={item}
+              open={openStates[index]}
+              onClick={(to: string) => handleClick(to, index)}
+              active={activeLink === item.link}
+              onAddNewItem={handleAddNewItem}
+            />
+           
+
+            {item.type === 'dropdown' && item.items && (
+              <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
+                <List disablePadding>
+                  {item.items.map((subItem: TreeItem) => (
+                    <ListItemLink
+                      key={subItem.name}
+                      item={subItem}
+                      onClick={(to: string) => handleClick(to, index)}
+                      active={activeLink === subItem.link}
+                      onAddNewItem={handleAddNewItem}
+                    />
+                  ))}
+                </List>
+              </Collapse>
             )}
-          </List>
-        </Box>
+          </React.Fragment>
+        ))}
+
+          {isEditingNewItem && (
+            <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
+              <TextField
+                placeholder="New Project Name"
+                value={newItemName}
+                onChange={(e) => setNewItemName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveNewItem();
+                  }
+                }}
+                fullWidth
+                autoFocus
+                variant="standard"
+                sx={{
+                  '& .MuiInput-underline:before': { borderBottom: 'none' },
+                  '& .MuiInput-underline:after': { borderBottom: 'none' },
+                  '& .MuiInputBase-input': { padding: 0 },
+                }}
+              />
+            </ListItemButton>
+          )}
+        </List>
       </Box>
-    // </MemoryRouter>
+    </Box>
+    
   );
 };
 

@@ -4,7 +4,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import './ActionBar.scss';
-
+import ExportBox from '../../export/Export';  
+ 
 interface User {
     id: string;
     name: string;
@@ -16,7 +17,7 @@ interface ActionBarProps {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
-    const pages = ['Отправить', 'Экспортировать', '...'];
+    const pages = ['Отправить', 'Экспортировать', '...'];  
     const colors = ['#4C84EA', '#2B8643', '#0751D8'];
 
     const getRandomColor = () => {
@@ -48,7 +49,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
             position="static"
             sx={{
                 backgroundColor: "transparent",
-                boxShadow:'none',
+                boxShadow: 'none',
                 width: '345.5px',
                 height: '31px',
             }}
@@ -87,31 +88,9 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
                             className="main-buttons-container"
                             style={{ marginLeft: calculateMarginLeft(randomUsers.length) }}
                         >
-                            {pages.map((page, index) => (
-                                <Button
-                                    key={page}
-                                    className={`main-button ${page === '...' ? 'three-dots-button' : ''}`}
-                                    sx={{
-                                        color: 'black',
-                                        display: 'block',
-                                        height: '31px',
-                                        minWidth: 'auto',
-                                        padding: '0 10px',
-                                        textTransform: 'none',
-                                        marginLeft: '8px',
-                                    }}
-                                    onClick={() => handleClick(index)}
-                                >
-                                    {page === '...' ? (
-                                        <span className="dots-container">
-                                            <span className="dot"></span>
-                                            <span className="dot"></span>
-                                            <span className="dot"></span>
-                                        </span>)
-                                        : (page)}
+                           
+                           <ExportBox /> 
 
-                                </Button>
-                            ))}
                         </Box>
                     </Box>
                 </Toolbar>
