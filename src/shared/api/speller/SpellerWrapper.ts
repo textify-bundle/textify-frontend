@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-export type SpellCheckResponse = {
-  code: number;
-  pos: number;
-  row: number;
-  col: number;
-  len: number;
-  word: string;
-  s: string[];
-};
+export type WordError = {
+    code: number;
+    pos: number;
+    len: number;
+    word: string;
+    s: string[];
+  };
 
 export type CheckTextParams = {
   text: string; 
@@ -18,34 +16,34 @@ export type CheckTextParams = {
   callback?: string; 
 };
 
-export async function checkText(params: CheckTextParams): Promise<SpellCheckResponse[]> {
-  const { text, lang = 'ru,en', options = 0, format = 'plain', callback } = params;
-
-  const url = 'https://speller.yandex.net/services/spellservice.json/checkText';
-  const queryParams = new URLSearchParams({
-    text,
-    lang,
-    options: options.toString(),
-    format,
-    ...(callback ? { callback } : {})
-  });
-
-  try {
-    const response = await axios.get<SpellCheckResponse[]>(`${url}?${queryParams}`);
-    return response.data;
-  } catch (error) {
-    throw handleSpellerError(error);
+export async function checkText(params: CheckTextParams): Promise<WordError[]> {
+    const { text, lang = 'ru,en', options = 0, format = 'plain', callback } = params;
+  
+    const url = 'https://speller.yandex.net/services/spellservice.json/checkText';
+    const queryParams = new URLSearchParams({
+      text,
+      lang,
+      options: options.toString(),
+      format,
+      ...(callback ? { callback } : {})
+    });
+  
+    try {
+      const response = await axios.get<WordError[]>(`${url}?${queryParams}`);
+      return response.data;
+    } catch (error) {
+      throw handleSpellerError(error);
+    }
   }
-}
 
-export function formatSpellingErrors(errors: SpellCheckResponse[]): string {
+export function formatSpellingErrors(errors: WordError[]): string {
   return errors.map(error => {
     const suggestions = error.s.join(', ');
-    return `Word: "${error.word}" error in symbol at position ${error.pos} (line: ${error.row + 1}). Suggestions: ${suggestions}`;
+    return `Word: "${error.word}" error in symbol at position ${error.pos}. Suggestions: ${suggestions}`;
   }).join('\n');
 }
 
-export function autoCorrectText(text: string, errors: SpellCheckResponse[]): string {
+export function autoCorrectText(text: string, errors: WordError[]): string {
     let correctedText = text;
   
     errors.forEach(error => {
@@ -72,7 +70,7 @@ export function autoCorrectText(text: string, errors: SpellCheckResponse[]): str
   
     return true;
   }
-  
+
   export function handleSpellerError(error: any): Error {
     console.error('Speller service error:', error);
   
