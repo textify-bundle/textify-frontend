@@ -61,7 +61,7 @@ function checkText(text: string, callback: Callback, settings?: Settings): void 
         timeout: settings?.timeout || DEFAULT_TIMEOUT,
     }, function(error, response, body) {
         if (error) {
-            callback(error, null);
+            callback(handleSpellerError(error), null);
         } else {
             if (response?.status === 200) {
                 callback(null, body);
@@ -94,7 +94,7 @@ function checkTexts(texts: string[], callback: Callback, settings?: Settings): v
         timeout: settings?.timeout || DEFAULT_TIMEOUT,
     }, function(error, response, body) {
         if (error) {
-            callback(error, null);
+            callback(handleSpellerError(error), null);
         } else {
             if (response?.status === 200) {
                 callback(null, body);
@@ -121,7 +121,7 @@ function checkTexts(texts: string[], callback: Callback, settings?: Settings): v
  */
 function prepareOptions(options?: { [key: string]: boolean }): number {
     let result = 0;
-    const standartOptions: { [key: string]: number } = {
+    const standardOptions: { [key: string]: number } = {
         IGNORE_DIGITS: 2,
         IGNORE_URLS: 4,
         FIND_REPEAT_WORDS: 8,
@@ -131,8 +131,8 @@ function prepareOptions(options?: { [key: string]: boolean }): number {
     if (options) {
         Object.keys(options).forEach(function(key) {
             const upperCaseKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
-            if (standartOptions[upperCaseKey] && options[key]) {
-                result |= standartOptions[upperCaseKey];
+            if (standardOptions[upperCaseKey] && options[key]) {
+                result |= standardOptions[upperCaseKey];
             }
         });
     }
@@ -175,7 +175,7 @@ function prepareSettings(settings?: Settings): { [key: string]: any } {
  */
 function formatSpellingErrors(errors: SpellingError[]): string {
     if (errors.length === 0) {
-        return 'No spelling errors found.';
+        return 'No spelling errors found';
     }
 
     return errors.map(error => {
@@ -204,6 +204,22 @@ function autoCorrectText(text: string, errors: SpellingError[]): string {
     return correctedText;
 }
 
+/**
+ * Processes and logs errors from the speller service and returns a structured error response.
+ *
+ * @param {Error} error - The error object returned by the speller service.
+ * @returns {Error} - A structured error response.
+ */
+function handleSpellerError(error: Error): Error {
+
+    const structuredError = new Error('Error while working with Yandex Speller API.');
+    structuredError.name = error.name;
+    structuredError.stack = error.stack;
+    structuredError.message = `Details: ${error.message}`;
+
+    return structuredError;
+}
+
 const supportedFormats = ['plain', 'html'];
 
 export {
@@ -218,5 +234,6 @@ export {
     ERROR_TOO_MANY_ERRORS,
     supportedFormats,
     formatSpellingErrors,
-    autoCorrectText
+    autoCorrectText,
+    handleSpellerError
 };
