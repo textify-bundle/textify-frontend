@@ -116,16 +116,16 @@ const LayoutWrapper = () => {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ background: '#F8F7F5', height: '100vh', width: '260px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20, marginTop: 20 }}>
+    <div style={{ display: 'flex', fontFamily: "Varela Round, serif" }}>
+      <div style={{ background: '#F8F7F5', height: '100dvh', width: '260px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginInline: 15, marginTop: 15, fontSize: 12, height: ""}}>
           <img
-            style={{ borderRadius: '40px', width: '40px', height: '40px', marginRight: 20 }}
+            style={{ borderRadius: '40px', width: '28px', height: '28px', marginRight: 10, backgroundColor: "#0751D8" }}
             src="https://sm.ign.com/t/ign_nordic/review/p/persona-5-/persona-5-review_htue.1280.jpg"
           />
           {userEmail}
         </div>
-        <div style={{ marginLeft: 20, marginTop: 20 }}>
+        <div style={{ marginInline: 8, marginTop: 20 }}>
           <NewSearch />
         </div>
         <PagesTree tree={newTree} />

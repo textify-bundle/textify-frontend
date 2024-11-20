@@ -11,7 +11,7 @@ interface NewSearchProps {
 }
 
 const NewSearch: React.FC<NewSearchProps> = ({
-    imageSrc = './src/shared/ui/search/magnifyingGlass.png', //ПИШУ ОТ САМ (АРТЕМ), по идее можно и не передавать пропсом картинку, но вроде и так норм
+    imageSrc = './src/shared/ui/search/magnifyingGlass.svg', //ПИШУ ОТ САМ (АРТЕМ), по идее можно и не передавать пропсом картинку, но вроде и так норм
     onClick = () => {},
     onChange = () => {},    
     placeholder = "Поиск",
@@ -33,9 +33,7 @@ const NewSearch: React.FC<NewSearchProps> = ({
     
 
     return (
-        <Box className={`search-container `} onClick={onClick} sx = {{ 
-            width: "184px",
-        }}> 
+        <Box className={`search-container`} onClick={onClick}>
             <TextField
                 variant="outlined"
                 onChange={handleChange}
@@ -48,6 +46,7 @@ const NewSearch: React.FC<NewSearchProps> = ({
                             <img className="search-glass_img" src={imageSrc} alt="glass" />
                         </InputAdornment>
                     ),
+                    style: {fontSize: 12, gap: "5px", marginLeft: 2}
                 }}
                 sx={{
                     '& .MuiOutlinedInput-root': {

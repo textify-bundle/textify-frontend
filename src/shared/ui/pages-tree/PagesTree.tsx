@@ -111,12 +111,12 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
   };
 
   return (
-    // <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 ,}}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: "100%", boxSizing: "border-box"}}>
         <Box sx={{ mt: 1 }} component="nav" aria-label="mailbox folders">
           <List>
             {tree.map((item, index) => (
               <React.Fragment key={item.name}>
+                {index == 2 && <div style={{width: "100%", height: "1px", backgroundColor: "rgba(0, 0, 0, 0.17)"}}></div>}
                 <ListItemLink
                   item={item}
                   open={openStates[index]}
@@ -166,8 +166,8 @@ const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
             )}
           </List>
         </Box>
+        <div className="blue-rectangle"></div>
       </Box>
-    // </MemoryRouter>
   );
 };
 
