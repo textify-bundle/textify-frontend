@@ -108,9 +108,19 @@ function checkTexts(texts: string[], callback: Callback, settings?: Settings): v
     });
 }
 
+/**
+ * Prepare options for the Yandex.Speller API request.
+ *
+ * @param {Object} options - An object containing boolean options for the request.
+ * @param {boolean} [options.ignoreDigits] - Ignore words with numbers, such as "avp17h4534".
+ * @param {boolean} [options.ignoreUrls] - Ignore Internet addresses, email addresses, and filenames.
+ * @param {boolean} [options.findRepeatWords] - Highlight repetitions of words, consecutive. For example, "I flew to to to Cyprus".
+ * @param {boolean} [options.ignoreCapitalization] - Ignore the incorrect use of UPPERCASE / lowercase letters, for example, in the word "moscow".
+ * @returns {number} - A number representing the combined options.
+ * @see {@link https://yandex.ru/dev/speller/doc/ru/reference/speller-options}
+ */
 function prepareOptions(options?: { [key: string]: boolean }): number {
     let result = 0;
-    // https://yandex.ru/dev/speller/doc/ru/reference/speller-options
     const standartOptions: { [key: string]: number } = {
         IGNORE_DIGITS: 2,
         IGNORE_URLS: 4,
@@ -130,6 +140,21 @@ function prepareOptions(options?: { [key: string]: boolean }): number {
     return result;
 }
 
+/**
+ * Prepare settings for the Yandex.Speller API request.
+ *
+ * @param {Settings} [settings] - An object containing settings for the request.
+ * @param {string} [settings.format] - Text format: plain or html.
+ * @param {string|Array} [settings.lang] - Language: en, ru or uk.
+ * @param {number} [settings.requestLimit] - Request repeat count in case of internet connection issues.
+ * @param {number} [settings.timeout] - Timeout between request repeats in milliseconds.
+ * @param {Object} [settings.options] - Options for the request.
+ * @param {boolean} [settings.options.ignoreDigits] - Ignore words with numbers, such as "avp17h4534".
+ * @param {boolean} [settings.options.ignoreUrls] - Ignore Internet addresses, email addresses, and filenames.
+ * @param {boolean} [settings.options.findRepeatWords] - Highlight repetitions of words, consecutive. For example, "I flew to to to Cyprus".
+ * @param {boolean} [settings.options.ignoreCapitalization] - Ignore the incorrect use of UPPERCASE / lowercase letters, for example, in the word "moscow".
+ * @returns {Object} - An object containing the prepared settings for the request.
+ */
 function prepareSettings(settings?: Settings): { [key: string]: any } {
     settings = settings || {};
 
@@ -142,6 +167,12 @@ function prepareSettings(settings?: Settings): { [key: string]: any } {
     };
 }
 
+/**
+ * Formats the list of spelling errors into a user-friendly format.
+ *
+ * @param {SpellingError[]} errors - The list of spelling errors.
+ * @returns {string} - A user-friendly string representation of the spelling errors.
+ */
 function formatSpellingErrors(errors: SpellingError[]): string {
     if (errors.length === 0) {
         return 'No spelling errors found.';
