@@ -80,7 +80,7 @@ export async function checkText(params: CheckTextParams): Promise<WordError[]> {
 export function formatSpellingErrors(errors: WordError[]): string {
   return errors.map(error => {
     const suggestions = error.s.join(', ');
-    return `Code: ${error.code}, Word: "${error.word}" error in symbol at position ${error.pos}. Suggestions: ${suggestions}`;
+    return `Word: "${error.word}" error in symbol at position ${error.pos}. Suggestions: ${suggestions}`;
   }).join('\n');
 }
 
@@ -115,10 +115,12 @@ export function validateText(text: string): boolean {
   const validCharacters = /^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?()"'-]+$/;
 
   if (text.length > maxLength) {
+    console.error('Text is too long for spelling check.');
     return false;
   }
 
   if (!validCharacters.test(text)) {
+    console.error('Text contains invalid characters.');
     return false;
   }
 
