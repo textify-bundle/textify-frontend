@@ -11,9 +11,9 @@ export type SpellCheckResponse = {
 };
 
 export type CheckTextParams = {
-  text: string;
-  lang?: string;
-  options?: number;
+  text: string; 
+  lang?: string; 
+  options?: number; 
   format?: string; 
   callback?: string; 
 };
@@ -41,47 +41,45 @@ export async function checkText(params: CheckTextParams): Promise<SpellCheckResp
 export function formatSpellingErrors(errors: SpellCheckResponse[]): string {
   return errors.map(error => {
     const suggestions = error.s.join(', ');
-    return `Word: "${error.word}" at position ${error.pos} (row ${error.row}, col ${error.col}). Suggestions: ${suggestions}`;
+    return `Word: "${error.word}" error in symbol at position ${error.pos} (line: ${error.row + 1}). Suggestions: ${suggestions}`;
   }).join('\n');
 }
 
 export function autoCorrectText(text: string, errors: SpellCheckResponse[]): string {
-  let correctedText = text;
-
-  errors.forEach(error => {
-    if (error.s.length > 0) {
-      const suggestion = error.s[0];
-      correctedText = correctedText.substring(0, error.pos) + suggestion + correctedText.substring(error.pos + error.len);
+    let correctedText = text;
+  
+    errors.forEach(error => {
+      if (error.s.length > 0) {
+        const suggestion = error.s[0];
+        correctedText = correctedText.substring(0, error.pos) + suggestion + correctedText.substring(error.pos + error.len);
+      }
+    });
+  
+    return correctedText;
+  }
+  
+  export function validateText(text: string): boolean {
+    const maxLength = 10000;
+    const validCharacters = /^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?()"'-]+$/;
+  
+    if (text.length > maxLength) {
+      return false;
     }
-  });
-
-  return correctedText;
-}
-
-export function validateText(text: string): boolean {
-  const maxLength = 10000;
-  const validCharacters = /^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?()"'-]+$/;
-
-  if (text.length > maxLength) {
-    console.error('Text is too long for spelling check.');
-    return false;
+  
+    if (!validCharacters.test(text)) {
+      return false;
+    }
+  
+    return true;
   }
-
-  if (!validCharacters.test(text)) {
-    console.error('Text contains invalid characters.');
-    return false;
+  
+  export function handleSpellerError(error: any): Error {
+    console.error('Speller service error:', error);
+  
+    const structuredError = new Error('Speller service error');
+    structuredError.name = 'SpellerServiceError';
+    structuredError.message = error.message || 'An error occurred while checking the text.';
+    structuredError.stack = error.stack || '';
+  
+    return structuredError;
   }
-
-  return true;
-}
-
-export function handleSpellerError(error: any): Error {
-  console.error('Speller service error:', error);
-
-  const structuredError = new Error('Speller service error');
-  structuredError.name = 'SpellerServiceError';
-  structuredError.message = error.message || 'An error occurred while checking the text.';
-  structuredError.stack = error.stack || '';
-
-  return structuredError;
-}
