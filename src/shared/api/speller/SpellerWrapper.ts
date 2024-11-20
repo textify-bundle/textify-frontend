@@ -1,12 +1,19 @@
 import axios from 'axios';
 
+export enum SpellerErrorCode {
+    ERROR_UNKNOWN_WORD = 1,
+    ERROR_REPEAT_WORD = 2,
+    ERROR_CAPITALIZATION = 3,
+    ERROR_TOO_MANY_ERRORS = 4
+  }
+
 export type WordError = {
-    code: number;
+    code: SpellerErrorCode;
     pos: number;
     len: number;
     word: string;
     s: string[];
-  };
+};
 
 export type CheckTextParams = {
   text: string; 
@@ -39,7 +46,7 @@ export async function checkText(params: CheckTextParams): Promise<WordError[]> {
 export function formatSpellingErrors(errors: WordError[]): string {
   return errors.map(error => {
     const suggestions = error.s.join(', ');
-    return `Word: "${error.word}" error in symbol at position ${error.pos}. Suggestions: ${suggestions}`;
+    return `Code: ${error.code}, Word: "${error.word}" error in symbol at position ${error.pos}. Suggestions: ${suggestions}`;
   }).join('\n');
 }
 
