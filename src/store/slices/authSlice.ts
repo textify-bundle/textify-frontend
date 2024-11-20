@@ -1,15 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { supabase } from "../../utils/client";
+import { AuthService } from "../../shared/api/auth/AuthService"; 
 import { User, Session } from "@supabase/supabase-js";
-
 interface AuthState {
   user: User | null;
   session: Session | null;
   accessToken: string | null;
   refreshToken: string | null;
   error: string | null;
-  lastRefreshTime: number | null;  
-
+  lastRefreshTime: number | null;
 }
 
 const initialState: AuthState = {
@@ -21,12 +19,11 @@ const initialState: AuthState = {
   error: null,
 };
 
-
-
- export const signIn = createAsyncThunk(
+// Логика для входа
+export const signIn = createAsyncThunk(
   "auth/signIn",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await AuthService.login(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -39,10 +36,11 @@ const initialState: AuthState = {
   }
 );
 
+// Логика для регистрации
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await AuthService.registration(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -55,28 +53,22 @@ export const signUp = createAsyncThunk(
   }
 );
 
+// Логика для выхода
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
-    try {
-      await supabase.auth.signOut();
-      return {}; 
-    } catch (error: unknown) {
-      
-      if (error instanceof Error) {
-        return rejectWithValue(error.message); 
-      }
-      
-      return rejectWithValue("An unknown error occurred during logout");
-    }
+    const { error } = await AuthService.logout();
+    if (error) return rejectWithValue(error.message);
+
+    return {}; // Успешный выход
   }
 );
 
-
+// Восстановление сессии
 export const restoreSession = createAsyncThunk(
   "auth/restoreSession",
   async (_, { dispatch, rejectWithValue }) => {
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await AuthService.getSession();
     if (error || !data.session) {
       dispatch(logout());
       return {};
@@ -90,7 +82,6 @@ export const restoreSession = createAsyncThunk(
     }
 
     const user = session.user;
-
     return {
       user,
       session,
@@ -100,7 +91,7 @@ export const restoreSession = createAsyncThunk(
   }
 );
 
-
+// Логика для валидации токена
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
   async (_, { getState, dispatch, rejectWithValue }) => {
@@ -118,21 +109,21 @@ export const validateToken = createAsyncThunk(
     }
   }
 );
-const REFRESH_INTERVAL = 60000; 
 
+// Логика для обновления токенов
+const REFRESH_INTERVAL = 60000; 
 export const refreshTokens = createAsyncThunk(
   "auth/refreshTokens",
   async (_, { getState, rejectWithValue }) => {
     const state = getState() as { auth: AuthState };
     const { lastRefreshTime } = state.auth;
 
-    
     const now = Date.now();
     if (lastRefreshTime && now - lastRefreshTime < REFRESH_INTERVAL) {
       return rejectWithValue("Запрос на обновление слишком частый");
     }
 
-    const { data, error } = await supabase.auth.refreshSession();
+    const { data, error } = await AuthService.refreshSession();
     if (error || !data.session) {
       return rejectWithValue("Не удалось обновить токены");
     }
@@ -247,5 +238,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout: logoutAction } = authSlice.actions; 
+export const { logout: logoutAction } = authSlice.actions;
 export default authSlice.reducer;

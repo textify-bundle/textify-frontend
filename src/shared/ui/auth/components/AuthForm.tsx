@@ -2,7 +2,7 @@ import React from "react";
 import { TextField, Button, CircularProgress, Typography } from "@mui/material";
 
 interface AuthFormProps {
-  formData: { firstName:string, lastName:string, email: string; password: string };
+  formData: { email: string; password: string };
   setFormData: React.Dispatch<React.SetStateAction<{ email: string; password: string }>>;
   isLoading: boolean;
   isSignUp: boolean;
@@ -24,7 +24,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, i
       }}
       className="auth-form"
     >
-      {isSignUp && (
+      {/* {isSignUp && (
         <>
           <TextField
             className="input-field"
@@ -47,7 +47,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, i
             sx={{ mb: 2 }}
           />
         </>
-      )}
+      )} */}
       <TextField
         className="input-field"
         size="small"
