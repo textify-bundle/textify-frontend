@@ -1,38 +1,49 @@
-import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import AuthPage from "./pages/AuthPage/AuthPage";
-import LayoutWrapper from "./pages/LayoutWrapper/LayoutWrapper";
-import ProtectedRoute from "./app/ProtectedRoute";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "./store";
-import { restoreSession, refreshTokens } from "./store/slices/authSlice";
-import { supabase } from "./utils/client";
+// App.tsx
+import React, { useState } from 'react';
+import { checkSpelling, SpellingError } from './shared/api/speller/SpellerWrapper';
 
 const App: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+    const [text, setText] = useState<string>('');
+    const [errors, setErrors] = useState<SpellingError[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    dispatch(restoreSession());
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "TOKEN_REFRESHED" && session) {
-        dispatch(refreshTokens());
-      }
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
+    const handleCheckSpelling = async () => {
+        setLoading(true);
+        try {
+            const result = await checkSpelling(text);
+            setErrors(result);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
-  }, [dispatch]);
 
-  return (
-    <Routes>
-      <Route path="/" element={<AuthPage />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/main" element={<LayoutWrapper />} />
-      </Route>
-    </Routes>
-  );
+    return (
+        <div>
+            <h1>Spell Checker</h1>
+            <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Enter text to check spelling..."
+            />
+            <button onClick={handleCheckSpelling} disabled={loading}>
+                {loading ? 'Checking...' : 'Check Spelling'}
+            </button>
+            {errors.length > 0 && (
+                <div>
+                    <h2>Spelling Errors:</h2>
+                    <ul>
+                        {errors.map((error, index) => (
+                            <li key={index}>
+                                Word: {error.word}, Suggestions: {error.suggestions.join(', ')}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default App;
