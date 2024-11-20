@@ -4,7 +4,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import './ActionBar.scss';
-import ExportBox from '../../export/Export';  
+import ExportBox from '../../export/Export.tsx';  
+import Settings from '../settings/settings/Settings.tsx';
+import ShareOverlay from '../../overlay/ShareOverlay.tsx';
  
 interface User {
     id: string;
@@ -17,7 +19,7 @@ interface ActionBarProps {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
-    const pages = ['Отправить', 'Экспортировать', '...'];  
+   
     const colors = ['#4C84EA', '#2B8643', '#0751D8'];
 
     const getRandomColor = () => {
@@ -38,11 +40,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
 
     const randomUsers = shuffleArray([...users]).slice(0, 4);
 
-    const handleClick = (index: number) => {
-        if (onClick) {
-            onClick(index);
-        }
-    };
+     
 
     return (
         <AppBar
@@ -77,7 +75,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
                                     position: 'absolute',
                                     zIndex: 1,
                                     backgroundColor: getRandomColor(),
-                                    left: `${index * 21}px`,
+                                    left: `${index * 21 - 100}px`,   
                                 }}
                             >
                                 {user.name.charAt(0)}
@@ -88,9 +86,9 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
                             className="main-buttons-container"
                             style={{ marginLeft: calculateMarginLeft(randomUsers.length) }}
                         >
-                           
+                           <ShareOverlay />
                            <ExportBox /> 
-
+                            <Settings/>
                         </Box>
                     </Box>
                 </Toolbar>

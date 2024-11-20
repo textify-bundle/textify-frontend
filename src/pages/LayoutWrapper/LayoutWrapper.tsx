@@ -12,11 +12,11 @@ const LayoutWrapper = () => {
   const users = [
     {
       id: '1',
-      name: 'Oleg',
+      name: 'wleg',
     },
     {
       id: '2',
-      name: 'Oleg',
+      name: 'qwOleg',
     },
     {
       id: '3',
