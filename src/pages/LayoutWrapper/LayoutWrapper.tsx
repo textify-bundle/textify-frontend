@@ -1,73 +1,59 @@
 import PagesTree from "../../shared/ui/pages-tree/PagesTree";
 import ActionBar from "../../widgets/header/action-bar/ActionBar";
+import {  useState } from "react";
+import NewSearch from "../../shared/ui/search/NewSearch";
+
+
 
 const LayoutWrapper = () => {
-  const users =[
+  const [userEmail, setUserEmail] = useState<string | undefined>('stariy boh');
+
+
+  const users = [
     {
       id: '1',
-      name: 'Oleg'
+      name: 'wleg',
     },
     {
       id: '2',
-      name: 'Oleg'
+      name: 'qwOleg',
     },
     {
       id: '3',
-      name: 'Oleg'
-    },
-  ]
-  const tree = [
-    {
-      name: 'Main',
-      type: 'link',
-      link: '/main',
-    },
-    {
-      name: 'Trash',
-      type: 'link',
-      link: '/trash',
-    },
-    {
-      name: 'Create Project',
-      type: 'action',
-      action: 'create',
-      icon: 'plus',
-    },
-    {
-      name: 'Number 1',
-      type: 'dropdown',
-      link: '/number1',
-      items: [
-        { name: 'Page 1', type: 'link', link: '/number1/page1' },
-        { name: 'Page 2', type: 'link', link: '/number1/page2' },
-        { name: 'Page 3', type: 'link', link: '/number1/page3' },
-      ],
-    },
-    {
-      name: 'Number 2',
-      type: 'dropdown',
-      link: '/number2',
-      items: [
-        { name: 'Page 1', type: 'link', link: '/number2/page1' },
-        { name: 'Page 2', type: 'link', link: '/number2/page2' },
-        { name: 'Page 3', type: 'link', link: '/number2/page3' },
-      ],
+      name: 'Oleg',
     },
   ];
 
   return (
-    <div style={{ display: 'flex', }}>
-      <div>
-        <h2><img style={{borderRadius:'40px', width: '40px', height: '40px'}} src='https://sm.ign.com/t/ign_nordic/review/p/persona-5-/persona-5-review_htue.1280.jpg'></img>   User name</h2>
-        <PagesTree tree={tree} />
+    <div style={{ display: 'flex' }}>
+      <div style={{ background: '#F8F7F5', height: '100vh', width: '260px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginInline: 15, marginTop: 15, fontSize: 12, height: ""}}>
+      <img
+            style={{ borderRadius: '40px', width: '40px', height: '40px', marginRight: 20 }}
+            src="https://sm.ign.com/t/ign_nordic/review/p/persona-5-/persona-5-review_htue.1280.jpg"
+          />
+          {userEmail}
+        </div>
+        <div style={{ marginLeft: 11, marginTop: 20, width:200 }}>
+          <NewSearch />
+        </div>
+        <PagesTree />
       </div>
-      <div style={{width: '100%'}}>
-        <div style={{ display: 'flex', justifyContent: 'end'}}>
-          <div style={{width: '380px'}}>
-          <ActionBar users={users} />
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <div style={{ width: '380px' }}>
+            <ActionBar users={users} />
           </div>
         </div>
       </div>
+              <div style={{
+          backgroundColor: '#0751D8',
+          height: 40,
+          width: 220,
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+        }}></div>
     </div>
   );
 };
