@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export enum SpellerErrorCode {
+export enum WordErrorType {
     ERROR_UNKNOWN_WORD = 1,
     ERROR_REPEAT_WORD = 2,
     ERROR_CAPITALIZATION = 3,
@@ -8,7 +8,7 @@ export enum SpellerErrorCode {
   }
 
 export type WordError = {
-    code: SpellerErrorCode;
+    code: WordErrorType;
     pos: number;
     len: number;
     word: string;
