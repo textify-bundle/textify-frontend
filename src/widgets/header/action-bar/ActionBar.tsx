@@ -4,7 +4,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import './ActionBar.scss';
-
+import ExportBox from '../../export/Export.tsx';  
+import Settings from '../settings/settings/Settings.tsx';
+import ShareOverlay from '../../overlay/ShareOverlay.tsx';
+ 
 interface User {
     id: string;
     name: string;
@@ -16,7 +19,7 @@ interface ActionBarProps {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
-    const pages = ['Отправить', 'Экспортировать', '...'];
+   
     const colors = ['#4C84EA', '#2B8643', '#0751D8'];
 
     const getRandomColor = () => {
@@ -37,17 +40,14 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
 
     const randomUsers = shuffleArray([...users]).slice(0, 4);
 
-    const handleClick = (index: number) => {
-        if (onClick) {
-            onClick(index);
-        }
-    };
+     
 
     return (
         <AppBar
             position="static"
             sx={{
                 backgroundColor: "transparent",
+                boxShadow: 'none',
                 width: '345.5px',
                 height: '31px',
             }}
@@ -75,7 +75,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
                                     position: 'absolute',
                                     zIndex: 1,
                                     backgroundColor: getRandomColor(),
-                                    left: `${index * 21}px`,
+                                    left: `${index * 21 - 100}px`,   
                                 }}
                             >
                                 {user.name.charAt(0)}
@@ -86,31 +86,9 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
                             className="main-buttons-container"
                             style={{ marginLeft: calculateMarginLeft(randomUsers.length) }}
                         >
-                            {pages.map((page, index) => (
-                                <Button
-                                    key={page}
-                                    className={`main-button ${page === '...' ? 'three-dots-button' : ''}`}
-                                    sx={{
-                                        color: 'black',
-                                        display: 'block',
-                                        height: '31px',
-                                        minWidth: 'auto',
-                                        padding: '0 10px',
-                                        textTransform: 'none',
-                                        marginLeft: '8px',
-                                    }}
-                                    onClick={() => handleClick(index)}
-                                >
-                                    {page === '...' ? (
-                                        <span className="dots-container">
-                                            <span className="dot"></span>
-                                            <span className="dot"></span>
-                                            <span className="dot"></span>
-                                        </span>)
-                                        : (page)}
-
-                                </Button>
-                            ))}
+                           <ShareOverlay />
+                           <ExportBox /> 
+                            <Settings/>
                         </Box>
                     </Box>
                 </Toolbar>

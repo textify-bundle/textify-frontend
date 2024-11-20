@@ -6,7 +6,6 @@ import { signIn, signUp } from "../../store/slices/authSlice";
 import { AppDispatch, RootState } from "../../store";
 import AuthHeader from "../../shared/ui/auth/components/AuthHeader";
 import AuthForm from "../../shared/ui/auth/components/AuthForm";
-import UserInfo from "../../shared/ui/auth/components/UserInfo";
 import AuthSwitch from "../../shared/ui/auth/components/AuthSwitch";
 import './authPage.scss';
 const AuthPage: React.FC = () => {
@@ -15,7 +14,7 @@ const AuthPage: React.FC = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const dispatch = useDispatch<AppDispatch>();
-  const { user, session, error } = useSelector((state: RootState) => state.auth);  
+  const { user, error } = useSelector((state: RootState) => state.auth);  
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -68,9 +67,11 @@ const AuthPage: React.FC = () => {
         handleAuth={handleAuth}
         error={error}
       />
-      {user && session && <UserInfo user={user} session={session} />}
       <AuthSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
+    <Button>
+      
+    </Button>
     </div>
   );
 };
