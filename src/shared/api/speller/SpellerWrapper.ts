@@ -184,6 +184,26 @@ function formatSpellingErrors(errors: SpellingError[]): string {
     }).join('\n');
 }
 
+/**
+ * Auto-correct text based on spelling suggestions.
+ *
+ * @param {string} text - The original text with potential spelling errors.
+ * @param {SpellingError[]} errors - The list of spelling errors with suggestions.
+ * @returns {string} - The corrected text with spelling errors replaced by suggestions.
+ */
+function autoCorrectText(text: string, errors: SpellingError[]): string {
+    let correctedText = text;
+
+    errors.forEach(error => {
+        if (error.s.length > 0) {
+            const suggestion = error.s[0]; // Use the first suggestion
+            correctedText = correctedText.substring(0, error.pos) + suggestion + correctedText.substring(error.pos + error.len);
+        }
+    });
+
+    return correctedText;
+}
+
 const supportedFormats = ['plain', 'html'];
 
 export {
@@ -197,5 +217,6 @@ export {
     ERROR_CAPITALIZATION,
     ERROR_TOO_MANY_ERRORS,
     supportedFormats,
-    formatSpellingErrors
+    formatSpellingErrors,
+    autoCorrectText
 };
