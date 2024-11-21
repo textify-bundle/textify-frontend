@@ -2,20 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Box, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
-import { signIn, signUp } from "../../store/slices/authSlice";
-import { AppDispatch, RootState } from "../../store";
-import AuthHeader from "../../shared/ui/auth/components/AuthHeader";
-import AuthForm from "../../shared/ui/auth/components/AuthForm";
-import UserInfo from "../../shared/ui/auth/components/UserInfo";
-import AuthSwitch from "../../shared/ui/auth/components/AuthSwitch";
-import './authPage.scss';
+import { signIn, signUp } from "../../../../store/slices/authSlice";
+import { AppDispatch, RootState } from "../../../../store";
+import AuthHeader from "../../../../shared/ui/auth/components/AuthHeader";
+import AuthForm from "../../../../shared/ui/auth/components/AuthForm";
+import AuthSwitch from "../../../../shared/ui/auth/components/AuthSwitch";
+import './index.scss';
+
+
 const AuthPage: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const dispatch = useDispatch<AppDispatch>();
-  const { user, session, error } = useSelector((state: RootState) => state.auth);  
+  const { user, error } = useSelector((state: RootState) => state.auth);  
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -68,9 +69,11 @@ const AuthPage: React.FC = () => {
         handleAuth={handleAuth}
         error={error}
       />
-      {user && session && <UserInfo user={user} session={session} />}
       <AuthSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
+    <Button>
+      
+    </Button>
     </div>
   );
 };

@@ -24,6 +24,30 @@ const AuthForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, i
       }}
       className="auth-form"
     >
+      {/* {isSignUp && (
+        <>
+          <TextField
+            className="input-field"
+            size="small"
+            label="Имя"
+            name="firstName"
+            onChange={handleChange}
+            value={formData.firstName}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            className="input-field"
+            size="small"
+            label="Фамилия"
+            name="lastName"
+            onChange={handleChange}
+            value={formData.lastName}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+        </>
+      )} */}
       <TextField
         className="input-field"
         size="small"
