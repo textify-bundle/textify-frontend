@@ -3,41 +3,46 @@ import { Box, List, ListItemButton, Collapse, ListItemText, ListItemIcon, TextFi
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData } from '../../../store/slices/pagesSlice'; 
+import { fetchTreeData } from '../../../store/slices/pagesSlice';
 import './PagesTree.scss';
-import { AppDispatch } from '../../../store';
+import { AppDispatch, RootState } from '../../../store';
 
 interface TreeItem {
   name: string;
   type: 'link' | 'dropdown' | 'action';
   link?: string;
   icon?: string;
-  items?: TreeItem[];  
+  items?: TreeItem[];
 }
 
-
+interface ListItemLinkProps {
+  item: TreeItem;
+  open?: boolean;
+  onClick: (link: string | undefined, index?: number) => void;
+  active?: boolean;
+  onAddNewItem?: (item: TreeItem) => void;
+}
 
 const PagesTree: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tree, loading } = useSelector((state: any) => state.pages);  
+  const { tree, loading } = useSelector((state: RootState) => state.pages);
 
   const [openStates, setOpenStates] = React.useState<boolean[]>([]);
   const [activeLink, setActiveLink] = React.useState<string | null>(null);
   const [isEditingNewItem, setIsEditingNewItem] = React.useState<boolean>(false);
   const [newItemName, setNewItemName] = React.useState('');
-  const [parentItem, setParentItem] = React.useState<any | null>(null);
+  const [parentItem, setParentItem] = React.useState<TreeItem | null>(null);
 
-  
   useEffect(() => {
-    dispatch(fetchTreeData()); 
+    dispatch(fetchTreeData());
   }, [dispatch]);
 
-  const handleClick = (link: string | undefined, index?: number) => {
+  const handleClick = (link: string | undefined, index?: number): void => {
     if (link) {
       setActiveLink(link);
     }
-  
-    if (index !== undefined && tree[index].type === 'dropdown') {
+
+    if (index !== undefined && tree[index]?.type === 'dropdown') {
       setOpenStates((prevOpenStates) => {
         const newOpenStates = [...prevOpenStates];
         newOpenStates[index] = !newOpenStates[index];
@@ -46,7 +51,7 @@ const PagesTree: React.FC = () => {
     }
   };
 
-  const handleAddNewItem = (item: any) => {
+  const handleAddNewItem = (item: TreeItem) => {
     setParentItem(item);
     setIsEditingNewItem(true);
   };
@@ -55,11 +60,11 @@ const PagesTree: React.FC = () => {
     const itemName = newItemName.trim() || `New Project ${tree.length + 1}`;
     const newItem: TreeItem = {
       name: itemName,
-      type: 'link',   
+      type: 'link',
       link: `/new-project-${Date.now()}`,
     };
-  
-     dispatch({
+
+    dispatch({
       type: 'pages/updateTree',
       payload: (prevTree: TreeItem[]) => {
         const updatedTree = [...prevTree];
@@ -67,14 +72,12 @@ const PagesTree: React.FC = () => {
           updatedTree.push(newItem);
         }
         return updatedTree;
-      }
+      },
     });
-  
+
     setNewItemName('');
     setIsEditingNewItem(false);
   };
-  
-  
 
   if (loading) {
     return (
@@ -84,7 +87,7 @@ const PagesTree: React.FC = () => {
     );
   }
 
-  const ListItemLink = ({ item, open, onClick, active, onAddNewItem }: any) => {
+  const ListItemLink: React.FC<ListItemLinkProps> = ({ item, open, onClick, active, onAddNewItem }) => {
     let icon = null;
     if (item.type === 'dropdown') {
       icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
@@ -97,7 +100,7 @@ const PagesTree: React.FC = () => {
       if (item.type === 'action' && item.icon === 'plus') {
         onAddNewItem?.(item);
       } else {
-        onClick(item.link ?? '', undefined);
+        onClick(item.link); 
       }
     };
 
@@ -120,36 +123,34 @@ const PagesTree: React.FC = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', width: 224 }}>
       <Box sx={{ mt: 1 }} component="nav" aria-label="mailbox folders">
         <List>
-                {tree.map((item: TreeItem, index:number) => (
-                  
-          <React.Fragment key={item.name}>
-             {index == 2 && <div style={{width: "100%", height: "1px", backgroundColor: "rgba(0, 0, 0, 0.17)"}}></div>}
-            <ListItemLink
-              item={item}
-              open={openStates[index]}
-              onClick={(to: string) => handleClick(to, index)}
-              active={activeLink === item.link}
-              onAddNewItem={handleAddNewItem}
-            />
-           
+          {tree.map((item: TreeItem, index: number) => (
+            <React.Fragment key={item.name}>
+              {index === 2 && <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(0, 0, 0, 0.17)' }}></div>}
+              <ListItemLink
+                item={item}
+                open={openStates[index]}
+                onClick={(link: string | undefined) => handleClick(link, index)} 
+                active={activeLink === item.link}
+                onAddNewItem={handleAddNewItem}
+              />
 
-            {item.type === 'dropdown' && item.items && (
-              <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
-                <List disablePadding>
-                  {item.items.map((subItem: TreeItem) => (
-                    <ListItemLink
-                      key={subItem.name}
-                      item={subItem}
-                      onClick={(to: string) => handleClick(to, index)}
-                      active={activeLink === subItem.link}
-                      onAddNewItem={handleAddNewItem}
-                    />
-                  ))}
-                </List>
-              </Collapse>
-            )}
-          </React.Fragment>
-        ))}
+              {item.type === 'dropdown' && item.items && (
+                <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
+                  <List disablePadding>
+                    {item.items.map((subItem: TreeItem) => (
+                      <ListItemLink
+                        key={subItem.name}
+                        item={subItem}
+                        onClick={(link: string | undefined) => handleClick(link, index)} 
+                        active={activeLink === subItem.link}
+                        onAddNewItem={handleAddNewItem}
+                      />
+                    ))}
+                  </List>
+                </Collapse>
+              )}
+            </React.Fragment>
+          ))}
 
           {isEditingNewItem && (
             <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
@@ -176,7 +177,6 @@ const PagesTree: React.FC = () => {
         </List>
       </Box>
     </Box>
-    
   );
 };
 
