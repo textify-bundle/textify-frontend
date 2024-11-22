@@ -19,6 +19,7 @@ interface ActionBarProps {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick = () => {} }) => {
+    
    
     const colors = ['#4C84EA', '#2B8643', '#0751D8'];
 
