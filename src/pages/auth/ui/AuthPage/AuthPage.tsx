@@ -43,8 +43,8 @@ const AuthPage: React.FC = () => {
   const toggleMode = () => setIsSignUp((prev) => !prev);
 
   return (
-    <div className='auth-page-container'>
-    <Box className="auth-page" sx={{ padding: "20px", maxWidth: "400px", margin: "auto", mt: 5 }}>
+    <div className='auth-page-container' style={{ 'display': "flex", justifyContent: 'center', alignItems: 'center' }}>
+    <Box className="auth-page" sx={{ padding: "20px", maxWidth: "400px", margin: "auto", mt: 25 }}>
         <Button sx={{
         color:'white',
         fontSize:'13px',
@@ -71,9 +71,6 @@ const AuthPage: React.FC = () => {
       />
       <AuthorizationSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
-    <Button>
-      
-    </Button>
     </div>
   );
 };
