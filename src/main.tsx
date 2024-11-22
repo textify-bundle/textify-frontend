@@ -9,7 +9,7 @@ import * as Sentry from "@sentry/react";
 
 
 Sentry.init({
-  dsn: "https://4a816694c0f6c51d0258edb9e56a5eb2@o4508337282613248.ingest.us.sentry.io/4508337839865856",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),
