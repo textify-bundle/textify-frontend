@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getProjects, getPages } from '../../shared/api/sideBar/projectsService'; 
 
@@ -13,8 +12,17 @@ interface Page {
   project_id: number;
 }
 
+interface TreeItem {
+  name: string;
+  type: 'link' | 'dropdown' | 'action';
+  link?: string;
+  action?: string;
+  icon?: string;
+  items?: TreeItem[]; 
+}
+
 interface PagesState {
-  tree: any[];
+  tree: TreeItem[];
   loading: boolean;
   error: string | null;
 }
@@ -28,7 +36,6 @@ const initialState: PagesState = {
 export const fetchTreeData = createAsyncThunk(
   'pages/fetchTreeData',
   async () => {
-
     const projectsData = await getProjects();  
     const pagesData = await getPages();   
 
@@ -50,7 +57,7 @@ const pagesSlice = createSlice({
         state.loading = false;
         const { projectsData, pagesData } = action.payload;
 
-        const treeStructure = projectsData.map((project: Project) => {
+        const treeStructure: TreeItem[] = projectsData.map((project: Project) => {
           const projectPages = pagesData.filter((page: Page) => page.project_id === project.id);
 
           return {

@@ -49,7 +49,6 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
     <div>
        <Button
         variant="text"   
-        color="default"  
         onClick={handleOpenDialog}
         sx={{
           position:'absolute',

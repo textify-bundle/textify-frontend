@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { keyframes } from '@mui/system';
 import './Settings.css';
-import Search from "../../../../shared/ui/search/NewSearch.tsx";
+import Search from "../../../../shared/ui/search-bar/SearchBar.tsx";
 import ButtDel from "../butt/ButtDel";
 import SwitchButton from "../switch-button/SwitchButton.tsx";
 import ButtonInOut from "../butt/ButtonInOut.js";

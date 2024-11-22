@@ -1,6 +1,6 @@
 import PagesTree from "../../../../shared/ui/pages-tree/PagesTree";
 import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
-import NewSearch from "../../../../shared/ui/search/NewSearch";
+import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
 import store from "../../../../store";
 import Editor from "../../../../widgets/editor/Editor";
 

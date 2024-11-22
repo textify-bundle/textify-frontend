@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthService } from "../../shared/api/auth/AuthService"; 
+import { AuthService } from "../../shared/api/authorization/AuthorizationService"; 
 import { User, Session } from "@supabase/supabase-js";
 interface AuthState {
   user: User | null;
@@ -13,11 +13,12 @@ interface AuthState {
 const initialState: AuthState = {
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
   session: localStorage.getItem("session") ? JSON.parse(localStorage.getItem("session")!) : null,
-  accessToken: localStorage.getItem("accessToken"),
-  refreshToken: localStorage.getItem("refreshToken"),
+  accessToken: (localStorage.getItem("accessToken") || null) as string | null,
+  refreshToken: (localStorage.getItem("refreshToken") || null) as string | null, 
   lastRefreshTime: null,
   error: null,
 };
+
 
 export const signIn = createAsyncThunk(
   "auth/signIn",
@@ -177,15 +178,17 @@ const authSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
-        state.accessToken = action.payload.accessToken ;
-        state.refreshToken = action.payload.refreshToken;
-
+        state.accessToken = action.payload.accessToken ?? null; 
+        state.refreshToken = action.payload.refreshToken ?? null;
+      
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("session", JSON.stringify(action.payload.session));
-        localStorage.setItem("accessToken", action.payload.accessToken || "");
-        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        localStorage.setItem("accessToken", action.payload.accessToken ?? "");  
+        localStorage.setItem("refreshToken", action.payload.refreshToken ?? "");
+        
         state.error = null;
       })
+      
       .addCase(signUp.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
