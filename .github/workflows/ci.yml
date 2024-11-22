@@ -31,6 +31,8 @@ jobs:
 
       - name: Lint
         run: npm run lint
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}   
 
   unit-tests:
     runs-on: ${{ matrix.os }}
@@ -54,7 +56,8 @@ jobs:
 
       - name: Test Frontend
         run: npm run test
-
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}   
   e2e:
     runs-on: ubuntu-22.04
     steps:
@@ -69,4 +72,5 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
