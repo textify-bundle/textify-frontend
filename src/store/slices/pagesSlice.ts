@@ -1,10 +1,12 @@
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages } from '../../shared/api/sideBar/projectsService'; 
+import { getProjects, getPages } from '../../shared/api/sideBar/projectsService';
+import { RootState } from '../index';  
 
 interface Project {
   id: number;
   project_name: string;
+  owner?: string;
+
 }
 
 interface Page {
@@ -25,14 +27,21 @@ const initialState: PagesState = {
   error: null,
 };
 
-export const fetchTreeData = createAsyncThunk(
+export const fetchTreeData = createAsyncThunk<
+  { projectsData: Project[]; pagesData: Page[]; userEmail: string }, 
+  void, 
+  { state: RootState } 
+>(
   'pages/fetchTreeData',
-  async () => {
+  async (_, thunkAPI) => {
+    
+    const userEmail = thunkAPI.getState().auth.user?.email || 'example@mail.ru';
 
-    const projectsData = await getProjects();  
-    const pagesData = await getPages();   
+    
+    const projectsData = await getProjects();
+    const pagesData = await getPages();
 
-    return { projectsData, pagesData };
+    return { projectsData, pagesData, userEmail }; 
   }
 );
 
@@ -48,9 +57,10 @@ const pagesSlice = createSlice({
       })
       .addCase(fetchTreeData.fulfilled, (state, action) => {
         state.loading = false;
-        const { projectsData, pagesData } = action.payload;
+        const { projectsData, pagesData, userEmail } = action.payload;
+        const filteredProjects = projectsData.filter((project: Project) => project.owner === userEmail);
 
-        const treeStructure = projectsData.map((project: Project) => {
+        const treeStructure = filteredProjects.map((project: Project) => {
           const projectPages = pagesData.filter((page: Page) => page.project_id === project.id);
 
           return {
