@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthService } from "../../shared/api/auth/AuthService"; 
+import { AuthorizationService } from "../../shared/api/authorization/AuthorizationService"; 
 import { User, Session } from "@supabase/supabase-js";
 interface AuthState {
   user: User | null;
@@ -13,16 +13,17 @@ interface AuthState {
 const initialState: AuthState = {
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
   session: localStorage.getItem("session") ? JSON.parse(localStorage.getItem("session")!) : null,
-  accessToken: localStorage.getItem("accessToken"),
-  refreshToken: localStorage.getItem("refreshToken"),
+  accessToken: (localStorage.getItem("accessToken") || null) as string | null,
+  refreshToken: (localStorage.getItem("refreshToken") || null) as string | null, 
   lastRefreshTime: null,
   error: null,
 };
 
+
 export const signIn = createAsyncThunk(
   "auth/signIn",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await AuthService.login(email, password);
+    const { data, error } = await AuthorizationService.login(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -38,7 +39,7 @@ export const signIn = createAsyncThunk(
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await AuthService.registration(email, password);
+    const { data, error } = await AuthorizationService.registration(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -54,7 +55,7 @@ export const signUp = createAsyncThunk(
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
-    const { error } = await AuthService.logout();
+    const { error } = await AuthorizationService.logout();
     if (error) return rejectWithValue(error.message);
 
     return {};  
@@ -65,7 +66,7 @@ export const logout = createAsyncThunk(
 export const restoreSession = createAsyncThunk(
   "auth/restoreSession",
   async (_, { dispatch, rejectWithValue }) => {
-    const { data, error } = await AuthService.getSession();
+    const { data, error } = await AuthorizationService.getSession();
     if (error || !data.session) {
       dispatch(logout());
       return {};
@@ -118,7 +119,7 @@ export const refreshTokens = createAsyncThunk(
       return rejectWithValue("Запрос на обновление слишком частый");
     }
 
-    const { data, error } = await AuthService.refreshSession();
+    const { data, error } = await AuthorizationService.refreshSession();
     if (error || !data.session) {
       return rejectWithValue("Не удалось обновить токены");
     }
@@ -177,15 +178,17 @@ const authSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
-        state.accessToken = action.payload.accessToken ;
-        state.refreshToken = action.payload.refreshToken;
-
+        state.accessToken = action.payload.accessToken ?? null; 
+        state.refreshToken = action.payload.refreshToken ?? null;
+      
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("session", JSON.stringify(action.payload.session));
-        localStorage.setItem("accessToken", action.payload.accessToken || "");
-        localStorage.setItem("refreshToken", action.payload.refreshToken || "");
+        localStorage.setItem("accessToken", action.payload.accessToken ?? "");  
+        localStorage.setItem("refreshToken", action.payload.refreshToken ?? "");
+        
         state.error = null;
       })
+      
       .addCase(signUp.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;

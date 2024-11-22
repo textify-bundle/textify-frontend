@@ -10,7 +10,7 @@ interface AuthFormProps {
   error?: string | null; 
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, isSignUp, handleAuth, error }) => {
+const AuthorizationForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, isSignUp, handleAuth, error }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
@@ -89,4 +89,4 @@ const AuthForm: React.FC<AuthFormProps> = ({ formData, setFormData, isLoading, i
   );
 };
 
-export default AuthForm;
+export default AuthorizationForm;
