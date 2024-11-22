@@ -2,7 +2,7 @@ import { FC, MouseEvent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Card, CardActionArea, CardContent, CardMedia, Button } from '@mui/material';
-import './index.scss';
+import './ProjectCard.scss';
 
 interface ProjectCardProps {
   isRemoved?: boolean;

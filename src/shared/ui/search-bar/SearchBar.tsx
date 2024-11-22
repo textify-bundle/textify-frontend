@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import "./NewSearch.scss";
+import "./SearchBar.scss";
 import Src from './magnifyingGlass.jpg';
 interface NewSearchProps {
     onClick?: () => void;
@@ -8,7 +8,7 @@ interface NewSearchProps {
     onValueChange?: (value: string) => void;
 }
 
-const NewSearch: React.FC<NewSearchProps> = ({
+const SearchBar: React.FC<NewSearchProps> = ({
 onClick = () => {},
 placeholder = "Поиск",
 onValueChange = () => {},
@@ -59,4 +59,4 @@ onValueChange = () => {},
     );
 };
 
-export default NewSearch;
+export default SearchBar;

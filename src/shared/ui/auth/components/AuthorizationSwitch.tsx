@@ -6,7 +6,7 @@ interface AuthSwitchProps {
   toggleMode: () => void;
 }
 
-const AuthSwitch: React.FC<AuthSwitchProps> = ({ isSignUp, toggleMode }) => (
+const AuthorizationSwitch: React.FC<AuthSwitchProps> = ({ isSignUp, toggleMode }) => (
   <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "15px" }}>
     <span style={{ marginRight: "5px", color: "#000" }}>
       {isSignUp ? "Уже есть аккаунт?" : "Еще нет аккаунта?"}
@@ -25,4 +25,4 @@ const AuthSwitch: React.FC<AuthSwitchProps> = ({ isSignUp, toggleMode }) => (
   </Box>
 );
 
-export default AuthSwitch;
+export default AuthorizationSwitch;

@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
 import { signIn, signUp } from "../../../../store/slices/authSlice";
 import { AppDispatch, RootState } from "../../../../store";
-import AuthHeader from "../../../../shared/ui/auth/components/AuthHeader";
-import AuthForm from "../../../../shared/ui/auth/components/AuthForm";
-import AuthSwitch from "../../../../shared/ui/auth/components/AuthSwitch";
-import './index.scss';
+import AuthorizationHeader from "../../../../shared/ui/auth/components/AuthorizationHeader";
+import AuthorizationForm from "../../../../shared/ui/auth/components/AuthorizationForm";
+import AuthorizationSwitch from "../../../../shared/ui/auth/components/AuthorizationSwitch";
+import './AuthPage.scss';
 
 
 const AuthPage: React.FC = () => {
@@ -60,8 +60,8 @@ const AuthPage: React.FC = () => {
       }}>
         Textify
       </Button>
-      <AuthHeader isSignUp={isSignUp} />
-      <AuthForm
+      <AuthorizationHeader isSignUp={isSignUp} />
+      <AuthorizationForm
         formData={formData}
         setFormData={setFormData}
         isLoading={isLoading}
@@ -69,7 +69,7 @@ const AuthPage: React.FC = () => {
         handleAuth={handleAuth}
         error={error}
       />
-      <AuthSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
+      <AuthorizationSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
     </Box>
     </div>
   );
