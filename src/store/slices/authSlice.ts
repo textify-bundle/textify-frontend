@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthorizationService } from "../../shared/api/authorization/AuthorizationService"; 
+import { AuthService } from "../../shared/api/authorization/AuthorizationService"; 
 import { User, Session } from "@supabase/supabase-js";
 interface AuthState {
   user: User | null;
@@ -23,7 +23,7 @@ const initialState: AuthState = {
 export const signIn = createAsyncThunk(
   "auth/signIn",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await AuthorizationService.login(email, password);
+    const { data, error } = await AuthService.login(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -39,7 +39,7 @@ export const signIn = createAsyncThunk(
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    const { data, error } = await AuthorizationService.registration(email, password);
+    const { data, error } = await AuthService.registration(email, password);
     if (error) return rejectWithValue(error.message);
 
     const { user, session } = data;
@@ -55,7 +55,7 @@ export const signUp = createAsyncThunk(
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
-    const { error } = await AuthorizationService.logout();
+    const { error } = await AuthService.logout();
     if (error) return rejectWithValue(error.message);
 
     return {};  
@@ -66,7 +66,7 @@ export const logout = createAsyncThunk(
 export const restoreSession = createAsyncThunk(
   "auth/restoreSession",
   async (_, { dispatch, rejectWithValue }) => {
-    const { data, error } = await AuthorizationService.getSession();
+    const { data, error } = await AuthService.getSession();
     if (error || !data.session) {
       dispatch(logout());
       return {};
@@ -119,7 +119,7 @@ export const refreshTokens = createAsyncThunk(
       return rejectWithValue("Запрос на обновление слишком частый");
     }
 
-    const { data, error } = await AuthorizationService.refreshSession();
+    const { data, error } = await AuthService.refreshSession();
     if (error || !data.session) {
       return rejectWithValue("Не удалось обновить токены");
     }
