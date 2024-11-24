@@ -103,13 +103,16 @@ const PagesTree: React.FC = () => {
 
     return (
       <li className="list-item">
+         
         <ListItemButton
+        
           component={item.type === 'link' ? RouterLink : 'button'}
           to={item.type === 'link' ? item.link : undefined}
           onClick={handleItemClick}
           className={`list-item__button ${active ? 'active' : ''}`}
         >
-          <ListItemText primary={item.name} className="list-item__text" />
+           
+           <ListItemText primary={item.name} className="list-item__text" />
           {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
         </ListItemButton>
       </li>
@@ -145,6 +148,7 @@ const PagesTree: React.FC = () => {
                       onAddNewItem={handleAddNewItem}
                     />
                   ))}
+                     
                 </List>
               </Collapse>
             )}
