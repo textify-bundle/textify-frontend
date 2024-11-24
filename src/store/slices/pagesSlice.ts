@@ -6,7 +6,6 @@ interface Project {
   id: number;
   project_name: string;
   owner?: string;
-
 }
 
 interface Page {
@@ -15,8 +14,17 @@ interface Page {
   project_id: number;
 }
 
+interface TreeItem {
+  name: string;
+  type: 'dropdown' | 'link' | 'action';   
+  link?: string;
+  action?: string;
+  icon?: string;
+  items?: TreeItem[];  
+}
+
 interface PagesState {
-  tree: any[];
+  tree: TreeItem[];  
   loading: boolean;
   error: string | null;
 }
@@ -28,15 +36,12 @@ const initialState: PagesState = {
 };
 
 export const fetchTreeData = createAsyncThunk<
-  { projectsData: Project[]; pagesData: Page[]}, 
+  { projectsData: Project[]; pagesData: Page[] }, 
   void, 
-  { state: RootState } 
+  { state: RootState }
 >(
   'pages/fetchTreeData',
   async () => {
-    
-
-    
     const projectsData = await getProjects();
     const pagesData = await getPages();
 
@@ -57,22 +62,19 @@ const pagesSlice = createSlice({
       .addCase(fetchTreeData.fulfilled, (state, action) => {
         state.loading = false;
         const { projectsData, pagesData } = action.payload;
-        
 
-        const treeStructure = projectsData.map((project: Project) => {
-          const projectPages = pagesData.filter((page: Page) => page.project_id === project.id);
-
-          return {
-            name: project.project_name,
-            type: 'dropdown',
-            link: `/project/${project.id}`,
-            items: projectPages.map((page: Page) => ({
+        const treeStructure: TreeItem[] = projectsData.map((project: Project) => ({
+          name: project.project_name,
+          type: 'dropdown',  
+          link: `/project/${project.id}`,
+          items: pagesData
+            .filter((page: Page) => page.project_id === project.id)
+            .map((page: Page) => ({
               name: page.title,
-              type: 'link',
+              type: 'link',   
               link: `/project/${project.id}/page/${page.id}`,
             })),
-          };
-        });
+        }));
 
         state.tree = [
           { name: 'Главная', type: 'link', link: '/main' },
