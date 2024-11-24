@@ -28,20 +28,19 @@ const initialState: PagesState = {
 };
 
 export const fetchTreeData = createAsyncThunk<
-  { projectsData: Project[]; pagesData: Page[]; userEmail: string }, 
+  { projectsData: Project[]; pagesData: Page[]}, 
   void, 
   { state: RootState } 
 >(
   'pages/fetchTreeData',
-  async (_, thunkAPI) => {
+  async () => {
     
-    const userEmail = thunkAPI.getState().auth.user?.email || 'example@mail.ru';
 
     
     const projectsData = await getProjects();
     const pagesData = await getPages();
 
-    return { projectsData, pagesData, userEmail }; 
+    return { projectsData, pagesData }; 
   }
 );
 
@@ -57,10 +56,10 @@ const pagesSlice = createSlice({
       })
       .addCase(fetchTreeData.fulfilled, (state, action) => {
         state.loading = false;
-        const { projectsData, pagesData, userEmail } = action.payload;
-        const filteredProjects = projectsData.filter((project: Project) => project.owner === userEmail);
+        const { projectsData, pagesData } = action.payload;
+        
 
-        const treeStructure = filteredProjects.map((project: Project) => {
+        const treeStructure = projectsData.map((project: Project) => {
           const projectPages = pagesData.filter((page: Page) => page.project_id === project.id);
 
           return {
