@@ -20,7 +20,7 @@ const UserProjectList: React.FC = () => {
 
     const getImageUrl = (index: number) => {
         const id = (index * 71287328173) % 10 + 1;
-        return `../patterns/${id}.webp`;
+        return `/patterns/${id}.webp`;
       };
   
     return (
