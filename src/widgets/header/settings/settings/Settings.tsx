@@ -2,9 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Box, Button, Menu, MenuList } from '@mui/material';
 import './Settings.scss'
 import Search from "../../../../shared/ui/search-bar/Search.tsx";
-//import ButtDel from "../butt/ButtDel.tsx";
 import SwitchButton from "../switch-button/SwitchButton.tsx";
-//import ButtonInOut from "../butt/ButtonInOut.tsx";
 import PropTypes from 'prop-types';
 
 
@@ -32,7 +30,7 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
     }, []);
 
     const handleButtonClick = () => {
-        // Implement your button click logic here
+        
     };
 
     const handleClose = useCallback(() => {
@@ -59,15 +57,20 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 onClose={handleClose}
                 sx={{
                     width: '280px',
-                    height: '498px',
-                    borderRadius: 20,
-                  }}
+                    '& .MuiPaper-root, .MuiList-root': {
+                        borderRadius: '16px',
+                        paddingTop: '2px',
+                        paddingBottom: '0',
+                    },
+                }}
             >
                 <MenuList
                 className="settings-case_name"
                 sx={{
+                    marginBlock: "8px",
                     fontSize: '16pt',
-                    paddingLeft: '10px',
+                    paddingInline: '20px',
+                    boxSizing: "border-box"
                 }}
                 >
                 Настройки
@@ -75,12 +78,14 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
 
 
                 {!isTrash && (
-                    <Search
-                        className="settings-case_search"
-                        placeholder="Поиск по файлу"
-                        value={valueText}
-                        onChange={handleSearchChange}
-                    />
+                    <div style={{width: "100%", height: 40, paddingInline: 22, boxSizing: "border-box"}}>
+                        <Search
+                            className="settings-case_search"
+                            placeholder="Поиск по файлу"
+                            value={valueText}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
                 )}
 
                 <Button
@@ -89,13 +94,13 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 onClick={handleButtonClick}
                 sx={{
                     width: '100%',
-                    height: '36px',
+                    height: '42px',
                     textTransform: 'none',
                     borderRadius: '0px',
                     padding: '0px',
                     gap: '10px',
                     backgroundColor: 'white',
-                    color: 'gray',
+                    color: 'black',
                     fontFamily: '"Varela Round", sans-serif',
                     fontSize: '12pt',
                     fontWeight: 400,
@@ -119,13 +124,13 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 onClick={handleButtonClick}
                 sx={{
                     width: '100%',
-                    height: '36px',
+                    height: '42px',
                     textTransform: 'none',
                     borderRadius: '0px',
                     padding: '0px',
                     gap: '10px',
                     backgroundColor: 'white',
-                    color: 'gray',
+                    color: 'black',
                     fontFamily: '"Varela Round", sans-serif',
                     fontSize: '12pt',
                     fontWeight: 400,
@@ -149,13 +154,13 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 onClick={handleButtonClick}
                 sx={{
                     width: '100%',
-                    height: '36px',
+                    height: '42px',
                     textTransform: 'none',
                     borderRadius: '0px',
                     padding: '0px',
                     gap: '10px',
                     backgroundColor: 'white',
-                    color: 'gray',
+                    color: 'black',
                     fontFamily: '"Varela Round", sans-serif',
                     fontSize: '12pt',
                     fontWeight: 400,
@@ -179,13 +184,13 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 onClick={handleButtonClick}
                 sx={{
                     width: '100%',
-                    height: '36px',
+                    height: '42px',
                     textTransform: 'none',
                     borderRadius: '0px',
                     padding: '0px',
                     gap: '10px',
                     backgroundColor: 'white',
-                    color: 'gray',
+                    color: 'black',
                     fontFamily: '"Varela Round", sans-serif',
                     fontSize: '12pt',
                     fontWeight: 400,
@@ -203,19 +208,19 @@ const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
                 </Button>
 
 
-                <MenuList className="settings-case_theme">
-                    <p>Тема:</p>
-                    <SwitchButton className="settings-case-theme-switch" />
+                <div style={{display: "flex", width: "100%", height: "42px", flex: "auto", flexDirection: "row", paddingInline: 20, boxSizing: "border-box"}}>
+                    <p style={{lineHeight: "6px", marginRight: 5}}>Тема:</p>
+                    <SwitchButton className="settings-case-theme-switch"/>
+                </div>
 
-                
-                </MenuList>
+
                 <Button
                     className="buttout"
                     variant="contained"
                     onClick={handleButtonClick}
                     sx={{
                         width: '100%',
-                        height: '36px',
+                        height: '42px',
                         textTransform: 'none',
                         borderRadius: '0px',
                         padding: '0px',
