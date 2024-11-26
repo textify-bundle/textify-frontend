@@ -17,13 +17,18 @@ const UserProjectList: React.FC = () => {
   
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
+
+    const getImageUrl = (index: number) => {
+        const id = (index * 71287328173) % 10 + 1;
+        return `../patterns/${id}.webp`;
+      };
   
     return (
       <div  style={{ paddingTop: '18px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
         {projectData.map((project, index) => (
           <ProjectCard
             key={index}
-            imageUrl={`https://img1.akspic.ru/previews/5/3/0/9/7/179035/179035-voda-gora-gidroresursy-rastenie-oblako-500x.jpg`}
+            imageUrl={getImageUrl(index)}
             lastEntryTime={project.dateOfChange}
             projectName={project.name}
           />
