@@ -1,12 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
 .text {
-    font-family: "Valera Round", sans-serif;
-    font-size: 27px;
-    padding-right: 400px;
-    font-weight: 450;
+    font-family: 'SF Compact Rounded', sans-serif;
+    font-size: 30px;
+    padding-left: 40px;
+    font-weight: 400;
+    position: relative;
 }
-.latest-projects {
-    padding-top: 1px;
+.latest-projects-text {
+    padding-top: 0px;
 }
-.your-projects {
-    padding-top: 10px;
+.your-projects-text {
+    padding-top: 22px;
+}
+.last-projects{
+    padding-left: 40px;
+    padding-top: 24px;
+}
+.your-projects{
+    padding-left: 40px;
+    padding-top: 18px;
 }

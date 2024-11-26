@@ -4,7 +4,7 @@ import './LastProjectCard.scss';
 
 interface LastProjectCardProps {
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
 }
 
 const LastProjectCard: React.FC<LastProjectCardProps> = ({ 

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthPage } from "../pages/auth/";
 import { LayoutWrapper } from "../pages/layout-wrapper";
+import {MainPage} from "../pages/main-page/ui/MainPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
@@ -30,7 +31,7 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/" element={<AuthPage />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/main" element={<LayoutWrapper />} />
+        <Route path="/main" element={<MainPage />} />
       </Route>
     </Routes>
   );
