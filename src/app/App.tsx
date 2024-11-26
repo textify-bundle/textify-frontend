@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthPage } from "../pages/auth/";
-import { LayoutWrapper } from "../pages/layout-wrapper";
 import {MainPage} from "../pages/main-page/ui/MainPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useDispatch } from "react-redux";

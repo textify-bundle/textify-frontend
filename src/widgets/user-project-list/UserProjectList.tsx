@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
-import { RootState } from '../../store/index';
+import { AppDispatch, RootState } from '../../store/index';
 import ProjectCard from '../../shared/ui/project-card/ProjectCard';
 
 const UserProjectList: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const projectData = useSelector((state: RootState) => state.pages.projectData);
     const loading = useSelector((state: RootState) => state.pages.loading);
     const error = useSelector((state: RootState) => state.pages.error);
   
     useEffect(() => {
-        dispatch(fetchTreeData() as any);
-        dispatch(getCardData() as any);
+        dispatch(fetchTreeData());
+        dispatch(getCardData());
     }, [dispatch]);
   
     if (loading) return <div>Loading...</div>;
