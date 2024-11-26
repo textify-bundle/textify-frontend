@@ -32,13 +32,18 @@ const LastProjectList: React.FC = () => {
         title: 'Новый проект'
     };
 
+    const getImageUrl = (index: number) => {
+        const id = (index * 71287328173) % 10 + 1;
+        return `../patterns/${id}.webp`;
+      };
+
   return (
     <div style={{ width: '847px', display: 'flex', flexWrap: 'wrap',  justifyContent: 'flex-start', gap: '40.82px',}}>
       {filteredProjectData.map((project, index) => (
         <LastProjectCard 
           key={index}
           title={project.name}
-          imageUrl={`https://kolesa-uploads.ru/-/496e6109-245d-49c9-bd9d-356ef4a0c698/r1.jpg`}
+          imageUrl={getImageUrl(index)}
         />
       ))}
       <LastProjectCard
