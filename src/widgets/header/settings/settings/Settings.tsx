@@ -5,7 +5,7 @@ import Search from "../../../../shared/ui/search-bar/Search.tsx";
 import SwitchButton from "../switch-button/SwitchButton.tsx";
 import PropTypes from 'prop-types';
 
-// :)
+// :D
 interface SettingsProps {
     isTrash?: boolean;
 }
