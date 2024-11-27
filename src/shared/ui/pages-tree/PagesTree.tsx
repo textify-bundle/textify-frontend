@@ -1,21 +1,33 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import {
-  Box,
-  List,
-  ListItemButton,
-  Collapse,
-  ListItemText,
-  ListItemIcon
-} from '@mui/material';
+import {Box,  List,  ListItemButton,  Collapse,  ListItemText,  ListItemIcon,  TextField,} from '@mui/material';
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
-import {
-  Link as RouterLink,
-  MemoryRouter
-} from 'react-router-dom';
-import './index.scss';
+import { Link as RouterLink } from 'react-router-dom';
+import './PagesTree.scss';
 
-const ListItemLink = ({ item, open, onClick, active }) => {
+interface Item {
+  name: string;
+  type: 'link' | 'action' | 'dropdown' | string;
+  link?: string;
+  action?: string;
+  icon?: string;
+  items?: Item[];
+}
+
+interface ListItemLinkProps {
+  item: Item;
+  open?: boolean;
+  onClick: (to: string, index?: number) => void;
+  active?: boolean;
+  onAddNewItem?: (parentItem: Item) => void;
+}
+
+const ListItemLink: React.FC<ListItemLinkProps> = ({
+  item,
+  open,
+  onClick,
+  active,
+  onAddNewItem,
+}) => {
   let icon = null;
   if (item.type === 'dropdown') {
     icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
@@ -23,50 +35,47 @@ const ListItemLink = ({ item, open, onClick, active }) => {
     icon = <Add className="icon" />;
   }
 
+  const handleItemClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (item.type === 'action' && item.icon === 'plus') {
+      onAddNewItem?.(item);
+    } else {
+      onClick(item.link ?? '', undefined);
+    }
+  };
+
   return (
-    <li>
+    <li className="list-item">
       <ListItemButton
         component={item.type === 'link' ? RouterLink : 'button'}
         to={item.type === 'link' ? item.link : undefined}
-        onClick={() => onClick(item.link)}
-        className={`listItemButton ${active ? 'active' : ''}`}
+        onClick={handleItemClick}
+        className={`list-item__button ${active ? 'active' : ''}`}
       >
-        <ListItemText
-          primary={item.name}
-          className="listItemText"
-        />
-        {icon && <ListItemIcon className="addIcon">{icon}</ListItemIcon>}
+        <ListItemText primary={item.name} className="list-item__text" />
+        {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
       </ListItemButton>
     </li>
   );
 };
 
-ListItemLink.propTypes = {
-  item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['link', 'action', 'dropdown']).isRequired,
-    link: PropTypes.string,
-    action: PropTypes.string,
-    icon: PropTypes.string,
-    items: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['link']).isRequired,
-      link: PropTypes.string.isRequired,
-    })),
-  }).isRequired,
-  open: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
-  active: PropTypes.bool,
-};
+interface PagesTreeProps {
+  tree: Item[];
+}
 
-const RouterBreadcrumbs = ({ tree }) => {
-  const [openStates, setOpenStates] = React.useState(
-    tree.map(() => false)
-  );
-  const [activeItem, setActiveItem] = React.useState(null);
+const PagesTree: React.FC<PagesTreeProps> = ({ tree: initialTree }) => {
+  const [tree, setTree] = React.useState<Item[]>(initialTree);
+  const [openStates, setOpenStates] = React.useState<boolean[]>(tree.map(() => false));
+  const [activeLink, setActiveLink] = React.useState<string | null>(null);
+  const [isEditingNewItem, setIsEditingNewItem] = React.useState<boolean>(false);
+  const [newItemName, setNewItemName] = React.useState('');
+  const [parentItem, setParentItem] = React.useState<Item | null>(null);
 
-  const handleClick = (to, index) => {
-    setActiveItem(to);
+  const handleClick = (link: string | undefined, index?: number) => {
+    if (link) {
+      setActiveLink(link);
+    }
+
     if (index !== undefined && tree[index].type === 'dropdown') {
       setOpenStates((prevOpenStates) => {
         const newOpenStates = [...prevOpenStates];
@@ -76,14 +85,35 @@ const RouterBreadcrumbs = ({ tree }) => {
     }
   };
 
+  const handleAddNewItem = (item: Item) => {
+    setParentItem(item);
+    setIsEditingNewItem(true); 
+  };
+
+  const handleSaveNewItem = () => {
+    const itemName = newItemName.trim() || `New Project ${tree.length + 1}`;
+    const newItem: Item = {
+      name: itemName,
+      type: 'link',
+      link: `/new-project-${Date.now()}`,
+    };
+
+    setTree((prevTree) => {
+      const updatedTree = [...prevTree];
+      if (parentItem && parentItem.type === 'action') {
+        updatedTree.push(newItem);
+      }
+      return updatedTree;
+    });
+
+    setNewItemName('');
+    setIsEditingNewItem(false);
+  };
+
   return (
-    <MemoryRouter initialEntries={[tree[0].link]} initialIndex={0}>
+    // <MemoryRouter initialEntries={[tree[0]?.link || '/']} initialIndex={0}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: 197 }}>
-        <Box
-          sx={{ bgcolor: 'background.paper', mt: 1 }}
-          component="nav"
-          aria-label="mailbox folders"
-        >
+        <Box sx={{ bgcolor: 'background.paper', mt: 1 }} component="nav" aria-label="mailbox folders">
           <List>
             {tree.map((item, index) => (
               <React.Fragment key={item.name}>
@@ -91,9 +121,10 @@ const RouterBreadcrumbs = ({ tree }) => {
                   item={item}
                   open={openStates[index]}
                   onClick={(to) => handleClick(to, index)}
-                  active={activeItem === item.link}
+                  active={activeLink === item.link}
+                  onAddNewItem={handleAddNewItem}
                 />
-                {item.type === 'dropdown' && (
+                {item.type === 'dropdown' && item.items && (
                   <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
                     <List disablePadding>
                       {item.items.map((subItem) => (
@@ -101,7 +132,8 @@ const RouterBreadcrumbs = ({ tree }) => {
                           key={subItem.name}
                           item={subItem}
                           onClick={(to) => handleClick(to)}
-                          active={activeItem === subItem.link}
+                          active={activeLink === subItem.link}
+                          onAddNewItem={handleAddNewItem}
                         />
                       ))}
                     </List>
@@ -109,26 +141,33 @@ const RouterBreadcrumbs = ({ tree }) => {
                 )}
               </React.Fragment>
             ))}
+            {isEditingNewItem && (
+              <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
+                <TextField
+                  placeholder="New Project Name"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSaveNewItem();
+                    }
+                  }}
+                  fullWidth
+                  autoFocus
+                  variant="standard"
+                  sx={{
+                    '& .MuiInput-underline:before': { borderBottom: 'none' },
+                    '& .MuiInput-underline:after': { borderBottom: 'none' },
+                    '& .MuiInputBase-input': { padding: 0 },
+                  }}
+                />
+              </ListItemButton>
+            )}
           </List>
         </Box>
       </Box>
-    </MemoryRouter>
+    // </MemoryRouter>
   );
 };
 
-RouterBreadcrumbs.propTypes = {
-  tree: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['link', 'action', 'dropdown']).isRequired,
-    link: PropTypes.string,
-    action: PropTypes.string,
-    icon: PropTypes.string,
-    items: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['link']).isRequired,
-      link: PropTypes.string.isRequired,
-    })),
-  })).isRequired,
-};
-
-export default RouterBreadcrumbs;
+export default PagesTree;

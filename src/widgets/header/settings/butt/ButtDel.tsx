@@ -18,4 +18,4 @@ const ButtDel: React.FC<ButtDelProps> = ({ placeholder ,
     );
 };
 
-export default ButtDel;
+// export default ButtDel;

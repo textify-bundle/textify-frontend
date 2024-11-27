@@ -11,9 +11,9 @@ interface SwitchButtonProps {
 const SwitchButton: React.FC<SwitchButtonProps> = ({ checkedProp = false, onToggle, className = '' }) => {
     const [checked, setChecked] = useState<boolean>(checkedProp);
 
-    useEffect(() => {
-        setChecked(checkedProp);
-    }, [checkedProp]);
+//     useEffect(() => {
+//         setChecked(checkedProp);
+//     }, [checkedProp]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newChecked = event.target.checked;
@@ -26,10 +26,10 @@ const SwitchButton: React.FC<SwitchButtonProps> = ({ checkedProp = false, onTogg
             switchContainer?.classList.remove('active');
         }
 
-        if (onToggle) {
-            onToggle(newChecked);
-        }
-    };
+//         if (onToggle) {
+//             onToggle(newChecked);
+//         }
+//     };
 
     return (
         <Box className={`switch-container ${className}`}>

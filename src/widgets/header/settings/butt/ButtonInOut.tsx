@@ -17,4 +17,4 @@ const ButtonInOut: React.FC<ButtonInOutProps> = ({ placeholder = 'Выход', o
     );
 };
 
-export default ButtonInOut;
+// export default ButtonInOut;
