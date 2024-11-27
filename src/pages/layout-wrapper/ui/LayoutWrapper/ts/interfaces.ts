@@ -1,7 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type LayoutType = 'main' | 'project';
-
 export interface ILayoutWrapperProps {
-    layout: LayoutType[];
+    layout: string;
     children?: React.ReactNode;
 }
