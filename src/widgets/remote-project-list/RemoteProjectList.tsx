@@ -28,6 +28,7 @@ const RemoteProjectList: React.FC = () => {
         {projectData.map((project, index) => (
           <ProjectCard
             key={index}
+            isRemoved={true}
             imageUrl={getImageUrl(index)}
             lastEntryTime={project.dateOfChange}
             projectName={project.name}

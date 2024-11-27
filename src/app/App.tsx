@@ -7,8 +7,8 @@ import { AppDispatch } from "../store";
 import { restoreSession, refreshTokens } from "../store/slices/authSlice";
 import { supabase } from "../utils/client";
 import './styles/index.scss';
+import { MainPage } from "../pages/main-page";
 import LayoutWrapper from "../pages/layout-wrapper/ui/LayoutWrapper/LayoutWrapper";
-import { TrashBin } from "../pages/trash-bin";
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +31,7 @@ const App: React.FC = () => {
     <Routes>
             <Route path="/" element={<AuthPage />} />
             <Route element={<ProtectedRoute />}>
-                <Route path="/main" element={<LayoutWrapper layout={['trash']}><TrashBin /></LayoutWrapper>} />
+                <Route path="/main" element={<LayoutWrapper layout={['main']}><MainPage /></LayoutWrapper>} />
             </Route>
         </Routes>
   );
