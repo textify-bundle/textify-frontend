@@ -3,10 +3,11 @@ import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
 import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
 import store from "../../../../store";
 import Editor from "../../../../widgets/editor/Editor";
+import { ILayoutWrapperProps } from '../LayoutWrapper/ts/interfaces';
 
 
 
-const LayoutWrapper = () => {
+const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout, children }) => {
 
   const users = [
     {
@@ -41,13 +42,15 @@ const LayoutWrapper = () => {
             <ActionBar users={users} />
           </div>
         </div>
-        <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
+        {layout.includes('main') && children}
+        {layout.includes('trash') && children}
+        {layout.includes('project') && <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
           <h1>
             Project Title
             <hr />
           </h1>
           <Editor />
-        </div>
+        </div>}
       </div>
               <div style={{
           backgroundColor: '#0751D8',

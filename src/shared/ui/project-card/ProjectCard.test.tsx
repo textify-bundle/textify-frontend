@@ -6,7 +6,7 @@ import { vi, describe, it } from 'vitest';
 describe('ProjectCard Component', () => {
     const defaultProps = {
         imageUrl: 'https://example.com/image.jpg',
-        lastEntryTime: Date.now(),
+        lastEntryTime: new Date,
         projectName: 'Test Project',
         onRestore: vi.fn(),
         onClick: vi.fn(),

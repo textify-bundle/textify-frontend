@@ -7,15 +7,15 @@ import './ProjectCard.scss';
 interface ProjectCardProps {
   isRemoved?: boolean;
   imageUrl: string;
-  lastEntryTime?: string | number;
+  lastEntryTime?: Date;
   projectName?: string;
   onRestore?: () => void;
   onClick?: () => void;
 }
 
 
-const timeFromDate = (date: string | number): string => {
-  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ru });
+const timeFromDate = (date: Date): string => {
+  return formatDistanceToNow(date, { addSuffix: true, locale: ru });
 };
 
 /**
@@ -33,7 +33,7 @@ const timeFromDate = (date: string | number): string => {
 const ProjectCard: FC<ProjectCardProps> = ({
   isRemoved = false,
   imageUrl = 'default-placeholder.jpg',
-  lastEntryTime = Date.now(),
+  lastEntryTime = new Date(),
   projectName = 'Unknown Project',
   onRestore = () => {},
   onClick = () => {},

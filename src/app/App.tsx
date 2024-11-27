@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthPage } from "../pages/auth/";
-import { LayoutWrapper } from "../pages/layout-wrapper";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { restoreSession, refreshTokens } from "../store/slices/authSlice";
 import { supabase } from "../utils/client";
 import './styles/index.scss';
+import LayoutWrapper from "../pages/layout-wrapper/ui/LayoutWrapper/LayoutWrapper";
+import { TrashBin } from "../pages/trash-bin";
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,11 +29,11 @@ const App: React.FC = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<AuthPage />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/main" element={<LayoutWrapper />} />
-      </Route>
-    </Routes>
+            <Route path="/" element={<AuthPage />} />
+            <Route element={<ProtectedRoute />}>
+                <Route path="/main" element={<LayoutWrapper layout={['trash']}><TrashBin /></LayoutWrapper>} />
+            </Route>
+        </Routes>
   );
 };
 
