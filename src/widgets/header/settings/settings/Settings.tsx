@@ -1,151 +1,93 @@
-import { useState, useCallback } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { keyframes } from '@mui/system';
-import './Settings.css';
-import Search from "../../../../shared/ui/search-bar/SearchBar.tsx";
-import ButtDel from "../butt/ButtDel";
-import SwitchButton from "../switch-button/SwitchButton.tsx";
-import ButtonInOut from "../butt/ButtonInOut.js";
-import PropTypes from 'prop-types';
+import React, { useState, useCallback } from 'react';
+import { Box, Button, Menu, MenuList } from '@mui/material';
+import './Settings.scss';  // Подключаем ваш scss файл
+import Search from "../../../../shared/ui/search-bar/SearchBar";
+import SettingButton from "../butt/SettingButton";
+import SwitchButton from "../switch-button/SwitchButton";
+import ButtonInOut from "../butt/ButtonInOut";
 
-const slideIn = keyframes`
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
+interface SettingsProps {
+  isTrash?: boolean; // Опциональный проп для отображения корзины
+}
 
-const slideOut = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-`;
+const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [valueText, setValueText] = useState<string>('');
+  const open = Boolean(anchorEl);
 
-const Settings = ({ isTrash }) => {
-  const [open, setOpen] = useState(false);
-  const [valueText, setValue] = useState('');
-
-  const handleSearchChange = useCallback((newValue) => {
-    setValue(newValue); 
-  }, []);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
 
   const handleClose = useCallback(() => {
-    setOpen(false);
+    setAnchorEl(null);
   }, []);
 
-  const handleButtonClick = () => {};
+  const handleSearchChange = useCallback((newValue: string) => {
+    setValueText(newValue);
+  }, []);
+
+  const handleButtonClick = useCallback(() => {
+    console.log("Button clicked!");
+  }, []);
 
   return (
     <Box id="settings">
       <Button
         id="settings-button"
+        aria-controls={open ? 'settings-menu' : undefined}
         aria-haspopup="true"
-        onClick={handleClickOpen}
-        sx={{
-          position: 'absolute',
-          top:7,
-          right: 40,
-          height:35,
-          zIndex: 10,
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          alignContent:'center',
-          flexWrap:'nowrap',
-          justifyContent:'flex-end'
-        }}
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
       >
-        <span style={{color:'black', fontSize: '30px' }}>...</span>
+        ...
       </Button>
-
-      <Dialog
+      <Menu
+        id="settings-menu"
+        anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        onExited={handleClose}
-        sx={{
-          '& .MuiDialog-paper': {
-            width: '200px',
-            height: '350px',
-            maxWidth: 'none',
-            padding: 0,
-            borderRadius: '20px',
-            animation: open ? `${slideIn} 0.62s ease-out` : `${slideOut} 0.62s ease-out`,
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-          },
-        }}
-        BackdropProps={{
-          invisible: true,
-        }}
       >
-        <DialogTitle sx={{ borderRadius: '20px', }}>Настройки</DialogTitle>
-        <DialogContent sx={{ padding: '10px' }}>
-          {!isTrash && (
-            <Search
-              className="settings-case_search"
-              placeholder="Поиск по файлу"
-              value={valueText}
-              onChange={handleSearchChange}
-            />
-          )}
-
-          {!isTrash && (
-            <ButtDel
-              id="settings-case_custom-button"
-              placeholder="Удалить проект"
-              onClick={handleButtonClick}
-            />
-          )}
-
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Цвет фона"
+        <MenuList className="settings-menu-list">Настройки</MenuList>
+        {!isTrash && (
+          <Search
+            placeholder="Поиск по файлу"
+            value={valueText}
+            onChange={handleSearchChange}
+          />
+        )}
+        {!isTrash && (
+          <SettingButton
+            placeholder="Удалить проект"
             onClick={handleButtonClick}
           />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Размер шрифта"
-            onClick={handleButtonClick}
-          />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Набор шрифтов"
-            onClick={handleButtonClick}
-          />
-
-          <div id="settings-case_theme">
-            <p>Тема:</p>
-            <SwitchButton className="settings-case-theme-switch" />
-          </div>
-        </DialogContent>
-        <DialogActions sx={{borderRadius: '20px', padding: '0 10px 10px 10px' }}>
-          <ButtonInOut
-            className="settings-case_button-in-out"
-            placeholder="Выход"
-            onClick={handleButtonClick}
-            sx={{
-              borderRadius: '20px',
-            }}
-          />
-        </DialogActions>
-      </Dialog>
+        )}
+        <SettingButton
+          placeholder="Цвет фона"
+          onClick={handleButtonClick}
+        />
+        <SettingButton
+          placeholder="Размер шрифта"
+          onClick={handleButtonClick}
+        />
+        <SettingButton
+          placeholder="Набор шрифтов"
+          onClick={handleButtonClick}
+        />
+        <MenuList id="settings-case_theme">
+          <p>Тема:</p>
+          <SwitchButton />
+        </MenuList>
+        <ButtonInOut
+          placeholder="Выход"
+          onClick={handleButtonClick}
+        />
+      </Menu>
     </Box>
   );
-};
-
-Settings.propTypes = {
-  isTrash: PropTypes.bool,
 };
 
 export default Settings;

@@ -1,9 +1,17 @@
 import { Box, Button } from "@mui/material";
-import PropTypes from 'prop-types';
-import './ButtonInOut.css';
+import './ButtonInOut.scss';
 import { supabase } from "../../../../utils/client";   
 
-const ButtonInOut = ({ placeholder = "Выход", onClick }) => {
+interface ButtInOut {
+  placeholder: string , 
+  onClick?: () => void;
+}
+
+
+const ButtonInOut: React.FC<ButtInOut>= ({
+   placeholder = "Выход",
+    onClick
+   }) => {
   
   const handleSignOut = async () => {
     try {
@@ -21,16 +29,12 @@ const ButtonInOut = ({ placeholder = "Выход", onClick }) => {
 
   return (
     <Box className="butt">
-      <Button id="butt_in-out" onClick={handleSignOut}>
+      <Button className="butt_in-out" onClick={handleSignOut}>
         {placeholder}
       </Button>
     </Box>
   );
 };
 
-ButtonInOut.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-};
 
 export default ButtonInOut;

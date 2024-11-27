@@ -1,48 +1,59 @@
 import React, { useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import "./SearchBar.scss";
-import Src from './magnifyingGlass.jpg';
-interface NewSearchProps {
+import './SearchBar.scss';
+
+interface SearchProps {
+    imageSrc?: string;
     onClick?: () => void;
+    onChange?: (value: string) => void;
     placeholder?: string;
-    onValueChange?: (value: string) => void;
+    value?: string;
 }
 
-const SearchBar: React.FC<NewSearchProps> = ({
-onClick = () => {},
-placeholder = "Поиск",
-onValueChange = () => {},
+const Search: React.FC<SearchProps> = ({
+    imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
+    onClick,
+    onChange,
+    placeholder = "Поиск",
+    value = "",
 }) => {
-    const [value, setValue] = useState<string>('');
+    const [internalValue, setInternalValue] = useState(value);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
-        setValue(newValue);
-        onValueChange(newValue); 
+
+        if (onChange) {
+            onChange(newValue); 
+        } else {
+            setInternalValue(newValue); 
+        }
     };
 
-    const handlePress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handlePress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            console.log(e.currentTarget.value);
+            console.log(internalValue);
         }
     };
 
     return (
-        <Box className={`search-container`} onClick={onClick}  >
+        <Box className="search-container" onClick={onClick}>
             <TextField
+                className="search-form_side-bar"
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
                 onKeyPress={handlePress}
-                value={value}
+                value={onChange ? value : internalValue} 
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
-                            <img  src={Src}  />
+                            <img
+                                className="search-glass_img"
+                                src={imageSrc}
+                                alt="glass"
+                            />
                         </InputAdornment>
                     ),
-                    style: {fontSize: 12, gap: "5px", marginLeft: 2}
-
                 }}
                 sx={{
                     '& .MuiOutlinedInput-root': {
@@ -59,4 +70,4 @@ onValueChange = () => {},
     );
 };
 
-export default SearchBar;
+export default Search;
