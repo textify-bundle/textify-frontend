@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Button, Menu, MenuList } from '@mui/material';
-import './Settings.scss'; 
+import { Box, Button, Menu, MenuList, MenuItem } from '@mui/material';
+import './Settings.scss';
 import Search from "../../../../shared/ui/search-bar/SearchBar";
 import SettingButton from "../butt/SettingButton";
 import SwitchButton from "../switch-button/SwitchButton";
 import ButtonInOut from "../butt/ButtonInOut";
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 
 interface SettingsProps {
   isTrash?: boolean;
@@ -12,8 +13,10 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [themeAnchorEl, setThemeAnchorEl] = useState<null | HTMLElement>(null); // Для темы
   const [valueText, setValueText] = useState<string>('');
   const open = Boolean(anchorEl);
+  const openTheme = Boolean(themeAnchorEl); // для открытия меню темы
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,6 +37,14 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
     console.log("Button clicked!");
   }, []);
 
+  const handleThemeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setThemeAnchorEl(event.currentTarget);
+  };
+
+  const handleThemeClose = () => {
+    setThemeAnchorEl(null);
+  };
+
   return (
     <Box id="settings">
       <Button
@@ -47,19 +58,10 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
       </Button>
       <Menu
         id="settings-menu"
-        className="settings-case" 
+        className="settings-case"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        sx={{
-          '& .MuiPaper-root': {
-            borderRadius: '12px', 
-            boxShadow: 'rgba(0, 0, 0, 0.25)',  
-            backgroundColor: 'rgba(251, 251, 251, 1)',  
-          },
-          padding: '0', 
-          margin: '0',    
-        }}
       >
         <MenuList className="settings-case_name">Настройки</MenuList>
         {!isTrash && (
@@ -75,20 +77,42 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
             onClick={handleButtonClick}
           />
         )}
-        <SettingButton
-          placeholder="Цвет фона"
-          onClick={handleButtonClick}
-        />
-        <SettingButton
-          placeholder="Размер шрифта"
-          onClick={handleButtonClick}
-        />
-        <SettingButton
-          placeholder="Набор шрифтов"
-          onClick={handleButtonClick}
-        />
+
+        <Button
+          id="demo-customized-button"
+          aria-controls={openTheme ? 'theam-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={openTheme ? 'true' : undefined}
+          variant="contained"
+          disableElevation
+          onClick={handleThemeClick} 
+          endIcon={<ArrowForwardIosRoundedIcon />}
+        >
+          Тема
+        </Button>
+
+        <Menu
+          id="theam-menu"
+          anchorEl={themeAnchorEl} 
+          open={openTheme}
+          onClose={handleThemeClose}
+        >
+          <SettingButton
+            placeholder="Цвет фона"
+            onClick={handleButtonClick}
+          />
+          <SettingButton
+            placeholder="Размер шрифта"
+            onClick={handleButtonClick}
+          />
+          <SettingButton
+            placeholder="Набор шрифтов"
+            onClick={handleButtonClick}
+          />
+        </Menu>
+
         <MenuList id="settings-case_theme">
-          <p>Тема:</p>
+          <p>Тёмная тема:</p>
           <SwitchButton />
         </MenuList>
         <ButtonInOut
