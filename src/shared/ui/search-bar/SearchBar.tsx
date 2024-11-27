@@ -3,7 +3,7 @@ import { TextField, Box, InputAdornment } from '@mui/material';
 import './SearchBar.scss';
 
 interface SearchProps {
-    imageSrc?: string;
+    iconSrc?:  './src/shared/ui/search-bar/magnifyingGlass.svg';
     onClick?: () => void;
     onChange?: (value: string) => void;
     placeholder?: string;
@@ -11,7 +11,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({
-    imageSrc = './src/shared/ui/search-bar/magnifyingGlass.png',
+    iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg', // Default icon
     onClick,
     onChange,
     placeholder = "Поиск",
@@ -49,8 +49,7 @@ const Search: React.FC<SearchProps> = ({
                         <InputAdornment position="start">
                             <img
                                 className="search-glass_img"
-                                src={imageSrc}
-                                alt="glass"
+                                src={iconSrc}
                             />
                         </InputAdornment>
                     ),

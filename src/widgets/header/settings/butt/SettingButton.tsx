@@ -1,17 +1,17 @@
 import {Box, Button} from "@mui/material";
 import './SettingButton.scss';
 
-interface Butt {
+interface ButtProps {
     placeholder: string , 
     onClick?: () => void;
 }
 
-const SettingButton:  React.FC <Butt>=({
+const SettingButton:  React.FC <ButtProps>=({
     placeholder = "кнопка",
     onClick
 }) => {
     return (
-        <Box className="butt">
+        <Box className="butt" >
             <Button className="butt_del" onClick={onClick}>
                 {placeholder}
             </Button>
