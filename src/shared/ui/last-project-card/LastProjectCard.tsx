@@ -5,14 +5,19 @@ import './LastProjectCard.scss';
 interface LastProjectCardProps {
     title: string;
     imageUrl?: string;
+    onClick?: () => void;
 }
 
 const LastProjectCard: React.FC<LastProjectCardProps> = ({ 
     title, 
-    imageUrl 
+    imageUrl, 
+    onClick = () => {},
 }) => {
     return (
-        <Card className="last-project-card">
+        <Card 
+        className="last-project-card"
+        onClick={onClick}
+        >
             <CardActionArea disableRipple className="last-project-card__action">
                 <CardMedia className='last-project-card__image'
                     component="img"
