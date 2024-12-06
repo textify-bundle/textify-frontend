@@ -31,10 +31,10 @@ const App: React.FC = () => {
             <Route path="/" element={<AuthPage />} />
             <Route element={<ProtectedRoute />}>
                 <Route path="/main" element={<LayoutWrapper layout={'main'}></LayoutWrapper>} />
+                <Route path="/trash" element={<LayoutWrapper layout={'trash'}></LayoutWrapper>} />
             </Route>
         </Routes>
   );
 };
-
 
 export default App;
