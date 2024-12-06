@@ -2,9 +2,8 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'http://localhost:5173/',
     setupNodeEvents(on, config) {
-      import('@cypress/grep').then((grep) => grep(config));
       on('task', {
         log(message) {
           console.log(message);
