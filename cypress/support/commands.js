@@ -23,12 +23,3 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-
-Cypress.Commands.add('mockApi', (fixture) => {
-    cy.fixture(fixture).then((mockData) => {
-      cy.intercept('GET', '/api/data', {
-        statusCode: 200,
-        body: mockData
-      });
-    });
-  });
