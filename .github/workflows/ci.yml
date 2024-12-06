@@ -70,18 +70,7 @@ jobs:
       - name: Install dependencies Frontend
         run: npm ci
 
-      - name: Start Server
-        run: npm start & 
-
-      - name: Wait for Server
-        run: |
-          while ! nc -z localhost 3000; do
-            sleep 1
-          done
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
