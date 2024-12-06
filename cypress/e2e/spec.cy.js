@@ -1,9 +1,6 @@
-describe('template spec', () => {
-  it('passes', () => {
-    cy.intercept('GET', 'https://example.com/api/data', { fixture: 'mockData.json' }).as('getData');
-    cy.visit('https://example.cypress.io');
-    cy.wait('@getData').then((interception) => {
-      expect(interception.response.body.data.name).to.eq('Mock Item');
-    });
+describe('Example Test Suite', () => {
+  it('should visit the homepage', () => {
+    cy.visit('http://localhost:5173/0');
+    cy.contains('h1', 'Test mock e2e');
   });
 });
