@@ -6,6 +6,7 @@ import store from "../../../../store";
 import Editor from "../../../../widgets/editor/Editor";
 import { ILayoutWrapperProps } from '../LayoutWrapper/ts/interfaces';
 import MainPage from '../../../main-page/ui/MainPage/MainPage';
+import TrashBin from '../../../../pages/trash-bin/ui/TrashBin/TrashBin'; 
  
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
