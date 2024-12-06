@@ -18,3 +18,6 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+Cypress.Commands.add('log', (message) => {
+    cy.task('log', message);
+  })
