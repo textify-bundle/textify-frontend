@@ -1,10 +1,10 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
-      require('@cypress/grep')(config);
+      import('@cypress/grep').then((grep) => grep(config));
       on('task', {
         log(message) {
           console.log(message);
@@ -13,7 +13,7 @@ module.exports = defineConfig({
       });
     },
     fixturesFolder: 'cypress/fixtures',
-    integrationFolder: 'cypress/e2e',
+    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/e2e.js',
   },
 });
