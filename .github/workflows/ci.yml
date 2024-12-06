@@ -70,7 +70,24 @@ jobs:
       - name: Install dependencies Frontend
         run: npm ci
 
+      - name: Build Frontend
+        run: npm run build  # Если у вас есть команда сборки
+
+      - name: Start Server
+        run: npm start &  # Запуск сервера в фоновом режиме
+
+      - name: Wait for Server
+        run: |
+          while ! nc -z localhost 3000; do
+            sleep 1
+          done
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          record: true  # Запись тестов в Cypress Dashboard (опционально)
+          parallel: true  # Параллельное выполнение тестов (опционально)
         env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}  # Ключ для записи тестов в Cypress Dashboard (опционально)
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
