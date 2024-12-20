@@ -42,6 +42,13 @@
     "testing-library": "^0.0.2",
     "vitest": "^2.1.4"
   },
+  "lint-staged": {
+  "*.{ts,tsx,js,jsx}": [
+    "eslint --fix",
+    "tsc --noEmit"
+  ]
+  },
+
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.2",
     "@eslint/js": "^9.13.0",
@@ -62,6 +69,8 @@
     "eslint-plugin-storybook": "^0.11.1",
     "globals": "^15.11.0",
     "happy-dom": "^15.11.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "sass-embedded": "^1.80.6",
     "storybook": "^8.4.5",
     "typescript": "~5.6.2",
