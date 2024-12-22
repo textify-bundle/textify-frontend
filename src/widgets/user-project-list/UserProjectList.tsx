@@ -4,7 +4,11 @@ import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import ProjectCard from '../../shared/ui/project-card/ProjectCard';
 
-const UserProjectList: React.FC = () => {
+interface UserProjectListProps {
+    onProjectsAvailable?: (hasProjects: boolean) => void; // Пропс для передачи информации
+}
+
+const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }) => {
     const dispatch = useDispatch<AppDispatch>();
     const projectData = useSelector((state: RootState) => state.pages.projectData);
     const loading = useSelector((state: RootState) => state.pages.loading);
@@ -15,17 +19,25 @@ const UserProjectList: React.FC = () => {
         dispatch(getCardData());
     }, [dispatch]);
   
-    if (loading) return <div>Loading...</div>;
+    useEffect(() => {
+        const activeProjects = projectData.filter(project => !project.isRemoved);
+        if (onProjectsAvailable) {
+            onProjectsAvailable(activeProjects.length > 0);
+        }
+    }, [projectData, onProjectsAvailable]);
+
     if (error) return <div>Error: {error}</div>;
+
+    const activeProjects = projectData.filter(project => !project.isRemoved);
 
     const getImageUrl = (index: number) => {
         const id = (index * 71287328173) % 10 + 1;
         return `/patterns/${id}.webp`;
-      };
+    };
   
     return (
-      <div  style={{ paddingTop: '18px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
-        {projectData.map((project, index) => (
+      <div style={{ paddingTop: '18px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
+        {activeProjects.map((project, index) => (
           <ProjectCard
             key={index}
             imageUrl={getImageUrl(index)}
