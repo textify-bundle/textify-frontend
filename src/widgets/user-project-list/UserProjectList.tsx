@@ -11,7 +11,6 @@ interface UserProjectListProps {
 const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }) => {
     const dispatch = useDispatch<AppDispatch>();
     const projectData = useSelector((state: RootState) => state.pages.projectData);
-    const loading = useSelector((state: RootState) => state.pages.loading);
     const error = useSelector((state: RootState) => state.pages.error);
   
     useEffect(() => {
