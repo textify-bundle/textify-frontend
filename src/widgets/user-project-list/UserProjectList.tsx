@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from '../../store/index';
 import ProjectCard from '../../shared/ui/project-card/ProjectCard';
 
 interface UserProjectListProps {
-    onProjectsAvailable?: (hasProjects: boolean) => void; // Пропс для передачи информации
+    onProjectsAvailable?: (hasProjects: boolean) => void;
 }
 
 const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }) => {
@@ -35,15 +35,30 @@ const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }
     };
   
     return (
-      <div style={{ paddingTop: '18px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
-        {activeProjects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            imageUrl={getImageUrl(index)}
-            lastEntryTime={project.dateOfChange}
-            projectName={project.name}
-          />
-        ))}
+      <div style={{ paddingTop: '18px' }}>
+        {activeProjects.length > 0 && (
+          <div
+            style={{
+              fontFamily: "'SF Compact Rounded', sans-serif",
+              fontSize: '30px',
+              paddingLeft: '30px',
+              fontWeight: 400,
+              position: 'relative',
+            }}
+          >
+            Ваши проекты
+          </div>
+        )}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px', paddingLeft: '30px', paddingTop: '24px' }}>
+          {activeProjects.map((project, index) => (
+            <ProjectCard
+              key={index}
+              imageUrl={getImageUrl(index)}
+              lastEntryTime={project.dateOfChange}
+              projectName={project.name}
+            />
+          ))}
+        </div>
       </div>
     );
   };
