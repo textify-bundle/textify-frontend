@@ -2,7 +2,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "dom"],  // Добавил "dom" для работы с браузерными API
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -11,6 +11,8 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
+    "jsx": "react", 
+    "esModuleInterop": true,
     "noEmit": true,
 
     /* Linting */
@@ -20,5 +22,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "src/**/*.ts",      // Включаем все файлы .ts
+    "src/**/*.tsx",     // Включаем все файлы .tsx
+    "vite.config.ts"    // Добавляем конфигурацию Vite
+  ]
 }

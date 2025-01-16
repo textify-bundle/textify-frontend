@@ -9,13 +9,14 @@
     "types": ["vitest/globals"],
 
     /* Bundler mode */
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Bundler",  // Оставьте "Bundler", если используете Vite/Webpack
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
+    "noEmit": true,  // Оставьте true, если хотите только проверку типов без компиляции
+    "jsx": "react",
+    "esModuleInterop": true,
+    
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
