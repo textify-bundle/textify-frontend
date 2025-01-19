@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
 import { signIn, signUp } from "../../../../store/slices/authSlice";
@@ -9,7 +9,6 @@ import AuthorizationForm from "../../../../shared/ui/auth/components/Authorizati
 import AuthorizationSwitch from "../../../../shared/ui/auth/components/AuthorizationSwitch";
 import './AuthPage.scss';
 
-
 const AuthPage: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,7 +16,9 @@ const AuthPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { user, error } = useSelector((state: RootState) => state.auth);  
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (user) {
@@ -43,34 +44,37 @@ const AuthPage: React.FC = () => {
   const toggleMode = () => setIsSignUp((prev) => !prev);
 
   return (
-    <div className='auth-page-container' style={{ 'display': "flex", justifyContent: 'center', alignItems: 'center' }}>
-    <Box className="auth-page" sx={{ padding: "20px", maxWidth: "400px", margin: "auto", mt: 25 }}>
-        <Button sx={{
-        color:'white',
-        fontSize:'13px',
-        position: 'absolute',
-        top: '35px',
-        left: '108px',  
-        background: '#0751D8',
-        width: '90px',
-        height: '37px',
-        display: 'flex',   
-        justifyContent: 'center', 
-        alignItems: 'center',   
-      }}>
-        Textify
-      </Button>
-      <AuthorizationHeader isSignUp={isSignUp} />
-      <AuthorizationForm
-        formData={formData}
-        setFormData={setFormData}
-        isLoading={isLoading}
-        isSignUp={isSignUp}
-        handleAuth={handleAuth}
-        error={error}
-      />
-      <AuthorizationSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
-    </Box>
+    <div className='auth-page-container'>
+      <Box className="auth-page" 
+        sx={{ 
+          width: '100%',
+          maxWidth: '400px',
+          margin: 'auto',
+          position: 'relative'
+        }}>
+        <Button 
+          className="textify-logo"
+          sx={{
+            color: 'white',
+            background: '#0751D8',
+            '&:hover': {
+              background: '#0645c0'
+            },
+            whiteSpace: 'nowrap'
+          }}>
+          Textify
+        </Button>
+        <AuthorizationHeader isSignUp={isSignUp} />
+        <AuthorizationForm
+          formData={formData}
+          setFormData={setFormData}
+          isLoading={isLoading}
+          isSignUp={isSignUp}
+          handleAuth={handleAuth}
+          error={error}
+        />
+        <AuthorizationSwitch isSignUp={isSignUp} toggleMode={toggleMode} />
+      </Box>
     </div>
   );
 };
