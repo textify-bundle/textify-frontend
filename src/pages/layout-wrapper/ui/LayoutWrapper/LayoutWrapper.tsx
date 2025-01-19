@@ -8,6 +8,8 @@ import Editor from "../../../../widgets/editor/Editor";
 const LayoutWrapper = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
+  const testToMerge=0;
+
   const users = [
     { id: '1', name: 'wleg' },
     { id: '2', name: 'qwOleg' },
