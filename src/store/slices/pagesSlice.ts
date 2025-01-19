@@ -111,7 +111,7 @@ const pagesSlice = createSlice({
             .map((page: Page) => ({
               name: page.title,
               type: 'link',   
-              link: `/${project.id}?page=${page.id}`,
+              link: `/pages/${page.id}`,
               id: page.id,
             })),
         }));
