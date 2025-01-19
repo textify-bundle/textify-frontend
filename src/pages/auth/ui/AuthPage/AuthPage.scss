@@ -2,6 +2,12 @@
 
 $font-main: 'Varela Round', sans-serif;
 $color-primary: #0751D8;
+
+// Breakpoints
+$mobile: 320px;
+$tablet: 768px;
+$desktop: 1024px;
+
 body{
   margin: 0;
 }
@@ -24,20 +30,46 @@ body{
 
 .auth-page {
   flex-direction: column;
-  padding: 20px 30px;
+  padding: clamp(1rem, 5%, 2rem);
   align-items: center;
   justify-content: flex-start;
-  width: 400px;
+  width: 90%;
+  max-width: 400px;
   background: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  margin: 1rem;
+  margin-top: 4rem;
+  position: relative;
+
+  @media (max-width: $tablet) {
+    width: 95%;
+    margin: 0.5rem;
+    margin-top: 4rem;
+  }
 
   h5 {
-    font-size: 24px;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
     font-weight: 500;
     font-family: $font-main;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 0.9rem;
+  }
+
+  .textify-logo {
+    position: absolute;
+    top: -3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    min-width: 90px;
+    text-align: center;
+    
+    @media (max-width: $tablet) {
+      font-size: 0.9rem;
+      padding: 0.4rem 1.2rem;
+    }
   }
 }
 
@@ -45,28 +77,34 @@ body{
   width: 100%;
 
   .input-field {
-    margin-top: 10px;
+    margin-top: 0.8rem;
+    width: 100%;
 
     .MuiInputBase-input {
-      font-size: 14px;
+      font-size: clamp(0.875rem, 2vw, 1rem);
       font-family: $font-main;
+      padding: 0.8rem;
     }
   }
 
   .button-submit {
-    margin-top: 15px;
+    margin-top: 1rem;
     box-shadow: none;
     background: $color-primary;
     border-radius: 8px;
     font-family: $font-main;
     color: white;
     text-transform: none;
+    width: 100%;
+    padding: 0.6rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
   }
 }
 
 .MuiButton-root {
   text-transform: none;
 }
+
 .auth-page .MuiButton-root {
     text-decoration: none; 
   }
