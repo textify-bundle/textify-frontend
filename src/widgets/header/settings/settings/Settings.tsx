@@ -1,151 +1,251 @@
-import { useState, useCallback } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { keyframes } from '@mui/system';
-import './Settings.css';
-import Search from "../../../../shared/ui/search-bar/SearchBar.tsx";
-import ButtDel from "../butt/ButtDel";
+import React, { useState, useCallback } from 'react';
+import { Box, Button, Menu, MenuList } from '@mui/material';
+import './Settings.scss'
+import Search from "../../../../shared/ui/search-bar/SearchBar.tsx"; 
 import SwitchButton from "../switch-button/SwitchButton.tsx";
-import ButtonInOut from "../butt/ButtonInOut.js";
 import PropTypes from 'prop-types';
 
-const slideIn = keyframes`
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
+// :)
+interface SettingsProps {
+    isTrash?: boolean;
+}
 
-const slideOut = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-`;
+// interface ButtDel {
+//     placeholder: string;
+//     onClick: () => void;
+//     className?: string; 
+// }
 
-const Settings = ({ isTrash }) => {
-  const [open, setOpen] = useState(false);
-  const [valueText, setValue] = useState('');
+const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const [valueText, setValue] = useState<string>('');
 
-  const handleSearchChange = useCallback((newValue) => {
-    setValue(newValue); 
-  }, []);
+    const handleSearchChange = useCallback((newValue: string) => {
+        setValue(newValue);
+    }, []);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+    const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    }, []);
 
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+    const handleButtonClick = () => {
+        
+    };
 
-  const handleButtonClick = () => {};
+    const handleClose = useCallback(() => {
+        setAnchorEl(null);
+    }, []);
 
-  return (
-    <Box id="settings">
-      <Button
-        id="settings-button"
-        aria-haspopup="true"
-        onClick={handleClickOpen}
-        sx={{
-          position: 'absolute',
-          top:7,
-          right: 40,
-          height:35,
-          zIndex: 10,
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          alignContent:'center',
-          flexWrap:'nowrap',
-          justifyContent:'flex-end'
-        }}
-      >
-        <span style={{color:'black', fontSize: '30px' }}>...</span>
-      </Button>
+    return (
+        <Box id="settings">
+            <Button
+                id="settings-button"
+                aria-controls={open ? 'settings-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+                
+            >
+                ...
+            </Button>
+            <Menu
+                id="settings-menu"
+                className="settings-case"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                sx={{
+                    width: '280px',
+                    '& .MuiPaper-root, .MuiList-root': {
+                        borderRadius: '16px',
+                        paddingTop: '2px',
+                        paddingBottom: '0',
+                    },
+                }}
+            >
+                <MenuList
+                className="settings-case_name"
+                sx={{
+                    marginBlock: "8px",
+                    fontSize: '16pt',
+                    paddingInline: '20px',
+                    boxSizing: "border-box"
+                }}
+                >
+                Настройки
+                </MenuList>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        onExited={handleClose}
-        sx={{
-          '& .MuiDialog-paper': {
-            width: '200px',
-            height: '350px',
-            maxWidth: 'none',
-            padding: 0,
-            borderRadius: '20px',
-            animation: open ? `${slideIn} 0.62s ease-out` : `${slideOut} 0.62s ease-out`,
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-          },
-        }}
-        BackdropProps={{
-          invisible: true,
-        }}
-      >
-        <DialogTitle sx={{ borderRadius: '20px', }}>Настройки</DialogTitle>
-        <DialogContent sx={{ padding: '10px' }}>
-          {!isTrash && (
-            <Search
-              className="settings-case_search"
-              placeholder="Поиск по файлу"
-              value={valueText}
-              onChange={handleSearchChange}
-            />
-          )}
 
-          {!isTrash && (
-            <ButtDel
-              id="settings-case_custom-button"
-              placeholder="Удалить проект"
-              onClick={handleButtonClick}
-            />
-          )}
+                {!isTrash && (
+                    <div style={{width: "100%", height: 40, paddingInline: 22, boxSizing: "border-box"}}>
+                        <Search
+                            className="settings-case_search"
+                            placeholder="Поиск по файлу"
+                            value={valueText}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
+                )}
 
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Цвет фона"
-            onClick={handleButtonClick}
-          />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Размер шрифта"
-            onClick={handleButtonClick}
-          />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Набор шрифтов"
-            onClick={handleButtonClick}
-          />
+                <Button
+                className="buttout"
+                variant="contained"
+                onClick={handleButtonClick}
+                sx={{
+                    width: '100%',
+                    height: '42px',
+                    textTransform: 'none',
+                    borderRadius: '0px',
+                    padding: '0px',
+                    gap: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    fontFamily: '"Varela Round", sans-serif',
+                    fontSize: '12pt',
+                    fontWeight: 400,
+                    lineHeight: '16px',
+                    textAlign: 'left',
+                    justifyContent: 'flex-start',
+                    boxShadow: 'none',
+                    paddingLeft: '20px',
+                    '&:hover': {
+                    backgroundColor: 'rgba(230, 230, 230, 1)',
+                    color: 'black',
+                    boxShadow: 'none',
+                    },
+                }}
+                >
+                Удалить проект
+                </Button>
+                <Button
+                className="buttout"
+                variant="contained"
+                onClick={handleButtonClick}
+                sx={{
+                    width: '100%',
+                    height: '42px',
+                    textTransform: 'none',
+                    borderRadius: '0px',
+                    padding: '0px',
+                    gap: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    fontFamily: '"Varela Round", sans-serif',
+                    fontSize: '12pt',
+                    fontWeight: 400,
+                    lineHeight: '16px',
+                    textAlign: 'left',
+                    justifyContent: 'flex-start',
+                    boxShadow: 'none',
+                    paddingLeft: '20px',
+                    '&:hover': {
+                    backgroundColor: 'rgba(230, 230, 230, 1)',
+                    color: 'black',
+                    boxShadow: 'none',
+                    },
+                }}
+                >
+                Цвет фона
+                </Button>
+                <Button
+                className="buttout"
+                variant="contained"
+                onClick={handleButtonClick}
+                sx={{
+                    width: '100%',
+                    height: '42px',
+                    textTransform: 'none',
+                    borderRadius: '0px',
+                    padding: '0px',
+                    gap: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    fontFamily: '"Varela Round", sans-serif',
+                    fontSize: '12pt',
+                    fontWeight: 400,
+                    lineHeight: '16px',
+                    textAlign: 'left',
+                    justifyContent: 'flex-start',
+                    boxShadow: 'none',
+                    paddingLeft: '20px',
+                    '&:hover': {
+                    backgroundColor: 'rgba(230, 230, 230, 1)',
+                    color: 'black',
+                    boxShadow: 'none',
+                    },
+                }}
+                >
+                Размер шрифта
+                </Button>
+                <Button
+                className="buttout"
+                variant="contained"
+                onClick={handleButtonClick}
+                sx={{
+                    width: '100%',
+                    height: '42px',
+                    textTransform: 'none',
+                    borderRadius: '0px',
+                    padding: '0px',
+                    gap: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    fontFamily: '"Varela Round", sans-serif',
+                    fontSize: '12pt',
+                    fontWeight: 400,
+                    lineHeight: '16px',
+                    textAlign: 'left',
+                    justifyContent: 'flex-start',
+                    boxShadow: 'none',
+                    paddingLeft: '20px',
+                    '&:hover': {
+                    backgroundColor: 'rgba(230, 230, 230, 1)',
+                    color: 'black',
+                    boxShadow: 'none',
+                    },
+                }}>Набор шрифтов 
+                </Button>
 
-          <div id="settings-case_theme">
-            <p>Тема:</p>
-            <SwitchButton className="settings-case-theme-switch" />
-          </div>
-        </DialogContent>
-        <DialogActions sx={{borderRadius: '20px', padding: '0 10px 10px 10px' }}>
-          <ButtonInOut
-            className="settings-case_button-in-out"
-            placeholder="Выход"
-            onClick={handleButtonClick}
-            sx={{
-              borderRadius: '20px',
-            }}
-          />
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
+
+                <div style={{display: "flex", width: "100%", height: "42px", flex: "auto", flexDirection: "row", paddingInline: 20, boxSizing: "border-box"}}>
+                    <p style={{lineHeight: "6px", marginRight: 5}}>Тема:</p>
+                    <SwitchButton className="settings-case-theme-switch"/>
+                </div>
+
+
+                <Button
+                    className="buttout"
+                    variant="contained"
+                    onClick={handleButtonClick}
+                    sx={{
+                        width: '100%',
+                        height: '42px',
+                        textTransform: 'none',
+                        borderRadius: '0px',
+                        padding: '0px',
+                        gap: '10px',
+                        backgroundColor: 'rgba(7, 81, 216, 1)',
+                        color: 'white',
+                        fontFamily: '"Varela Round", sans-serif',
+                        fontSize: '12pt',
+                        fontWeight: 400,
+                        lineHeight: '16px',
+                        textAlign: 'left',
+                        '&:hover': {
+                        backgroundColor: 'rgba(7, 58, 151, 1)',
+                        },
+                    }}
+                    >
+                    Выход
+                    </Button>
+            </Menu>
+        </Box>
+    );
 };
 
 Settings.propTypes = {
-  isTrash: PropTypes.bool,
+    isTrash: PropTypes.bool,
 };
 
 export default Settings;
