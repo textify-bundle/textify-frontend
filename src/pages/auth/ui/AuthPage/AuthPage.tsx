@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
 import { signIn, signUp } from "../../../../store/slices/authSlice";
@@ -17,8 +17,6 @@ const AuthPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, error } = useSelector((state: RootState) => state.auth);  
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (user) {
