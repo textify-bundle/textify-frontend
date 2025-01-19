@@ -10,7 +10,7 @@ import TrashBin from '../../../../pages/trash-bin/ui/TrashBin/TrashBin';
  
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
-
+  const Lasamponent =1;
   const users = [
     {
       id: '1',
