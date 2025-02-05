@@ -6,7 +6,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import Typography from '@mui/material/Typography';
 import { keyframes } from '@mui/system';
 
 export interface SimpleDialogProps {
@@ -114,9 +113,7 @@ export default function SimpleDialogDemo() {
 
   return (
     <div>
-      <Typography variant="subtitle1" component="div">
-        Selected: {selectedValue}
-      </Typography>
+    
       <br />
       <Button
         variant="outlined"

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../../utils/userSettingsUtils';
 
 interface UserSettingsState {
-  name : string;
+  name: string;
   theme: 'light' | 'dark';
   language: string;
   notificationsEnabled: boolean;
@@ -10,7 +10,7 @@ interface UserSettingsState {
 }
 
 const initialState: UserSettingsState = {
-  name:'',
+  name: '',
   theme: 'light',
   language: 'en',
   notificationsEnabled: true,
@@ -28,6 +28,10 @@ const userSettingsSlice = createSlice({
       state.theme = action.payload;
       saveSettingsToLocalStorage(state);
     },
+    toggleTheme(state) {
+      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      saveSettingsToLocalStorage(state);
+    },
     setLanguage(state, action: PayloadAction<string>) {
       state.language = action.payload;
       saveSettingsToLocalStorage(state);
@@ -43,5 +47,6 @@ const userSettingsSlice = createSlice({
   },
 });
 
-export const { setTheme, setLanguage, toggleNotifications, setFontSize } = userSettingsSlice.actions;
+export const { setTheme, toggleTheme, setLanguage, toggleNotifications, setFontSize } = userSettingsSlice.actions;
+
 export default userSettingsSlice.reducer;
