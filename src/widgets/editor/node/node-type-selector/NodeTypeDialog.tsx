@@ -18,10 +18,11 @@ const NodeTypeDialog: React.FC<NodeTypeDialogProps> = ({ open, onClose }) => {
   };
 
   const handleAddNode = () => {
+    const id = Date.now().toString();
     const newNode = {
-      id: Date.now().toString(),
+      id,
       type: selectedType,
-      content: '',
+      content: selectedType === 'text' ? `Node ${id}` : '',
       styles: {},
     };
     dispatch(addNode(newNode));
