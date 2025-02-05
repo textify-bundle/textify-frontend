@@ -1,12 +1,19 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useDispatch } from 'react-redux';
+import { updateNode } from '../../../store/slices/blockSlice';
 import { Node } from '../../../shared/types/editor';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
 
-const NodeContainer = ({ node }: { node: Node }) => {
+interface NodeContainerProps {
+  node: Node;
+}
+
+const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const dispatch = useDispatch();
 
   const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id: node.id });
@@ -14,6 +21,10 @@ const NodeContainer = ({ node }: { node: Node }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const handleContentChange = (newContent: Node['content']) => {
+    dispatch(updateNode({ ...node, content: newContent }));
   };
 
   return (
@@ -32,7 +43,7 @@ const NodeContainer = ({ node }: { node: Node }) => {
         </>
       )}
       <div className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}>
-        <TextEditor content={node.content} styles={node.styles} />
+        <TextEditor content={node.content} styles={node.styles} onContentChange={handleContentChange} />
       </div>
       <div
         ref={setActivatorNodeRef}
