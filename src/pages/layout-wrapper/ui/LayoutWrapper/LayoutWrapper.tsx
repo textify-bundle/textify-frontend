@@ -29,7 +29,6 @@ const LayoutWrapper = () => {
           height: "100vh",
           position: "relative",
           width: isSidebarVisible ? "260px" : "0",
-          transition: "width 0.3s, background 0.3s",
           overflow: "hidden",
         }}
       >
