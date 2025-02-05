@@ -1,4 +1,4 @@
-type NodeType = 
+export type NodeType =
     | 'text'
     | 'heading'
     | 'todo'
@@ -15,7 +15,7 @@ type NodeType =
     | 'equation'
     | 'none';
 
-type NodeContent = 
+export type NodeContent =
     | string
     | TodoContent
     | MediaContent
@@ -25,36 +25,36 @@ type NodeContent =
     | BookmarkContent
     | EquationContent;
 
-type TodoContent = {
+export type TodoContent = {
     text: string;
     checked: boolean;
 };
 
-type MediaContent = {
+export type MediaContent = {
     url: string;
     altText?: string;
 };
 
-type FileContent = {
+export type FileContent = {
     fileName: string;
     fileSize: number;
 };
 
-type TableContent = {
+export type TableContent = {
     rows: Node[][];
 };
 
-type CalloutContent = {
+export type CalloutContent = {
     text: string;
     icon?: string;
 };
 
-type BookmarkContent = {
+export type BookmarkContent = {
     url: string;
     title?: string;
 };
 
-type EquationContent = {
+export type EquationContent = {
     equation: string;
 };
 
