@@ -17,6 +17,7 @@ import NodeContainer from './node/NodeContainer';
 import { RootState } from '../../store/index';
 import { reorderNodes } from '../../store/slices/blockSlice';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import AddNodeButton from './node/AddNodeButton';
 
 const Editor = () => {
   const nodes = useSelector((state: RootState) => state.blocks.nodes);
@@ -37,18 +38,21 @@ const Editor = () => {
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis]}
-    >
-      <SortableContext items={nodes.map((node) => node.id)} strategy={verticalListSortingStrategy}>
-        {nodes.map((node) => (
-          <NodeContainer node={node} key={node.id} />
-        ))}
-      </SortableContext>
-    </DndContext>
+    <div>
+      <AddNodeButton />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext items={nodes.map((node) => node.id)} strategy={verticalListSortingStrategy}>
+          {nodes.map((node) => (
+            <NodeContainer node={node} key={node.id} />
+          ))}
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 };
 
