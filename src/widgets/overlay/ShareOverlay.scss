@@ -1,0 +1,87 @@
+.container {
+  .send-button {
+    background-color: none;
+    color: rgb(11, 8, 8);
+    border-radius: 4px;
+    padding: 8px 16px;
+    text-transform: none;
+    font-size: 14px;
+    &:hover {
+      background-color: #f1f3f6;
+    }
+  }
+}
+
+.share-dialog {
+  &__content {
+    padding: 16px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__close-btn {
+    margin-left: auto;
+  }
+
+  .css-rizt0-MuiTypography-root {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  &__label {
+    font-weight: bold;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  &__access {
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    justify-content: space-between;
+  }
+
+  &__accordion {
+    border: none;
+    background-color: rgba(248, 247, 245, 1);
+    width: 50%;
+    box-shadow: none;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 15px; 
+
+    &-summary {
+      min-height: unset;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 15px; 
+    }
+  }
+
+  .css-1abvrni-MuiButtonBase-root-MuiButton-root {
+    margin-top: 16px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border-radius: 15px;
+    padding: 10px 20px;
+    text-transform: none;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 16px;
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .css-qopi4n-MuiPaper-root-MuiDialog-paper {
+    border-radius: 20px;
+    margin: 0;
+  }
+}
