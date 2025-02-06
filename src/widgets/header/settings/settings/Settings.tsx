@@ -1,125 +1,100 @@
-import React, { useState, useCallback } from 'react';
-import { Box, Button, Menu, MenuList, MenuItem } from '@mui/material';
-import './Settings.scss';
-import Search from "../../../../shared/ui/search-bar/SearchBar";
-import SettingButton from "../butt/SettingButton";
-import SwitchButton from "../switch-button/SwitchButton";
-import ButtonInOut from "../butt/ButtonInOut";
+import React, { useState, useCallback, MouseEvent } from 'react';
+import { Box, Button, Dialog, DialogContent, Typography, IconButton, Menu, MenuItem } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import './Settings.scss';
+import Search from '../../../../shared/ui/search-bar/SearchBar';
+import SettingButton from '../butt/SettingButton';
+import SwitchButton from '../switch-button/SwitchButton';
+import ButtonInOut from '../butt/ButtonInOut';
 
 interface SettingsProps {
   isTrash?: boolean;
+  themeOptions?: string[];
 }
 
-const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
+const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['Цвет фона', 'Размер шрифта', 'Набор шрифтов'] }) => {
+  const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [themeAnchorEl, setThemeAnchorEl] = useState<null | HTMLElement>(null); // Для темы
   const [valueText, setValueText] = useState<string>('');
-  const open = Boolean(anchorEl);
-  const openTheme = Boolean(themeAnchorEl); // для открытия меню темы
 
-  const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    },
-    []
-  );
-
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleSearchChange = useCallback((newValue: string) => {
     setValueText(newValue);
   }, []);
 
   const handleButtonClick = useCallback(() => {
-    console.log("Button clicked!");
+    console.log('Button clicked!');
   }, []);
 
-  const handleThemeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setThemeAnchorEl(event.currentTarget);
+  const handleThemeClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleThemeClose = () => {
-    setThemeAnchorEl(null);
+    setAnchorEl(null);
   };
 
   return (
     <Box id="settings">
-      <Button
-        id="settings-button"
-        aria-controls={open ? 'settings-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        ...
+      <Button id="settings-button" onClick={handleOpen}>
+        <span className="dot" />
+        <span className="dot" />
+        <span className="dot" />
       </Button>
-      <Menu
-        id="settings-menu"
-        className="settings-case"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
+
+      <Dialog 
+        open={open} 
+        onClose={handleClose} 
+        fullWidth 
+        maxWidth="xs"
+        className="settings-dialog"
+        BackdropProps={{ style: { backgroundColor: 'transparent' } }}
       >
-        <MenuList className="settings-case_name">Настройки</MenuList>
-        {!isTrash && (
-          <Search
-            placeholder="Поиск по файлу"
-            value={valueText}
-            onChange={handleSearchChange}
-          />
-        )}
-        {!isTrash && (
-          <SettingButton
-            placeholder="Удалить проект"
-            onClick={handleButtonClick}
-          />
-        )}
+        <DialogContent>
+          <Box className="settings-header">
+            <Typography variant="h6">Настройки</Typography>
+            <IconButton onClick={handleClose} className="close-btn">
+              <CloseIcon />
+            </IconButton>
+          </Box>
 
-        <Button
-          id="demo-customized-button"
-          aria-controls={openTheme ? 'theam-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={openTheme ? 'true' : undefined}
-          variant="contained"
-          disableElevation
-          onClick={handleThemeClick} 
-          endIcon={<ArrowForwardIosRoundedIcon />}
-        >
-          Тема
-        </Button>
+          {!isTrash && (
+            <Search placeholder="Поиск по файлу" value={valueText} onChange={handleSearchChange} />
+          )}
+          {!isTrash && (
+            <SettingButton placeholder="Удалить проект" onClick={handleButtonClick} />
+          )}
 
-        <Menu
-          id="theam-menu"
-          anchorEl={themeAnchorEl} 
-          open={openTheme}
-          onClose={handleThemeClose}
-        >
-          <SettingButton
-            placeholder="Цвет фона"
-            onClick={handleButtonClick}
-          />
-          <SettingButton
-            placeholder="Размер шрифта"
-            onClick={handleButtonClick}
-          />
-          <SettingButton
-            placeholder="Набор шрифтов"
-            onClick={handleButtonClick}
-          />
-        </Menu>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body1">Тема</Typography>
+            <IconButton onClick={handleThemeClick}>
+              <ArrowForwardIosRoundedIcon />
+            </IconButton>
+          </Box>
 
-        <MenuList id="settings-case_theme">
-          <p>Тёмная тема:</p>
-          <SwitchButton />
-        </MenuList>
-        <ButtonInOut
-          placeholder="Выход"
-          onClick={handleButtonClick}
-        />
-      </Menu>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleThemeClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          >
+            {themeOptions.map((option, index) => (
+              <MenuItem key={index} onClick={handleButtonClick}>{option}</MenuItem>
+            ))}
+          </Menu>
+
+          <Box className="settings-theme">
+            <Typography variant="body1">Тёмная тема:</Typography>
+            <SwitchButton />
+          </Box>
+
+          <ButtonInOut placeholder="Выход" onClick={handleButtonClick} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

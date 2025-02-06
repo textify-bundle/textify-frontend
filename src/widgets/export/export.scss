@@ -1,89 +1,74 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* Убираем затемнение */
+}
+
 .exportBox {
-  width: 160px;
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  min-width: 300px;
+  text-align: center;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  color: black;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: gray;
+}
+
+.modalContent {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   align-items: flex-start;
-  padding: 0;
-  box-sizing: border-box;
-  margin-top: 0;
-  margin-left: 2px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  position: relative;
-  z-index: 2;
-  background-color: white;
-  opacity: 1;
-  transform: translateY(0) translateX(0);
-  transition: width 0.5s ease-in-out, transform 0.6s ease-in-out;
+  text-align: left;
+}
 
-  &.visible {
-    width: 250px;
-    transform: translateY(50px) translateX(-200px);
-  }
+.modalOption {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: black;
+  font-size: 18px;
+}
 
-  .exportButton {
-    width: 100%;
-    height: 36px;
-    margin-top: 0;
-    background-color: white;
-    color: black;
-    box-shadow: none;
-    border-radius: 50px;
-    &:hover {
-      background-color: #F5F5F5;
-      box-shadow: none;
-    }
-  }
+.modalOption:hover {
+  background: none;
+}
 
-  .content {
-    background-color: white;
-    width: 100%;
-    padding: 0;
-    border-radius: 0 0 12px 12px;
-    box-sizing: border-box;
+.exportButton {
+  background: none;
+  border: none;
+  color: black;
+  border-radius: 8px;
+  padding: 8px;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    .optionButton {
-      width: 100%;
-      height: 36px;
-      background-color: white;
-      color: black;
-      box-shadow: none;
-      border-radius: 0;
-      &:hover {
-        background-color: #F5F5F5;
-        box-shadow: none;
-      }
-
-      .subOption {
-        padding: 8px;
-        background-color: #F9F9F9;
-
-        &:hover {
-          background-color: #F5F5F5;
-        }
-      }
-    }
-  }
-
-  .overlay {
-    position: fixed;
-    
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 0.5;
-    }
-  }
+.exportButton:hover {
+  background-color: #f1f3f6;
 }

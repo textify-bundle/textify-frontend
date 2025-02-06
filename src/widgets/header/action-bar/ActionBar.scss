@@ -1,28 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
-
-.custom-button {
-  font-family: 'SF Compact Rounded', sans-serif;
-}
-
-.main-buttons-container {
-  display: flex;
-  flex-direction: row;
-  z-index: 0;
-}
-
-.three-dots-button {
-  .dots-container {
+/* Стили для контейнера кнопок внутри Toolbar */
+.buttons-container {
+    // Если нужны дополнительные настройки для Toolbar, добавьте их здесь
+  }
+  
+  /* Контейнер, в котором располагаются все кнопки */
+  .main-buttons-container {
     display: flex;
     align-items: center;
+  }
+  
+  /* Стили для кнопки пользователя */
+  .user-button {
+    color: white;
+    display: flex;
     justify-content: center;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    background-color: black;
+    align-items: center;
+    
+    /* Фиксированные размеры для получения идеального круга */
+    height: 31px;
+    width: 31px;
+    min-width: 31px; // Переопределяем стандартную минимальную ширину MUI
+  
+    padding: 0;
     border-radius: 50%;
-    display: inline-block;
-    margin: 0 2px;
+    font-size: 16px;
+    text-transform: none;
+    // Если понадобится, можно добавить transition или hover-эффекты
   }
-}
+  
