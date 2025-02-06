@@ -6,15 +6,14 @@ import NewSearch from "../../../../shared/ui/search-bar/SearchBar"
 import store from "../../../../store"
 import Editor from "../../../../widgets/editor/Editor"
 import type { RootState } from "../../../../store"
-
 const LayoutWrapper = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
   const theme = useSelector((state: RootState) => state.settings.theme)
 
   const users = [
-    { id: "1", name: "wleg" },
-    { id: "2", name: "qwOleg" },
-    { id: "3", name: "Oleg" },
+    { id: '1', name: 'wleg' },
+    { id: '2', name: 'qwOleg' },
+    { id: '3', name: 'Oleg' },
   ]
 
   const toggleSidebar = () => {
@@ -22,87 +21,87 @@ const LayoutWrapper = () => {
   }
 
   return (
-    <div style={{ display: "flex" }} className={theme}>
+    <div style={{ display: 'flex' }} className={theme}>
       <div
         style={{
-          background: theme === "dark" ? "#2a2a2a" : "#F8F7F5",
-          height: "100vh",
-          position: "relative",
-          width: isSidebarVisible ? "260px" : "0",
-          overflow: "hidden",
+          background: theme === 'dark' ? '#2a2a2a' : '#F8F7F5',
+          height: '100vh',
+          position: 'relative',
+          width: isSidebarVisible ? '260px' : '0',
+          overflow: 'hidden',
         }}
       >
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
             marginInline: 15,
             marginTop: 15,
             fontSize: 12,
-            color: theme === "dark" ? "#e0e0e0" : "inherit",
+            color: theme === 'dark' ? '#e0e0e0' : 'inherit',
           }}
         >
           <div
             style={{
-              borderRadius: "40px",
-              width: "40px",
-              height: "40px",
+              borderRadius: '40px',
+              width: '40px',
+              height: '40px',
               marginRight: 20,
-              backgroundColor: "#0751D8",
+              backgroundColor: '#0751D8',
             }}
           ></div>
-          {store.getState().auth.user?.email || "example@mail.ru"}
+          {store.getState().auth.user?.email || 'example@mail.ru'}
         </div>
         <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}>
           <NewSearch />
         </div>
         <PagesTree />
-        <div style={{ width: "100%", height: 40, bottom: 0, position: "absolute", background: "#0751D8" }}></div>
+        <div style={{ width: '100%', height: 40, bottom: 0, position: 'absolute', background: '#0751D8' }}></div>
       </div>
 
       <button
         onClick={toggleSidebar}
         style={{
-          position: "absolute",
-          top: "50%",
-          left: isSidebarVisible ? "230px" : "10px",
-          transform: "translateY(-50%)",
+          position: 'absolute',
+          top: '50%',
+          left: isSidebarVisible ? '230px' : '10px',
+          transform: 'translateY(-50%)',
           zIndex: 1000,
-          backgroundColor: theme === "dark" ? "#3a3a3a" : "#F0F0F0",
-          color: "#0751D8",
-          border: "1px solid #0751D8",
-          borderRadius: "50%",
+          backgroundColor: theme === 'dark' ? '#3a3a3a' : '#F0F0F0',
+          color: '#0751D8',
+          border: '1px solid #0751D8',
+          borderRadius: '50%',
           padding: 0,
-          width: "32px",
-          height: "32px",
-          fontSize: "18px",
-          fontWeight: "bold",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+          width: '32px',
+          height: '32px',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         }}
       >
-        {isSidebarVisible ? "⟨" : "⟩"}
+        {isSidebarVisible ? '⟨' : '⟩'}
       </button>
 
       <div
         style={{
-          width: "100%",
-          backgroundColor: theme === "dark" ? "#1a1a1a" : "white",
-          color: theme === "dark" ? "#e0e0e0" : "inherit",
+          width: '100%',
+          backgroundColor: theme === 'dark' ? '#1a1a1a' : 'white',
+          color: theme === 'dark' ? '#e0e0e0' : 'inherit',
         }}
       >
-        <div style={{ display: "flex", justifyContent: "end" }}>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
           <div>
             <ActionBar users={users} />
           </div>
         </div>
-        <div style={{ marginTop: "100px", width: "85%", margin: "100px auto" }}>
+        <div style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}>
           <h1>
             Project Title
-            <hr style={{ borderColor: theme === "dark" ? "#444" : "#ddd" }} />
+            <hr style={{ borderColor: theme === 'dark' ? '#444' : '#ddd' }} />
           </h1>
           <Editor />
         </div>
@@ -112,4 +111,3 @@ const LayoutWrapper = () => {
 }
 
 export default LayoutWrapper
-
