@@ -7,18 +7,18 @@ import store from "../../../../store"
 import Editor from "../../../../widgets/editor/Editor"
 import type { RootState } from "../../../../store"
 const LayoutWrapper = () => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true)
-  const theme = useSelector((state: RootState) => state.settings.theme)
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const theme = useSelector((state: RootState) => state.settings.theme);
 
   const users = [
     { id: '1', name: 'wleg' },
     { id: '2', name: 'qwOleg' },
     { id: '3', name: 'Oleg' },
-  ]
+  ];
 
   const toggleSidebar = () => {
     setIsSidebarVisible((prev) => !prev)
-  }
+  };
 
   return (
     <div style={{ display: 'flex' }} className={theme}>
