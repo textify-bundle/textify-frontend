@@ -1,4 +1,4 @@
-.container {
+.share {
   .send-button {
     background-color: transparent;
     color: rgb(11, 8, 8);
@@ -6,92 +6,81 @@
     padding: 8px;
     text-transform: none;
     font-size: 14px;
-    
+
     &:hover {
       background-color: #f1f3f6;
     }
   }
-}
 
-.share-dialog {
-  &__content {
-    padding: 16px;
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-
-  &__close-btn {
-    margin-left: auto;
-  }
-
-  .css-rizt0-MuiTypography-root {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 16px;
-  }
-
-  &__label {
-    font-weight: bold;
-    margin-bottom: 0;
-    white-space: nowrap;
-  }
-
-  &__access {
-    display: flex;
-    align-items: center;
-    border-radius: 15px;
-    justify-content: space-between;
-  }
-
-  &__accordion {
-    border: none;
-    background-color: rgba(248, 247, 245, 1);
-    width: 50%;
-    box-shadow: none;
-    justify-content: space-between;
-    gap: 10px;
-    border-radius: 15px; 
-
-    &-summary {
-      min-height: unset;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 15px; 
+  &-dialog {
+    &__content {
+      padding: 16px;
     }
-  }
 
-  &__copy-btn {
-    text-transform: none;
-    margin-top: 16px;
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    border-radius: 15px;
-    padding: 10px 20px;
-    margin-top: 10px;
-    text-transform: none;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 16px;
-    transition: background-color 0.2s, transform 0.1s ease-in-out;
-    
-    &:hover {
-      background-color: #0056b3;
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
     }
-  }
 
-  .MuiPaper-root {
-    border-radius: 20px;
-    background: white;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3); 
-  }
+    &__close-btn {
+      margin-left: auto;
+    }
 
-  .MuiBackdrop-root {
-    background: transparent;
+    &__label {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    &__access {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    &__accordion {
+      max-width: 45%;
+      background: rgba(248, 247, 245, 1) !important;
+      border-radius: 15px !important;
+      box-shadow: none !important;
+      transition: background-color 0.2s ease-in-out;
+
+      &-summary {
+        min-height: unset;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 15px;
+      }
+
+      .css-rizt0-MuiTypography-root {
+        font-size: 14px;
+      }
+    }
+
+    &__copy-btn {
+      text-transform: none !important;
+      margin-top: 16px;
+      width: 100%;
+      color: white;
+      border-radius: 15px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 16px;
+    }
+
+   
+
+    .MuiPaper-root {
+      border-radius: 20px;
+      background: white;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6); 
+    }
+
+    .MuiBackdrop-root {
+      background: transparent;
+    }
   }
 }

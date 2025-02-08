@@ -46,13 +46,13 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
     navigator.clipboard.writeText(generatedLink)
       .then(() => {
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000); // Убираем эффект через 2 сек
+        setTimeout(() => setCopied(false), 2000); 
       })
       .catch(err => console.error("Failed to copy link", err));
   };
 
   return (
-    <div className='container'>
+    <div className='share'>
       <Button className="send-button" onClick={() => setOpenDialog(true)}>
         {title}
       </Button>

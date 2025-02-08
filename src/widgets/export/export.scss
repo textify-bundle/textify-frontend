@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent; /* Убираем затемнение */
+  background: transparent; 
 }
 
 .exportBox {
@@ -16,7 +16,7 @@
   padding: 16px;
   min-width: 300px;
   text-align: center;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+  box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6); 
 }
 
 .modalHeader {

@@ -11,7 +11,7 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({
-    iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg', // Default icon
+    iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg', 
     onClick,
     onChange,
     placeholder = "Поиск",
