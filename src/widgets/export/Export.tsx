@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { DialogContent, DialogTitle, Button } from '@mui/material';
-import './export.scss'; 
+import { DialogContent, DialogTitle, Button, Box } from '@mui/material';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -26,18 +25,98 @@ const ExportModal: React.FC<ExportModalProps> = ({
   };
 
   return (
-    <div className="export-modal__overlay" onClick={handleOverlayClick}>
-      <div className="export-modal__box">
-        <DialogTitle className="export-modal__header">
-          <div className="export-modal__title">{title}</div>
-          <Button onClick={onClose} className="export-modal__close-button">✕</Button>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        zIndex: 1000
+      }}
+      onClick={handleOverlayClick}
+    >
+      <Box
+        sx={{
+          background: 'white',
+          borderRadius: '20px',
+          padding: '16px',
+          minWidth: '300px',
+          textAlign: 'left',
+          boxShadow: '1px 1px 20px rgba(0, 0, 0, 0.6)'
+        }}
+      >
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            padding: '10px 0',
+            color: 'black'
+          }}
+        >
+          <Box
+            sx={{
+              flexGrow: 1,
+              fontWeight: 400,
+              fontSize: '28px',
+              lineHeight: '16px',
+              textAlign: 'left'
+            }}
+          >
+            {title}
+          </Box>
+          <Button
+            onClick={onClose}
+            sx={{
+              background: 'none',
+              border: 'none',
+              fontSize: '18px',
+              cursor: 'pointer',
+              color: 'gray',
+              '&:hover': {
+                color: 'black'
+              }
+            }}
+          >
+            ✕
+          </Button>
         </DialogTitle>
-        <DialogContent className="export-modal__content">
+        <DialogContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            padding: '0',
+            alignItems: 'flex-start',
+            textAlign: 'left'
+          }}
+        >
           <Button
             variant="outlined"
             fullWidth
             onClick={onExportToHTML}
-            className="export-modal__option"
+            sx={{
+              textTransform: 'none',
+              padding: '10px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'black',
+              textAlign: 'left',
+              fontSize: '18px',
+              backgroundColor: 'transparent',
+              transition: 'background-color 0.2s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(220, 220, 220, 0.29)'
+              }
+            }}
           >
             Экспортировать в HTML
           </Button>
@@ -45,13 +124,27 @@ const ExportModal: React.FC<ExportModalProps> = ({
             variant="outlined"
             fullWidth
             onClick={onExportToPDF}
-            className="export-modal__option"
+            sx={{
+              textTransform: 'none',
+              padding: '10px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'black',
+              textAlign: 'left',
+              fontSize: '18px',
+              backgroundColor: 'transparent',
+              transition: 'background-color 0.2s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(220, 220, 220, 0.29)'
+              }
+            }}
           >
             Экспортировать в PDF
           </Button>
         </DialogContent>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
@@ -71,12 +164,34 @@ const ExportButton: React.FC<ExportButtonProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="export-button__container">
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: 'none'
+      }}
+    >
       <Button
-        variant="contained"
-        color="primary"
         onClick={() => setModalOpen(true)}
-        className="export-button__button"
+        sx={{
+          textTransform: 'none',
+          padding: '8px',
+          borderRadius: '8px',
+          color: 'black',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: 'normal',
+          outline: 'none',
+          boxShadow: 'none',
+          '&:hover': {
+            backgroundColor: 'rgba(220, 217, 217, 0.328)',
+            outline: 'none',
+            boxShadow: 'none'
+          }
+        }}
       >
         {buttonText}
       </Button>
@@ -87,7 +202,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
         onExportToHTML={onExportToHTML}
         onExportToPDF={onExportToPDF}
       />
-    </div>
+    </Box>
   );
 };
 
