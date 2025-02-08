@@ -19,25 +19,25 @@ export const exportToPDF = async (
     } = options;
 
     try {
-        // Конвертируем HTML в canvas
+        
         const canvas = await html2canvas(content, {
             scale: quality,
             useCORS: true,
             logging: false
         });
 
-        // Создаем PDF документ
+        
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a4'
         });
 
-        // Получаем размеры страницы и контента
-        const imgWidth = 210 - (margin * 2); // A4 width in mm - margins
+        
+        const imgWidth = 210 - (margin * 2); 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        // Добавляем изображение в PDF
+    
         pdf.addImage(
             canvas.toDataURL('image/jpeg', 0.95),
             'JPEG',
@@ -47,7 +47,7 @@ export const exportToPDF = async (
             imgHeight
         );
 
-        // Сохраняем PDF
+       
         pdf.save(filename);
     } catch (error) {
         console.error('Ошибка при экспорте в PDF:', error);
@@ -62,10 +62,10 @@ export const exportToHTML = (
     const { filename = 'document.html' } = options;
 
     try {
-        // Создаем копию контента
+       
         const exportContent = content.cloneNode(true) as HTMLElement;
         
-        // Получаем все стили
+      
         const styles = Array.from(document.styleSheets)
             .map(styleSheet => {
                 try {
@@ -78,7 +78,7 @@ export const exportToHTML = (
             })
             .join('\n');
 
-        // Создаем HTML документ
+       
         const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -91,7 +91,7 @@ export const exportToHTML = (
 </body>
 </html>`;
 
-        // Создаем и сохраняем файл
+    
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         saveAs(blob, filename);
     } catch (error) {
