@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { DialogContent, DialogTitle, Button } from '@mui/material';
-import './Export.scss'; 
+import './export.scss'; 
 
 interface ExportModalProps {
   isOpen: boolean;
