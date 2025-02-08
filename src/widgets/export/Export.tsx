@@ -1,32 +1,92 @@
 import { useState } from 'react';
-import './Export.scss';
+import { DialogContent, DialogTitle, Button } from '@mui/material';
+import './Export.scss'; 
 
-const ExportModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+interface ExportModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  onExportToHTML: () => void;
+  onExportToPDF: () => void;
+}
+
+const ExportModal: React.FC<ExportModalProps> = ({
+  isOpen,
+  onClose,
+  title = 'Экспортировать',
+  onExportToHTML,
+  onExportToPDF
+}) => {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="overlay" onClick={onClose}>
-      <div className="exportBox" onClick={(e) => e.stopPropagation()}>
-        <div className="modalHeader">
-          <div className="title">Экспортировать</div>
-          <button className="closeButton" onClick={onClose}>✕</button>
-        </div>
-        <div className="modalContent">
-          <div className="modalOption" onClick={() => console.log('HTML')}>Экспортировать в HTML</div>
-          <div className="modalOption" onClick={() => console.log('PDF')}>Экспортировать в PDF</div>
-        </div>
+    <div className="export-modal__overlay" onClick={handleOverlayClick}>
+      <div className="export-modal__box">
+        <DialogTitle className="export-modal__header">
+          <div className="export-modal__title">{title}</div>
+          <Button onClick={onClose} className="export-modal__close-button">✕</Button>
+        </DialogTitle>
+        <DialogContent className="export-modal__content">
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={onExportToHTML}
+            className="export-modal__option"
+          >
+            Экспортировать в HTML
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={onExportToPDF}
+            className="export-modal__option"
+          >
+            Экспортировать в PDF
+          </Button>
+        </DialogContent>
       </div>
     </div>
   );
 };
 
-const ExportButton = () => {
+interface ExportButtonProps {
+  buttonText?: string;
+  modalTitle?: string;
+  onExportToHTML?: () => void;
+  onExportToPDF?: () => void;
+}
+
+const ExportButton: React.FC<ExportButtonProps> = ({
+  buttonText = 'Экспортировать',
+  modalTitle = 'Экспортировать',
+  onExportToHTML = () => console.log('Экспорт в HTML'),
+  onExportToPDF = () => console.log('Экспорт в PDF')
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="container">
-      <button className="exportButton" onClick={() => setModalOpen(true)}>Экспортировать</button>
-      <ExportModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+    <div className="export-button__container">
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        className="export-button__button"
+      >
+        {buttonText}
+      </Button>
+      <ExportModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        onExportToHTML={onExportToHTML}
+        onExportToPDF={onExportToPDF}
+      />
     </div>
   );
 };
