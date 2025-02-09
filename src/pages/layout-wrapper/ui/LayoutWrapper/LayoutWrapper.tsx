@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const LayoutWrapper = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const { backgroundColor, fontSize, fontFamily, textColor, BarColor } = useSelector((state: RootState) => state.settings);  
+  const { backgroundColor, fontSize, fontFamily, textColor, barColor } = useSelector((state: RootState) => state.settings);  
   
   const users = [
     { id: '1', name: 'wleg' },
@@ -23,13 +23,13 @@ const LayoutWrapper = () => {
   useEffect(() => {
     document.documentElement.style.setProperty('--background-color', backgroundColor);
     document.documentElement.style.setProperty('--font-size', fontSize);
-    document.documentElement.style.setProperty('--background-bar-color', BarColor);
+    document.documentElement.style.setProperty('--background-bar-color', barColor);
     document.documentElement.style.setProperty('--text-color', textColor);
     document.documentElement.style.setProperty('--font-family', fontFamily);
 
    
   
-  }, [backgroundColor, fontSize, fontFamily, BarColor,textColor]);
+  }, [backgroundColor, fontSize, fontFamily, barColor,textColor]);
 
   return (
     <div style={{ display: 'flex', background:'var(--background-color)' }}>
