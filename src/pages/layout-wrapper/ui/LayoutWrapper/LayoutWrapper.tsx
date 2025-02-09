@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PagesTree from "../../../../shared/ui/pages-tree/PagesTree";
 import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
 import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
-import store from "../../../../store";
+import store, { RootState } from "../../../../store";
 import Editor from "../../../../widgets/editor/Editor";
+import { useSelector } from 'react-redux';
+import { MainPage } from '../../../main-page';
+import { TrashBin } from '../../../trash-bin';
+import { ILayoutWrapperProps } from './ts';
 
-const LayoutWrapper = () => {
+const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-
+  const { backgroundColor, fontSize, fontFamily, textColor, barColor } = useSelector((state: RootState) => state.settings);  
+  
   const users = [
     { id: '1', name: 'wleg' },
     { id: '2', name: 'qwOleg' },
@@ -18,8 +23,24 @@ const LayoutWrapper = () => {
     setIsSidebarVisible((prev) => !prev);
   };
 
+  useEffect(() => {
+    document.documentElement.style.setProperty('--background-color', backgroundColor);
+    document.documentElement.style.setProperty('--font-size', fontSize);
+    document.documentElement.style.setProperty('--background-bar-color', barColor);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    document.documentElement.style.setProperty('--font-family', fontFamily);
+
+  }, [backgroundColor, fontSize, fontFamily, barColor,textColor]);
+
+  const layoutMap: { [key: string]: React.FC } = {
+    main: MainPage,
+    trash: TrashBin,
+  };
+
+  const LayoutComponent = layoutMap[layout] || null;
+
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', background:'var(--background-color)' }}>
       <div
         style={{
           background: '#F8F7F5',
@@ -37,7 +58,7 @@ const LayoutWrapper = () => {
               width: '40px',
               height: '40px',
               marginRight: 20,
-              backgroundColor: '#0751D8',
+              backgroundColor: 'var(--background-bar-color)',
             }}
           ></div>
           
@@ -48,7 +69,7 @@ const LayoutWrapper = () => {
           <NewSearch />
         </div>
         <PagesTree />
-        <div style={{width:'100%', height:40,bottom:0,position:'absolute', background:'#0751D8'}}></div>
+        <div style={{width:'100%', height:40,bottom:0,position:'absolute', background:'var(--background-bar-color)'}}></div>
       </div>
 
       <button
@@ -79,19 +100,21 @@ const LayoutWrapper = () => {
       </button>
 
       <div style={{ width: '100%' }}>
-        
         <div style={{ display: 'flex', justifyContent: 'end' }}>
           <div>
             <ActionBar users={users} />
           </div>
         </div>
-        <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
-          <h1>
-            Project Title
-            <hr />
-          </h1>
-          <Editor />
-        </div>
+        {LayoutComponent ? <LayoutComponent /> : null}
+        {layout === 'project' && (
+          <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
+            <h1>
+              Project Title
+              <hr />
+            </h1>
+            <Editor />
+          </div>
+        )}
       </div>
     </div>
   );
