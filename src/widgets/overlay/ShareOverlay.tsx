@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Dialog,
-  DialogContent,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  IconButton,
-} from '@mui/material';
+import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CloseIcon from '@mui/icons-material/Close';
+import ModelWindow from '../header/ModelWindow/ModelWindow.tsx';
 import './ShareOverlay.scss';
 
 interface PageShareProps {
@@ -46,7 +32,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
     navigator.clipboard.writeText(generatedLink)
       .then(() => {
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000); 
+        setTimeout(() => setCopied(false), 2000);
       })
       .catch(err => console.error("Failed to copy link", err));
   };
@@ -57,51 +43,24 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         {title}
       </Button>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="xs" className="share-dialog">
-        <DialogContent className="share-dialog__content">
-          <Box className="share-dialog__header">
-            <Typography variant="h6">Поделиться</Typography>
-            <IconButton onClick={() => setOpenDialog(false)} className="share-dialog__close-btn">
-              <CloseIcon sx={{ color: '#d5d4d4', '&:hover': { color: '#dfdbdb' } }} />
-            </IconButton>
-          </Box>
-          
-          <Box className="share-dialog__access">
-            <Typography variant="body1" className="share-dialog__label">
-              У кого есть ссылка
-            </Typography>
-            <Accordion
-              expanded={expanded === "panel1"}
-              onChange={handleChange("panel1")}
-              className="share-dialog__accordion"
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                className="share-dialog__accordion-summary"
-              >
-                {selectedItem}
-              </AccordionSummary>
-              <AccordionDetails className="share-dialog__accordion-details">
-                <FormControl>
-                  <RadioGroup value={selectedItem} onChange={handleItemChange}>
-                    <FormControlLabel value="Нет доступа" control={<Radio />} label="Нет доступа" />
-                    <FormControlLabel value="Только чтение" control={<Radio />} label="Только чтение" />
-                    <FormControlLabel value="Редактирование" control={<Radio />} label="Редактирование" />
-                  </RadioGroup>
-                </FormControl>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-
-          <Button
-            variant="contained"
-            className={`share-dialog__copy-btn ${copied ? 'copied' : ''}`}
-            onClick={handleCopyLink}
-          >
-            {copied ? "Скопировано!" : "Копировать ссылку"}
-          </Button>
-        </DialogContent>
-      </Dialog>
+      <ModelWindow isOpen={openDialog} onClose={() => setOpenDialog(false)} title="Поделиться">
+        <Box className="share-dialog__access">
+          <Typography variant="body1" className="share-dialog__label">У кого есть ссылка</Typography>
+          <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
+            <AccordionSummary className=''expandIcon={<ExpandMoreIcon />}>{selectedItem}</AccordionSummary>
+            <AccordionDetails>
+              <FormControl>
+                <RadioGroup className='share-dialog__radio' value={selectedItem} onChange={handleItemChange}>
+                  <FormControlLabel value="Нет доступа" control={<Radio />} label="Нет доступа" />
+                  <FormControlLabel value="Только чтение" control={<Radio />} label="Только чтение" />
+                  <FormControlLabel value="Редактирование" control={<Radio />} label="Редактирование" />
+                </RadioGroup>
+              </FormControl>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
+        <Button className='share-dialog__copy-btn' variant="contained" onClick={handleCopyLink}>{copied ? "Скопировано!" : "Копировать ссылку"}</Button>
+      </ModelWindow>
     </div>
   );
 };

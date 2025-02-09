@@ -1,12 +1,12 @@
-import React, { useState, useCallback, MouseEvent } from 'react';
-import { Box, Button, Dialog, DialogContent, Typography, IconButton, Menu, MenuItem } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState, MouseEvent } from 'react';
+import { Box, Button, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import './Settings.scss';
 import Search from '../../../../shared/ui/search-bar/SearchBar';
 import SettingButton from '../butt/SettingButton';
 import SwitchButton from '../switch-button/SwitchButton';
 import ButtonInOut from '../butt/ButtonInOut';
+import ModelWindow from '../../ModelWindow/ModelWindow.tsx';
+import './Settings.scss'; 
 
 interface SettingsProps {
   isTrash?: boolean;
@@ -20,14 +20,6 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['�
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleSearchChange = useCallback((newValue: string) => {
-    setValueText(newValue);
-  }, []);
-
-  const handleButtonClick = useCallback(() => {
-    console.log('Button clicked!');
-  }, []);
 
   const handleThemeClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -45,45 +37,21 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['�
         <span className="dot" />
       </Button>
 
-      <Dialog 
-        open={open} 
-        onClose={handleClose} 
-        fullWidth 
-        maxWidth="xs"
-        className="settings-dialog"
-        BackdropProps={{ style: { backgroundColor: 'transparent' } }}
-      >
-        <DialogContent>
-          <Box className="settings-header">
-            <Typography variant="h6">Настройки</Typography>
-            <IconButton onClick={handleClose} className="close-btn">
-              <CloseIcon />
-            </IconButton>
-          </Box>
+      <ModelWindow isOpen={open} onClose={handleClose} title="Настройки">
+        <Box className="settings-dialog">
+          {!isTrash && <Search placeholder="Поиск по файлу" value={valueText} onChange={setValueText} />}
+          {!isTrash && <SettingButton placeholder="Удалить проект" onClick={handleClose} />}
 
-          {!isTrash && (
-            <Search placeholder="Поиск по файлу" value={valueText} onChange={handleSearchChange} />
-          )}
-          {!isTrash && (
-            <SettingButton placeholder="Удалить проект" onClick={handleButtonClick} />
-          )}
-
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box className="settings-theme">
             <Typography variant="body1">Тема</Typography>
-            <IconButton onClick={handleThemeClick}>
+            <IconButton className="settings-theme-btn" onClick={handleThemeClick}>
               <ArrowForwardIosRoundedIcon />
             </IconButton>
           </Box>
 
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleThemeClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          >
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleThemeClose}>
             {themeOptions.map((option, index) => (
-              <MenuItem key={index} onClick={handleButtonClick}>{option}</MenuItem>
+              <MenuItem key={index} onClick={handleThemeClose}>{option}</MenuItem>
             ))}
           </Menu>
 
@@ -92,9 +60,9 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['�
             <SwitchButton />
           </Box>
 
-          <ButtonInOut placeholder="Выход" onClick={handleButtonClick} />
-        </DialogContent>
-      </Dialog>
+          <ButtonInOut placeholder="Выход" onClick={handleClose} />
+        </Box>
+      </ModelWindow>
     </Box>
   );
 };
