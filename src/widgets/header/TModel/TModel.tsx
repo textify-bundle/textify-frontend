@@ -1,16 +1,16 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import './ModelWindow.scss';
+import './TModel.scss';
 
-interface ModelWindowProps {
+interface ModelProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
 }
 
-const ModelWindow: React.FC<ModelWindowProps> = ({ isOpen, onClose, title, children }) => {
+const TModel: React.FC<ModelProps> = ({ isOpen, onClose, title, children }) => {
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -24,4 +24,4 @@ const ModelWindow: React.FC<ModelWindowProps> = ({ isOpen, onClose, title, child
   );
 };
 
-export default ModelWindow;
+export default TModel;

@@ -1,12 +1,12 @@
-import React, { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
 import { Box, Button, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import Search from '../../../../shared/ui/search-bar/SearchBar';
-import SettingButton from '../butt/SettingButton';
+import SettingButton from '../buttons/SettingButton.tsx';
 import SwitchButton from '../switch-button/SwitchButton';
-import ButtonInOut from '../butt/ButtonInOut';
-import ModelWindow from '../../ModelWindow/ModelWindow.tsx';
-import './Settings.scss'; 
+import ButtonInOut from '../buttons/ButtonInOut.tsx';
+import TModel from '../../TModel/TModel.tsx';
+import './Settings.scss';
 
 interface SettingsProps {
   isTrash?: boolean;
@@ -30,14 +30,8 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['�
   };
 
   return (
-    <Box id="settings">
-      <Button id="settings-button" onClick={handleOpen}>
-        <span className="dot" />
-        <span className="dot" />
-        <span className="dot" />
-      </Button>
-
-      <ModelWindow isOpen={open} onClose={handleClose} title="Настройки">
+    <>
+      <TModel isOpen={open} onClose={handleClose} title="Настройки">
         <Box className="settings-dialog">
           {!isTrash && <Search placeholder="Поиск по файлу" value={valueText} onChange={setValueText} />}
           {!isTrash && <SettingButton placeholder="Удалить проект" onClick={handleClose} />}
@@ -62,8 +56,16 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false, themeOptions = ['�
 
           <ButtonInOut placeholder="Выход" onClick={handleClose} />
         </Box>
-      </ModelWindow>
-    </Box>
+      </TModel>
+
+      <Box id="settings">
+        <Button id="settings-button" onClick={handleOpen}>
+          <span className="dot" />
+          <span className="dot" />
+          <span className="dot" />
+        </Button>
+      </Box>
+    </>
   );
 };
 

@@ -24,7 +24,12 @@
       gap: 10px;
     }
 
+    &__close-btn {
+      margin-left: auto;
+    }
+
     &__label {
+      font-weight: bold;
       white-space: nowrap;
     }
 
@@ -36,13 +41,12 @@
     }
 
     &__accordion {
-      max-width: 45%;
-      background: rgba(248, 247, 245, 1) !important;
+      max-width: 100%;
       border-radius: 15px !important;
       box-shadow: none !important;
       transition: background-color 0.2s ease-in-out;
 
-      &-radio {
+      &-summary {
         min-height: unset;
         padding: 8px 16px;
         font-size: 14px;
@@ -59,7 +63,7 @@
       margin-top: 16px;
       width: 100%;
       color: white;
-      border-radius: 15px  !important;
+      border-radius: 15px !important;
       padding: 10px 20px;
       font-size: 18px;
       font-weight: 400;

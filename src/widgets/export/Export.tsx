@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Box } from '@mui/material';
-import ModelWindow from '../header/ModelWindow/ModelWindow.tsx';
+import TModel from '../header/TModel/TModel.tsx';
 
 interface ExportModalProps  {
   buttonText?: string;
@@ -41,7 +41,7 @@ const ExportModal: React.FC<ExportModalProps > = ({
         {buttonText}
       </Button>
 
-      <ModelWindow isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalTitle}>
+      <TModel isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalTitle}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <Button
             variant="outlined"
@@ -76,7 +76,7 @@ const ExportModal: React.FC<ExportModalProps > = ({
             Экспортировать в PDF
           </Button>
         </Box>
-      </ModelWindow>
+      </TModel>
     </Box>
   );
 };
