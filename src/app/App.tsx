@@ -8,7 +8,7 @@ import { restoreSession, refreshTokens } from "../store/slices/authSlice";
 import { supabase } from "../utils/client";
 import './styles/index.scss';
 import LayoutWrapper from "../pages/layout-wrapper/ui/LayoutWrapper/LayoutWrapper";
-
+ 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -28,13 +28,15 @@ const App: React.FC = () => {
 
   return (
     <Routes>
-            <Route path="/" element={<AuthPage />} />
-            <Route element={<ProtectedRoute />}>
-                <Route path="/main" element={<LayoutWrapper layout={'main'}></LayoutWrapper>} />
-                <Route path="/trash" element={<LayoutWrapper layout={'trash'}></LayoutWrapper>} />
-            </Route>
-        </Routes>
+      <Route path="/" element={<AuthPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/main" element={<LayoutWrapper layout={'main'}></LayoutWrapper>} />
+        <Route path="/trash" element={<LayoutWrapper layout={'trash'}></LayoutWrapper>} />
+        <Route path="/:projectId" element={<LayoutWrapper layout={'project'}></LayoutWrapper>} />
+      </Route>
+    </Routes>
   );
 };
 
 export default App;
+
