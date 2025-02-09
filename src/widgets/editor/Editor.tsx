@@ -6,6 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent, 
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -22,6 +23,7 @@ const Editor = () => {
     { id: '1', type: 'text', content: 'Node 1', styles: { bold: true } },
     { id: '2', type: 'text', content: 'Node 2', styles: { italic: true } },
     { id: '3', type: 'text', content: 'Node 3', styles: { underline: true } },
+    { id: '5', type: 'image', content: { url: '', altText: '' } },
   ]);
 
   const sensors = useSensors(
@@ -29,7 +31,9 @@ const Editor = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const handleDragEnd = ({ active, over }: { active: { id: string }; over: { id: string } | null }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
     if (over && active.id !== over.id) {
       setNodes((currentNodes) => {
         const oldIndex = currentNodes.findIndex((node) => node.id === active.id);

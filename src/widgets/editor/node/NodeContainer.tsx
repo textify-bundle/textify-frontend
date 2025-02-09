@@ -4,6 +4,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { Node } from '../../../shared/types/editor';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
+import ImageEditor from './image-editor/ImageEditor';
+import { MediaContent } from '../../../shared/types/editor/node';
 
 const NodeContainer = ({ node }: { node: Node }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -14,6 +16,11 @@ const NodeContainer = ({ node }: { node: Node }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const editorComponents: { [key: string]: JSX.Element | null } = {
+    text: <TextEditor content={node.content as string} />,
+    image: <ImageEditor content={node.content as MediaContent} nodeId={node.id} />,
   };
 
   return (
@@ -32,7 +39,7 @@ const NodeContainer = ({ node }: { node: Node }) => {
         </>
       )}
       <div className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}>
-        <TextEditor content={node.content} styles={node.styles} />
+        {editorComponents[node.type] || null}
       </div>
       <div
         ref={setActivatorNodeRef}
