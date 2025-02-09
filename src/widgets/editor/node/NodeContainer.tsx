@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDispatch } from 'react-redux';
-import { updateNode } from '../../../store/slices/blockSlice';
+import { updateNode } from '../../../store/slices/nodeSlice';
 import { Node } from '../../../shared/types/editor';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';

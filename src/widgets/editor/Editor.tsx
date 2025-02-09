@@ -15,12 +15,12 @@ import {
 } from '@dnd-kit/sortable';
 import NodeContainer from './node/NodeContainer';
 import { RootState } from '../../store/index';
-import { reorderNodes } from '../../store/slices/blockSlice';
+import { reorderNodes } from '../../store/slices/nodeSlice';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import AddNodeButton from './node/AddNodeButton';
 
 const Editor = () => {
-  const nodes = useSelector((state: RootState) => state.blocks.nodes);
+  const nodes = useSelector((state: RootState) => state.nodes.nodes);
   const dispatch = useDispatch();
 
   const sensors = useSensors(

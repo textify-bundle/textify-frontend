@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { arrayMove } from '@dnd-kit/sortable';
 import { Node } from '../../shared/types/editor';
 
-interface BlockState {
+interface nodeState {
   nodes: Node[];
 }
 
-const initialState: BlockState = {
+const initialState: nodeState = {
   nodes: [
     { id: '1', type: 'text', content: 'Node 1', styles: { bold: true } },
     { id: '2', type: 'text', content: 'Node 2', styles: { italic: true } },
@@ -14,8 +14,8 @@ const initialState: BlockState = {
   ],
 };
 
-const blockSlice = createSlice({
-  name: 'blocks',
+const nodeSlice = createSlice({
+  name: 'nodes',
   initialState,
   reducers: {
     addNode: (state, action: PayloadAction<Node>) => {
@@ -37,5 +37,5 @@ const blockSlice = createSlice({
   },
 });
 
-export const { addNode, updateNode, removeNode, reorderNodes } = blockSlice.actions;
-export default blockSlice.reducer;
+export const { addNode, updateNode, removeNode, reorderNodes } = nodeSlice.actions;
+export default nodeSlice.reducer;

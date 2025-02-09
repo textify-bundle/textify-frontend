@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateNode } from '../../../../store/slices/blockSlice';
+import { updateNode } from '../../../../store/slices/nodeSlice';
 import { NodeType } from '../../../../shared/types/editor/node';
 
 interface NodeTypeSelectorProps {

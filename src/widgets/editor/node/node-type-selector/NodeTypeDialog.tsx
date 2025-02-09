@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { addNode } from '../../../../store/slices/blockSlice';
+import { addNode } from '../../../../store/slices/nodeSlice';
 import { NodeType } from '../../../../shared/types/editor/node';
 
 interface NodeTypeDialogProps {
