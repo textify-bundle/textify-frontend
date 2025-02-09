@@ -2,12 +2,11 @@ import { UserSettingsState } from "../store/slices/userSettingsSlice";
 
 interface UserSettings {
   name?: string;
-  theme?: 'light' | 'dark';
   backgroundColor?: string;
   fontSize?: '10px' | '12px' | '16px';
   fontFamily?: string;
   textColor?: string;
-  BarColor?: string;
+  barColor?: string;
 }
 
 
@@ -18,13 +17,11 @@ export const loadSettingsFromLocalStorage = (): Partial<UserSettingsState> | nul
     
     const validatedSettings: Partial<UserSettingsState> = {};
     
-    validatedSettings.name = parsedSettings.name;
-    validatedSettings.theme = parsedSettings.theme;
     validatedSettings.textColor=parsedSettings.textColor;
     validatedSettings.backgroundColor = parsedSettings.backgroundColor;
     validatedSettings.fontSize = parsedSettings.fontSize as '10px' | '12px' | '16px';
     validatedSettings.fontFamily = parsedSettings.fontFamily;
-    validatedSettings.BarColor=parsedSettings.BarColor;
+    validatedSettings.barColor = parsedSettings.barColor;
     return validatedSettings;
   }
   return null;

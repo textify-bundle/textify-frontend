@@ -5,33 +5,29 @@ import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../../
 
 export const allowedFontFamilies: string[] = [
   'Arial, sans-serif',
-  '"Times New Roman", serif',
-  '"Courier New", monospace',
+  'Times New Roman", serif',
+  'Courier New", monospace',
   'Georgia, serif',
   'Verdana, sans-serif',
-  '"Trebuchet MS", sans-serif',
-  '"Lucida Console", monospace',
-  '"Comic Sans MS", cursive',
+  'Trebuchet MS", sans-serif',
+  'Lucida Console", monospace',
+  'Comic Sans MS", cursive',
   'Impact, sans-serif',
   'Tahoma, sans-serif'
 ];
 
 export interface UserSettingsState {
-  name: string;
-  theme: 'light' | 'dark';
   backgroundColor: string;
-  BarColor: string;
+  barColor: string;
   textColor: string;
   fontSize: '10px' | '12px' | '16px';
   fontFamily: string;
 }
 
 const initialState: UserSettingsState = {
-  name: '',
-  theme: 'light',
-  BarColor: "#333333",
-  backgroundColor: "#333333",
-  textColor: "#333333",
+  barColor: "#0751D8",
+  backgroundColor: "#FFF",
+  textColor: "#000",
   fontSize: '12px',
   fontFamily: allowedFontFamilies[0],
 };
@@ -45,14 +41,6 @@ const userSettingsSlice = createSlice({
   name: 'userSettings',
   initialState: initialStateFromStorage,
   reducers: {
-    setTheme(state, action: PayloadAction<'light' | 'dark'>) {
-      state.theme = action.payload;
-      saveSettingsToLocalStorage(state);
-    },
-    toggleTheme(state) {
-      state.theme = state.theme === 'light' ? 'dark' : 'light';
-      saveSettingsToLocalStorage(state);
-    },
     setBackgroundColor(state, action: PayloadAction<string>) {
  {
         state.backgroundColor = action.payload;
@@ -60,7 +48,7 @@ const userSettingsSlice = createSlice({
       }
     },
     setBarColor(state, action: PayloadAction<string>) {
-        state.BarColor = action.payload;
+        state.barColor = action.payload;
         saveSettingsToLocalStorage(state);
     },
     setTextColor(state, action: PayloadAction<string>) {
@@ -81,8 +69,6 @@ const userSettingsSlice = createSlice({
 });
 
 export const {
-  setTheme,
-  toggleTheme,
   setBackgroundColor,
   setBarColor,
   setTextColor,
