@@ -1,93 +1,82 @@
 import React, { useEffect } from 'react';
-import { Box, List, ListItemButton, Collapse, ListItemText, ListItemIcon, TextField, CircularProgress } from '@mui/material';
+import { Box, List, ListItemButton, Collapse, ListItemText, ListItemIcon, TextField } from '@mui/material';
 import { ExpandLess, ExpandMore, Add } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData } from '../../../store/slices/pagesSlice';
+import { fetchTreeData, createNewProjectAndPage } from '../../../store/slices/pagesSlice';
 import './PagesTree.scss';
 import { AppDispatch, RootState } from '../../../store';
 
 interface TreeItem {
   name: string;
-  type: 'link' | 'dropdown' | 'action';
+  type: 'dropdown' | 'link' | 'action';
   link?: string;
+  action?: string;
   icon?: string;
   items?: TreeItem[];
+  id?: number;
 }
 
 interface ListItemLinkProps {
   item: TreeItem;
   open?: boolean;
-  onClick: (link: string | undefined, index?: number) => void;
+  onClick: (item: TreeItem) => void;
   active?: boolean;
-  onAddNewItem?: (item: TreeItem) => void;
+  onAddNewItem?: () => void;
 }
 
 const PagesTree: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tree, loading } = useSelector((state: RootState) => state.pages);
+  const navigate = useNavigate();
+  const { projectId } = useParams<{ projectId: string }>();
+  const [searchParams] = useSearchParams();
+  const pageId = searchParams.get('page');
+  const { tree } = useSelector((state: RootState) => state.pages);
+  const location = useLocation();
 
-  const [openStates, setOpenStates] = React.useState<boolean[]>([]);
+  const [openStates, setOpenStates] = React.useState<{ [key: string]: boolean }>({});
   const [activeLink, setActiveLink] = React.useState<string | null>(null);
   const [isEditingNewItem, setIsEditingNewItem] = React.useState<boolean>(false);
   const [newItemName, setNewItemName] = React.useState('');
-  const [parentItem, setParentItem] = React.useState<TreeItem | null>(null);
 
   useEffect(() => {
     dispatch(fetchTreeData());
   }, [dispatch]);
 
-  const handleClick = (link: string | undefined, index?: number): void => {
-    if (link) {
-      setActiveLink(link);
+  useEffect(() => {
+    if (projectId) {
+      setOpenStates(prev => ({ ...prev, [projectId]: true }));
     }
+  }, [projectId]);
 
-    if (index !== undefined && tree[index]?.type === 'dropdown') {
-      setOpenStates((prevOpenStates) => {
-        const newOpenStates = [...prevOpenStates];
-        newOpenStates[index] = !newOpenStates[index];
-        return newOpenStates;
-      });
+  const handleClick = (item: TreeItem): void => {
+    if (item.type === 'dropdown') {
+      setOpenStates(prev => ({ ...prev, [item.id!]: !prev[item.id!] }));
+    } else if (item.type === 'link' && item.link) {
+      setActiveLink(item.link);
+      navigate(item.link);
     }
   };
 
-  const handleAddNewItem = (item: TreeItem) => {
-    setParentItem(item);
+  const handleAddNewItem = () => {
     setIsEditingNewItem(true);
   };
 
-  const handleSaveNewItem = () => {
-    const itemName = newItemName.trim() || `New Project ${tree.length + 1}`;
-    const newItem: TreeItem = {
-      name: itemName,
-      type: 'link',
-      link: `/new-project-${Date.now()}`,
-    };
-
-    dispatch({
-      type: 'pages/updateTree',
-      payload: (prevTree: TreeItem[]) => {
-        const updatedTree = [...prevTree];
-        if (parentItem && parentItem.type === 'action') {
-          updatedTree.push(newItem);
-        }
-        return updatedTree;
-      },
-    });
-
-    setNewItemName('');
-    setIsEditingNewItem(false);
+  const handleSaveNewItem = async () => {
+    const projectName = newItemName.trim() || `Новый проект ${tree.length + 1}`;
+    
+    try {
+      const result = await dispatch(createNewProjectAndPage(projectName)).unwrap();
+      setNewItemName('');
+      setIsEditingNewItem(false);
+      navigate(`/${result.project.id}?page=${result.page.id}`);
+    } catch (error) {
+      console.error('Не удалось создать новый проект:', error);
+      alert(`Ошибка при создании проекта: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
+    }
   };
 
-  if (loading) {
-    return (
-      <div>
-        <CircularProgress sx={{ position: 'absolute', left: '6.5vw', top: '45vh' }} size={24} color="inherit" />
-      </div>
-    );
-  }
-
-  const ListItemLink: React.FC<ListItemLinkProps> = ({ item, open, onClick, active, onAddNewItem }) => {
+  const ListItemLink: React.FC<ListItemLinkProps> = ({ item, open, onClick, onAddNewItem }) => {
     let icon = null;
     if (item.type === 'dropdown') {
       icon = open ? <ExpandLess className="icon" /> : <ExpandMore className="icon" />;
@@ -95,12 +84,16 @@ const PagesTree: React.FC = () => {
       icon = <Add className="icon" />;
     }
 
+    const isActive = item.type === 'dropdown' 
+      ? location.pathname === `/${item.id}`
+      : item.link === `${location.pathname}${location.search}`;
+
     const handleItemClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       if (item.type === 'action' && item.icon === 'plus') {
-        onAddNewItem?.(item);
+        onAddNewItem?.();
       } else {
-        onClick(item.link); 
+        onClick(item);
       }
     };
 
@@ -110,7 +103,7 @@ const PagesTree: React.FC = () => {
           component={item.type === 'link' ? RouterLink : 'button'}
           to={item.type === 'link' ? item.link : undefined}
           onClick={handleItemClick}
-          className={`list-item__button ${active ? 'active' : ''}`}
+          className={`list-item__button ${isActive ? 'active' : ''}`}
         >
           <ListItemText primary={item.name} className="list-item__text" />
           {icon && <ListItemIcon className="list-item__add-icon">{icon}</ListItemIcon>}
@@ -128,21 +121,21 @@ const PagesTree: React.FC = () => {
               {index === 2 && <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(0, 0, 0, 0.17)' }}></div>}
               <ListItemLink
                 item={item}
-                open={openStates[index]}
-                onClick={(link: string | undefined) => handleClick(link, index)} 
-                active={activeLink === item.link}
+                open={openStates[item.id!]}
+                onClick={() => handleClick(item)}
+                active={activeLink === item.link || (item.id?.toString() === projectId)}
                 onAddNewItem={handleAddNewItem}
               />
 
               {item.type === 'dropdown' && item.items && (
-                <Collapse component="li" in={openStates[index]} timeout="auto" unmountOnExit>
+                <Collapse component="li" in={openStates[item.id!]} timeout="auto" unmountOnExit>
                   <List disablePadding>
                     {item.items.map((subItem: TreeItem) => (
                       <ListItemLink
                         key={subItem.name}
                         item={subItem}
-                        onClick={(link: string | undefined) => handleClick(link, index)} 
-                        active={activeLink === subItem.link}
+                        onClick={() => handleClick(subItem)}
+                        active={activeLink === subItem.link || (subItem.id?.toString() === pageId)}
                         onAddNewItem={handleAddNewItem}
                       />
                     ))}
@@ -155,7 +148,7 @@ const PagesTree: React.FC = () => {
           {isEditingNewItem && (
             <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
               <TextField
-                placeholder="New Project Name"
+                placeholder="Название нового проекта"
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
                 onKeyDown={(e) => {
@@ -181,3 +174,4 @@ const PagesTree: React.FC = () => {
 };
 
 export default PagesTree;
+

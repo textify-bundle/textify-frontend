@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
+.last-project-card {
+    width: 86.01px;
+    height: 107.34px;
+    position: relative;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important; 
+
+    &__image {
+        height: 86.01px;
+        border-radius: 6px;
+    }
+
+    &__action {
+        position: relative;
+        z-index: 0;
+    }
+
+    &__content {
+        margin-top: 0;
+        font-family: 'SF Compact Rounded', sans-serif;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-weight: 400;
+        font-size: 12px !important;
+    }
+}

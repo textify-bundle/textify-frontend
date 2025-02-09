@@ -1,151 +1,110 @@
-import { useState, useCallback } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { keyframes } from '@mui/system';
-import './Settings.css';
-import Search from "../../../../shared/ui/search-bar/SearchBar.tsx";
-import ButtDel from "../butt/ButtDel";
-import SwitchButton from "../switch-button/SwitchButton.tsx";
-import ButtonInOut from "../butt/ButtonInOut.js";
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import Search from '../../../../shared/ui/search-bar/SearchBar';
+import SettingButton from '../buttons/SettingButton';
+import ButtonInOut from '../buttons/ButtonInOut';
+import './Settings.scss';
+import TModal from '../../../../shared/tmodal/TModal';
+import { MuiColorInput } from 'mui-color-input';
+import { 
+  setBackgroundColor, 
+  setBarColor, 
+  setTextColor,
+  setFontSize,
+  setFontFamily,
+  allowedFontFamilies,
+  UserSettingsState
+} from '../../../../store/slices/userSettingsSlice';
+import { RootState } from '../../../../store';
 
-const slideIn = keyframes`
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
+interface SettingsProps {
+  isTrash?: boolean;
+}
 
-const slideOut = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-`;
+const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [valueText, setValueText] = useState<string>('');
+  const dispatch = useDispatch();
+  const settings = useSelector((state: RootState) => state.settings);
 
-const Settings = ({ isTrash }) => {
-  const [open, setOpen] = useState(false);
-  const [valueText, setValue] = useState('');
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const handleSearchChange = useCallback((newValue) => {
-    setValue(newValue); 
-  }, []);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
-
-  const handleButtonClick = () => {};
+  const handleColorChange = (colorType: keyof Pick<UserSettingsState, 'backgroundColor' | 'textColor' | 'barColor'>) => 
+    (color: string) => {
+      switch (colorType) {
+        case 'backgroundColor':
+          dispatch(setBackgroundColor(color));
+          break;
+        case 'textColor':
+          dispatch(setTextColor(color));
+          break;
+        case 'barColor':
+          dispatch(setBarColor(color));
+          break;
+      }
+    };
 
   return (
-    <Box id="settings">
-      <Button
-        id="settings-button"
-        aria-haspopup="true"
-        onClick={handleClickOpen}
-        sx={{
-          position: 'absolute',
-          top:7,
-          right: 40,
-          height:35,
-          zIndex: 10,
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          alignContent:'center',
-          flexWrap:'nowrap',
-          justifyContent:'flex-end'
-        }}
-      >
-        <span style={{color:'black', fontSize: '30px' }}>...</span>
-      </Button>
+    <>
+      <TModal isOpen={open} onClose={handleClose} title="Settings">
+        <Box className="settings-dialog">
+          {!isTrash && <Search placeholder="Search in file" value={valueText} onChange={setValueText} />}
+          {!isTrash && <SettingButton placeholder="Delete project" onClick={handleClose} />}
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        onExited={handleClose}
-        sx={{
-          '& .MuiDialog-paper': {
-            width: '200px',
-            height: '350px',
-            maxWidth: 'none',
-            padding: 0,
-            borderRadius: '20px',
-            animation: open ? `${slideIn} 0.62s ease-out` : `${slideOut} 0.62s ease-out`,
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-          },
-        }}
-        BackdropProps={{
-          invisible: true,
-        }}
-      >
-        <DialogTitle sx={{ borderRadius: '20px', }}>Настройки</DialogTitle>
-        <DialogContent sx={{ padding: '10px' }}>
-          {!isTrash && (
-            <Search
-              className="settings-case_search"
-              placeholder="Поиск по файлу"
-              value={valueText}
-              onChange={handleSearchChange}
-            />
-          )}
+          <Box className="settings-theme">
+            <Typography variant="body1">Background Color:</Typography>
+            <MuiColorInput value={settings.backgroundColor} onChange={handleColorChange('backgroundColor')}/>
+          </Box>
+          <Box className="settings-theme">
+            <Typography variant="body1">Main Color:</Typography>
+            <MuiColorInput value={settings.barColor} onChange={handleColorChange('barColor')}/>
+          </Box>
+          <Box className="settings-theme">
+            <Typography variant="body1">Text Color:</Typography>
+            <MuiColorInput value={settings.textColor} onChange={handleColorChange('textColor')}/>
+          </Box>
 
-          {!isTrash && (
-            <ButtDel
-              id="settings-case_custom-button"
-              placeholder="Удалить проект"
-              onClick={handleButtonClick}
-            />
-          )}
+          <Box className="settings-theme">
+            <Typography variant="body1">Font Size:</Typography>
+            <Select
+              value={settings.fontSize}
+              onChange={(e) => dispatch(setFontSize(e.target.value as '10px' | '12px' | '16px'))}
+            >
+              <MenuItem value="10px">Small (10px)</MenuItem>
+              <MenuItem value="12px">Medium (12px)</MenuItem>
+              <MenuItem value="16px">Large (16px)</MenuItem>
+            </Select>
+          </Box>
 
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Цвет фона"
-            onClick={handleButtonClick}
-          />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Размер шрифта"
-            onClick={handleButtonClick}
-          />
-          <ButtDel
-            id="settings-case_custom-button"
-            placeholder="Набор шрифтов"
-            onClick={handleButtonClick}
-          />
+          <Box className="settings-theme">
+            <Typography variant="body1">Font Family:</Typography>
+            <Select
+              value={settings.fontFamily}
+              onChange={(e) => dispatch(setFontFamily(e.target.value))}
+            >
+              {allowedFontFamilies.map((font) => (
+                <MenuItem key={font} value={font}>
+                  {font.split(',')[0].replace(/['"]/g, '')}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
 
-          <div id="settings-case_theme">
-            <p>Тема:</p>
-            <SwitchButton className="settings-case-theme-switch" />
-          </div>
-        </DialogContent>
-        <DialogActions sx={{borderRadius: '20px', padding: '0 10px 10px 10px' }}>
-          <ButtonInOut
-            className="settings-case_button-in-out"
-            placeholder="Выход"
-            onClick={handleButtonClick}
-            sx={{
-              borderRadius: '20px',
-            }}
-          />
-        </DialogActions>
-      </Dialog>
-    </Box>
+          <ButtonInOut placeholder="Exit" onClick={handleClose} />
+        </Box>
+      </TModal>
+
+      <Box id="settings">
+        <Button id="settings-button" onClick={handleOpen}>
+          <span className="dot" />
+          <span className="dot" />
+          <span className="dot" />
+        </Button>
+      </Box>
+    </>
   );
-};
-
-Settings.propTypes = {
-  isTrash: PropTypes.bool,
 };
 
 export default Settings;
