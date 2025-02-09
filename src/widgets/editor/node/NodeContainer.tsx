@@ -7,7 +7,7 @@ import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
-import { AppBar, Toolbar, Typography, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -53,7 +53,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     setShowDropdown(false);
   };
 
-  const handleAddNode = () => {
+  const handleAddNode = (currentNodeIndex?: string) => {
     const id = Date.now().toString();
     const newNode = {
       id,
@@ -61,7 +61,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       content: '',
       styles: {},
     };
-    dispatch(addNode(newNode));
+    dispatch(addNode({node: newNode, index: currentNodeIndex}));
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -115,26 +115,46 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       <div ref={refs.setReference}>{/* Reference element for floating UI */}</div>
       {showDropdown && (
         <div ref={dropdownRef} style={{ position: strategy, top: (y ?? 0) + 15, left: x ?? 0 }}>
-          <AppBar position="static" color="default" elevation={1}>
-            <Toolbar variant="dense">
-              <Typography variant="subtitle1" color="inherit">
-                Тип блока:
-              </Typography>
-              <Select
-                value={selectedType}
-                onChange={handleTypeChange}
-                variant="outlined"
-                size="small"
-                style={{ marginLeft: 8 }}
-              >
-                {nodeTypes.map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Toolbar>
-          </AppBar>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              padding: '6px',
+              width: '185.06px',
+              height: '208px',
+              overflowY: 'scroll',
+              background: '#FFFFFF',
+              boxShadow: '0px 0px 24.2px rgba(0, 0, 0, 0.25)',
+              borderRadius: '12px'
+            }} className="node-type-selector">
+              {nodeTypes.map((type) => (
+                <div
+                  key={type}
+                  className={`node-type-item ${selectedType === type ? 'selected' : ''}`}
+                  onClick={() => handleTypeChange({ target: { value: type } } as SelectChangeEvent<NodeType>)}
+                  style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '6.59px 9.89px',
+                  gap: '4.94px',
+                  background: '#FFFFFF',
+                  borderRadius: '3.3px',
+                  flex: 'none',
+                  order: 1,
+                  alignSelf: 'stretch',
+                  flexGrow: 0,
+                  cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFFFF'}
+                >
+                  <img src={`./node-types/${type}`} alt="" />
+                  <h4>{type}</h4>
+                </div>
+              ))}
+            </div>
         </div>
       )}
       {isHovered && (
@@ -148,7 +168,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
             transition: 'transform 0.2s ease',
           }}
         >
-          <button onClick={handleAddNode} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+          <button onClick={() => {handleAddNode(node.id)}} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             <img src="./icons/plus.svg" width="15px" alt="Add Node" />
           </button>
         </div>
@@ -163,7 +183,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
           content={node.content}
           styles={node.styles}
           onContentChange={handleContentChange}
-          onEnterPress={handleAddNode}
+          onEnterPress={() => {handleAddNode(node.id)}}
         />
       </div>
       <div
