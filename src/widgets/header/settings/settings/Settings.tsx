@@ -1,251 +1,110 @@
-import React, { useState, useCallback } from 'react';
-import { Box, Button, Menu, MenuList } from '@mui/material';
-import './Settings.scss'
-import Search from "../../../../shared/ui/search-bar/SearchBar.tsx"; 
-import SwitchButton from "../switch-button/SwitchButton.tsx";
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import Search from '../../../../shared/ui/search-bar/SearchBar';
+import SettingButton from '../buttons/SettingButton';
+import ButtonInOut from '../buttons/ButtonInOut';
+import './Settings.scss';
+import TModal from '../../../../shared/tmodal/TModal';
+import { MuiColorInput } from 'mui-color-input';
+import { 
+  setBackgroundColor, 
+  setBarColor, 
+  setTextColor,
+  setFontSize,
+  setFontFamily,
+  allowedFontFamilies,
+  UserSettingsState
+} from '../../../../store/slices/userSettingsSlice';
+import { RootState } from '../../../../store';
 
-// :)
 interface SettingsProps {
-    isTrash?: boolean;
+  isTrash?: boolean;
 }
 
-// interface ButtDel {
-//     placeholder: string;
-//     onClick: () => void;
-//     className?: string; 
-// }
+const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [valueText, setValueText] = useState<string>('');
+  const dispatch = useDispatch();
+  const settings = useSelector((state: RootState) => state.settings);
 
-const Settings: React.FC<SettingsProps> = ({ isTrash }) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const [valueText, setValue] = useState<string>('');
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-    const handleSearchChange = useCallback((newValue: string) => {
-        setValue(newValue);
-    }, []);
-
-    const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    }, []);
-
-    const handleButtonClick = () => {
-        
+  const handleColorChange = (colorType: keyof Pick<UserSettingsState, 'backgroundColor' | 'textColor' | 'barColor'>) => 
+    (color: string) => {
+      switch (colorType) {
+        case 'backgroundColor':
+          dispatch(setBackgroundColor(color));
+          break;
+        case 'textColor':
+          dispatch(setTextColor(color));
+          break;
+        case 'barColor':
+          dispatch(setBarColor(color));
+          break;
+      }
     };
 
-    const handleClose = useCallback(() => {
-        setAnchorEl(null);
-    }, []);
+  return (
+    <>
+      <TModal isOpen={open} onClose={handleClose} title="Settings">
+        <Box className="settings-dialog">
+          {!isTrash && <Search placeholder="Search in file" value={valueText} onChange={setValueText} />}
+          {!isTrash && <SettingButton placeholder="Delete project" onClick={handleClose} />}
 
-    return (
-        <Box id="settings">
-            <Button
-                id="settings-button"
-                aria-controls={open ? 'settings-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                
+          <Box className="settings-theme">
+            <Typography variant="body1">Background Color:</Typography>
+            <MuiColorInput value={settings.backgroundColor} onChange={handleColorChange('backgroundColor')}/>
+          </Box>
+          <Box className="settings-theme">
+            <Typography variant="body1">Main Color:</Typography>
+            <MuiColorInput value={settings.barColor} onChange={handleColorChange('barColor')}/>
+          </Box>
+          <Box className="settings-theme">
+            <Typography variant="body1">Text Color:</Typography>
+            <MuiColorInput value={settings.textColor} onChange={handleColorChange('textColor')}/>
+          </Box>
+
+          <Box className="settings-theme">
+            <Typography variant="body1">Font Size:</Typography>
+            <Select
+              value={settings.fontSize}
+              onChange={(e) => dispatch(setFontSize(e.target.value as '10px' | '12px' | '16px'))}
             >
-                ...
-            </Button>
-            <Menu
-                id="settings-menu"
-                className="settings-case"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                sx={{
-                    width: '280px',
-                    '& .MuiPaper-root, .MuiList-root': {
-                        borderRadius: '16px',
-                        paddingTop: '2px',
-                        paddingBottom: '0',
-                    },
-                }}
+              <MenuItem value="10px">Small (10px)</MenuItem>
+              <MenuItem value="12px">Medium (12px)</MenuItem>
+              <MenuItem value="16px">Large (16px)</MenuItem>
+            </Select>
+          </Box>
+
+          <Box className="settings-theme">
+            <Typography variant="body1">Font Family:</Typography>
+            <Select
+              value={settings.fontFamily}
+              onChange={(e) => dispatch(setFontFamily(e.target.value))}
             >
-                <MenuList
-                className="settings-case_name"
-                sx={{
-                    marginBlock: "8px",
-                    fontSize: '16pt',
-                    paddingInline: '20px',
-                    boxSizing: "border-box"
-                }}
-                >
-                Настройки
-                </MenuList>
+              {allowedFontFamilies.map((font) => (
+                <MenuItem key={font} value={font}>
+                  {font.split(',')[0].replace(/['"]/g, '')}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
 
-
-                {!isTrash && (
-                    <div style={{width: "100%", height: 40, paddingInline: 22, boxSizing: "border-box"}}>
-                        <Search
-                            className="settings-case_search"
-                            placeholder="Поиск по файлу"
-                            value={valueText}
-                            onChange={handleSearchChange}
-                        />
-                    </div>
-                )}
-
-                <Button
-                className="buttout"
-                variant="contained"
-                onClick={handleButtonClick}
-                sx={{
-                    width: '100%',
-                    height: '42px',
-                    textTransform: 'none',
-                    borderRadius: '0px',
-                    padding: '0px',
-                    gap: '10px',
-                    backgroundColor: 'white',
-                    color: 'black',
-                    fontFamily: '"Varela Round", sans-serif',
-                    fontSize: '12pt',
-                    fontWeight: 400,
-                    lineHeight: '16px',
-                    textAlign: 'left',
-                    justifyContent: 'flex-start',
-                    boxShadow: 'none',
-                    paddingLeft: '20px',
-                    '&:hover': {
-                    backgroundColor: 'rgba(230, 230, 230, 1)',
-                    color: 'black',
-                    boxShadow: 'none',
-                    },
-                }}
-                >
-                Удалить проект
-                </Button>
-                <Button
-                className="buttout"
-                variant="contained"
-                onClick={handleButtonClick}
-                sx={{
-                    width: '100%',
-                    height: '42px',
-                    textTransform: 'none',
-                    borderRadius: '0px',
-                    padding: '0px',
-                    gap: '10px',
-                    backgroundColor: 'white',
-                    color: 'black',
-                    fontFamily: '"Varela Round", sans-serif',
-                    fontSize: '12pt',
-                    fontWeight: 400,
-                    lineHeight: '16px',
-                    textAlign: 'left',
-                    justifyContent: 'flex-start',
-                    boxShadow: 'none',
-                    paddingLeft: '20px',
-                    '&:hover': {
-                    backgroundColor: 'rgba(230, 230, 230, 1)',
-                    color: 'black',
-                    boxShadow: 'none',
-                    },
-                }}
-                >
-                Цвет фона
-                </Button>
-                <Button
-                className="buttout"
-                variant="contained"
-                onClick={handleButtonClick}
-                sx={{
-                    width: '100%',
-                    height: '42px',
-                    textTransform: 'none',
-                    borderRadius: '0px',
-                    padding: '0px',
-                    gap: '10px',
-                    backgroundColor: 'white',
-                    color: 'black',
-                    fontFamily: '"Varela Round", sans-serif',
-                    fontSize: '12pt',
-                    fontWeight: 400,
-                    lineHeight: '16px',
-                    textAlign: 'left',
-                    justifyContent: 'flex-start',
-                    boxShadow: 'none',
-                    paddingLeft: '20px',
-                    '&:hover': {
-                    backgroundColor: 'rgba(230, 230, 230, 1)',
-                    color: 'black',
-                    boxShadow: 'none',
-                    },
-                }}
-                >
-                Размер шрифта
-                </Button>
-                <Button
-                className="buttout"
-                variant="contained"
-                onClick={handleButtonClick}
-                sx={{
-                    width: '100%',
-                    height: '42px',
-                    textTransform: 'none',
-                    borderRadius: '0px',
-                    padding: '0px',
-                    gap: '10px',
-                    backgroundColor: 'white',
-                    color: 'black',
-                    fontFamily: '"Varela Round", sans-serif',
-                    fontSize: '12pt',
-                    fontWeight: 400,
-                    lineHeight: '16px',
-                    textAlign: 'left',
-                    justifyContent: 'flex-start',
-                    boxShadow: 'none',
-                    paddingLeft: '20px',
-                    '&:hover': {
-                    backgroundColor: 'rgba(230, 230, 230, 1)',
-                    color: 'black',
-                    boxShadow: 'none',
-                    },
-                }}>Набор шрифтов 
-                </Button>
-
-
-                <div style={{display: "flex", width: "100%", height: "42px", flex: "auto", flexDirection: "row", paddingInline: 20, boxSizing: "border-box"}}>
-                    <p style={{lineHeight: "6px", marginRight: 5}}>Тема:</p>
-                    <SwitchButton className="settings-case-theme-switch"/>
-                </div>
-
-
-                <Button
-                    className="buttout"
-                    variant="contained"
-                    onClick={handleButtonClick}
-                    sx={{
-                        width: '100%',
-                        height: '42px',
-                        textTransform: 'none',
-                        borderRadius: '0px',
-                        padding: '0px',
-                        gap: '10px',
-                        backgroundColor: 'rgba(7, 81, 216, 1)',
-                        color: 'white',
-                        fontFamily: '"Varela Round", sans-serif',
-                        fontSize: '12pt',
-                        fontWeight: 400,
-                        lineHeight: '16px',
-                        textAlign: 'left',
-                        '&:hover': {
-                        backgroundColor: 'rgba(7, 58, 151, 1)',
-                        },
-                    }}
-                    >
-                    Выход
-                    </Button>
-            </Menu>
+          <ButtonInOut placeholder="Exit" onClick={handleClose} />
         </Box>
-    );
-};
+      </TModal>
 
-Settings.propTypes = {
-    isTrash: PropTypes.bool,
+      <Box id="settings">
+        <Button id="settings-button" onClick={handleOpen}>
+          <span className="dot" />
+          <span className="dot" />
+          <span className="dot" />
+        </Button>
+      </Box>
+    </>
+  );
 };
 
 export default Settings;

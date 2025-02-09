@@ -1,0 +1,24 @@
+.butt {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+    .butt .butt_in-out { 
+        text-transform: none;
+        border-radius: 12px;
+        width: 100%;
+        height: 36px;
+        padding: 0px;
+        padding-left: 10px;
+        background-color: rgba(7, 81, 216, 1);
+        color: white;
+        font-family: 'SF Compact Rounded', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        text-align: center;
+
+        &:hover {
+            background: rgba(7, 58, 151, 1);
+        }
+    }
