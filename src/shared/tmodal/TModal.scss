@@ -1,0 +1,10 @@
+.MuiDialog-root {
+  .MuiBackdrop-root {
+    background-color: transparent;
+  }
+
+  .MuiDialog-paper {
+    border-radius: 20px;
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6);
+  }
+}

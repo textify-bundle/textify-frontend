@@ -1,53 +1,58 @@
 import React, { useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import "./SearchBar.scss";
-import Src from './magnifyingGlass.jpg';
+import './SearchBar.scss';
 
-interface NewSearchProps {
-    className?: string;
+interface SearchProps {
+    iconSrc?:  './src/shared/ui/search-bar/magnifyingGlass.svg';
     onClick?: () => void;
+    onChange?: (value: string) => void;
     placeholder?: string;
     value?: string;
-    onChange?: (value: string) => void;
 }
 
-const SearchBar: React.FC<NewSearchProps> = ({
-    className,
-    onClick = () => {},
+const Search: React.FC<SearchProps> = ({
+    iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg', 
+    onClick,
+    onChange,
     placeholder = "Поиск",
-    value: externalValue,
-    onChange = () => {},
+    value = "",
 }) => {
-    const [internalValue, setValue] = useState<string>(externalValue || '');
+    const [internalValue, setInternalValue] = useState(value);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
-        setValue(newValue);
-        onChange(newValue);
+
+        if (onChange) {
+            onChange(newValue); 
+        } else {
+            setInternalValue(newValue); 
+        }
     };
 
-    const handlePress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handlePress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            console.log(e.currentTarget.value);
+            console.log(internalValue);
         }
     };
 
     return (
-        <Box className={`${className} search-container`} onClick={onClick}  >
+        <Box className="search-container" onClick={onClick}>
             <TextField
+                className="search-form_side-bar"
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
                 onKeyPress={handlePress}
-                value={internalValue}
+                value={onChange ? value : internalValue} 
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
-                            <img  src={Src}  />
+                            <img
+                                className="search-glass_img"
+                                src={iconSrc}
+                            />
                         </InputAdornment>
                     ),
-                    style: {fontSize: 12, gap: "5px", marginLeft: 2}
-
                 }}
                 sx={{
                     '& .MuiOutlinedInput-root': {
@@ -64,4 +69,4 @@ const SearchBar: React.FC<NewSearchProps> = ({
     );
 };
 
-export default SearchBar;
+export default Search;

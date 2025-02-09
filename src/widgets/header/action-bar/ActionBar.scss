@@ -1,28 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
-
-.custom-button {
-  font-family: 'SF Compact Rounded', sans-serif;
-}
-
-.main-buttons-container {
-  display: flex;
-  flex-direction: row;
-  z-index: 0;
-}
-
-.three-dots-button {
-  .dots-container {
+ .main-buttons-container {
     display: flex;
     align-items: center;
+  }
+  
+  .user-button {
+    color: white;
+    display: flex;
     justify-content: center;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    background-color: black;
+    align-items: center;
+    
+    height: 31px;
+    width: 31px;
+    min-width: 31px;
+  
+    padding: 0;
     border-radius: 50%;
-    display: inline-block;
-    margin: 0 2px;
+    font-size: 16px;
+    text-transform: none;
   }
-}
+  
