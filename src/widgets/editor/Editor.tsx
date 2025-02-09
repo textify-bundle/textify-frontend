@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   DndContext,
@@ -17,12 +18,11 @@ import NodeContainer from './node/NodeContainer';
 import { RootState } from '../../store/index';
 import { reorderNodes } from '../../store/slices/nodeSlice';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import AddNodeButton from './node/AddNodeButton';
 
-const Editor = () => {
+const Editor: React.FC = () => {
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
   const dispatch = useDispatch();
-
+  const [newNodeId, setNewNodeId] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -37,22 +37,28 @@ const Editor = () => {
     }
   };
 
+  const handleFocusNewNode = (id: string) => {
+    setNewNodeId(id); 
+  };
+
   return (
-    <div>
-      <AddNodeButton />
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
-      >
-        <SortableContext items={nodes.map((node) => node.id)} strategy={verticalListSortingStrategy}>
-          {nodes.map((node) => (
-            <NodeContainer node={node} key={node.id} />
-          ))}
-        </SortableContext>
-      </DndContext>
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      modifiers={[restrictToVerticalAxis]}
+    >
+      <SortableContext items={nodes.map((node) => node.id)} strategy={verticalListSortingStrategy}>
+        {nodes.map((node) => (
+          <NodeContainer
+            key={node.id}
+            node={node}
+            isNewNode={node.id === newNodeId} 
+            onFocus={() => handleFocusNewNode(node.id)}
+          />
+        ))}
+      </SortableContext>
+    </DndContext>
   );
 };
 

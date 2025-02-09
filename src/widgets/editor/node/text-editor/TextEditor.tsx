@@ -1,6 +1,4 @@
-// src/components/text-editor/TextEditor.tsx
-import React, { useState } from 'react';
-import { Input } from '@mui/base/Input';
+import React, { forwardRef, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import './TextEditor.scss';
 import { NodeContent, NodeStyles } from '../../../../shared/types/editor/node';
@@ -9,51 +7,59 @@ interface TextEditorProps {
   content: NodeContent;
   styles?: NodeStyles;
   onContentChange: (newContent: NodeContent) => void;
+  onEnterPress: () => void;
+  inputId?: string;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ content, styles, onContentChange }) => {
-  const [value, setValue] = useState(content);
+const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
+  ({ content, styles, inputId, onContentChange, onEnterPress }, ref) => {
+    const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
 
-  const handleChange = (newValue: NodeContent) => {
-    setValue(newValue);
-    onContentChange(newValue);
-  };
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newValue = event.target.value;
+      setValue(newValue);
+      onContentChange(newValue);
+    };
 
-  const renderContent = () => {
-    if (typeof content === 'string') {
-      return (
-        <Input
-          multiline
-          slots={{
-            textarea: TextareaAutosize,
-          }}
-          value={value}
-          onChange={(e) => handleChange(e.target.value)}
-          slotProps={{
-            input: {
-              style: {
-                border: 'none',
-                padding: 0,
-                background: 'transparent',
-                width: '100%',
-                resize: 'none',
-                overflow: 'hidden',
-                outline: 'none',
-              },
-            },
-          }}
-          className="text-editor__input"
-        />
-      );
-    }
-    return null;
-  };
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        onEnterPress();
+      }
+    };
 
-  return (
-    <div className="text-editor" style={styles}>
-      {renderContent()}
-    </div>
-  );
-};
+    const renderContent = () => {
+      if (typeof content === 'string') {
+        return (
+          <TextareaAutosize
+            id={inputId}
+            ref={ref}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            style={{
+              border: 'none',
+              padding: 0,
+              background: 'transparent',
+              width: '100%',
+              resize: 'none',
+              overflow: 'hidden',
+              outline: 'none',
+              ...styles,
+            }}
+            className="text-editor__input"
+          />
+        );
+      }
+      return null;
+    };
+
+    return (
+      <div className="text-editor" style={styles}>
+        {renderContent()}
+      </div>
+    );
+  }
+);
 
 export default TextEditor;

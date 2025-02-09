@@ -18,7 +18,7 @@ export type FileContent = {
 };
 
 export type TableContent = {
-  rows: Node[][];
+  rows: CustomNode[][];
 };
 
 export type CalloutContent = {
@@ -47,10 +47,10 @@ export type NodeStyles = {
   backgroundColor?: string;
 };
 
-export type Node = {
+export type CustomNode = {
   id: string;
   type: NodeType;
   content: NodeContent;
   styles?: NodeStyles;
-  children?: Node[];
+  children?: CustomNode[];
 };

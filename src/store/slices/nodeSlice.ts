@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { arrayMove } from '@dnd-kit/sortable';
-import { Node } from '../../shared/types/editor';
+import { CustomNode } from '../../shared/types/editor/node';
 
 interface nodeState {
-  nodes: Node[];
+  nodes: CustomNode[];
 }
 
 const initialState: nodeState = {
@@ -18,10 +18,10 @@ const nodeSlice = createSlice({
   name: 'nodes',
   initialState,
   reducers: {
-    addNode: (state, action: PayloadAction<Node>) => {
+    addNode: (state, action: PayloadAction<CustomNode>) => {
       state.nodes.push(action.payload);
     },
-    updateNode: (state, action: PayloadAction<Node>) => {
+    updateNode: (state, action: PayloadAction<CustomNode>) => {
       const index = state.nodes.findIndex(node => node.id === action.payload.id);
       if (index !== -1) {
         state.nodes[index] = action.payload;
