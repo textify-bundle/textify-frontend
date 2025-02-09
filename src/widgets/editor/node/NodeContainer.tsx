@@ -127,7 +127,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
               boxShadow: '0px 0px 24.2px rgba(0, 0, 0, 0.25)',
               borderRadius: '12px'
             }} className="node-type-selector">
-              {nodeTypes.map((type) => (
+              {nodeTypes.filter((value) => value !== 'none').map((type) => (
                 <div
                   key={type}
                   className={`node-type-item ${selectedType === type ? 'selected' : ''}`}
@@ -150,7 +150,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFFFF'}
                 >
-                  <img src={`./node-types/${type}`} alt="" />
+                  <img src={`./node-types/${type}.png`} alt="" width={`30px`} />
                   <h4>{type}</h4>
                 </div>
               ))}
