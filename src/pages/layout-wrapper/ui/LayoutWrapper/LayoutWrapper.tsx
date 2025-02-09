@@ -5,8 +5,11 @@ import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
 import store, { RootState } from "../../../../store";
 import Editor from "../../../../widgets/editor/Editor";
 import { useSelector } from 'react-redux';
+import { MainPage } from '../../../main-page';
+import { TrashBin } from '../../../trash-bin';
+import { ILayoutWrapperProps } from './ts';
 
-const LayoutWrapper = () => {
+const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const { backgroundColor, fontSize, fontFamily, textColor, barColor } = useSelector((state: RootState) => state.settings);  
   
@@ -27,9 +30,14 @@ const LayoutWrapper = () => {
     document.documentElement.style.setProperty('--text-color', textColor);
     document.documentElement.style.setProperty('--font-family', fontFamily);
 
-   
-  
   }, [backgroundColor, fontSize, fontFamily, barColor,textColor]);
+
+  const layoutMap: { [key: string]: React.FC } = {
+    main: MainPage,
+    trash: TrashBin,
+  };
+
+  const LayoutComponent = layoutMap[layout] || null;
 
   return (
     <div style={{ display: 'flex', background:'var(--background-color)' }}>
@@ -97,13 +105,16 @@ const LayoutWrapper = () => {
             <ActionBar users={users} />
           </div>
         </div>
-        <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
-          <h1>
-            Project Title
-            <hr />
-          </h1>
-          <Editor />
-        </div>
+        {LayoutComponent ? <LayoutComponent /> : null}
+        {layout === 'project' && (
+          <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
+            <h1>
+              Project Title
+              <hr />
+            </h1>
+            <Editor />
+          </div>
+        )}
       </div>
     </div>
   );
