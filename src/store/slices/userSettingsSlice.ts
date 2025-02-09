@@ -56,18 +56,17 @@ const userSettingsSlice = createSlice({
       if (allowedFontFamilies.includes(action.payload)) {
         state.fontFamily = action.payload;
         
-        // Обновляем CSS-переменную глобально
+        
         if (typeof window !== 'undefined') {
-          // Обновляем корневую CSS-переменную
+          
           document.documentElement.style.setProperty(
             '--app-font-family', 
             `'${action.payload}', sans-serif`
           );
 
-          // Принудительное обновление стилей для всех элементов
+          
           document.body.style.fontFamily = `'${action.payload}', sans-serif`;
           
-          // Сохраняем в localStorage для персистентности
           localStorage.setItem('app-font-family', action.payload);
         }
         
