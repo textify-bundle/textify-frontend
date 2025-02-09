@@ -7,7 +7,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
   UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
