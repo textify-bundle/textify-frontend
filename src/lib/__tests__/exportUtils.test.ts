@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, test } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { exportHTMLToPDF } from '../exportUtils';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -19,22 +19,20 @@ describe('exportHTMLToPDF', () => {
         vi.clearAllMocks();
     });
 
-    test('should export PDF', async () => {
+    it('should generate PDF file', async () => {
         // Подготавливаем мок для canvas
         const mockCanvas = {
             width: 800,
             height: 600,
-            toDataURL: vi.fn().mockReturnValue('data:image/jpeg;base64,test')
+            toDataURL: vi.fn().mockReturnValue('mockDataUrl')
         };
-        
-        // Подготавливаем мок для PDF
+        (html2canvas as unknown as vi.Mock).mockResolvedValue(mockCanvas);
+
+        // Мокаем jsPDF
         const mockPdf = {
             addImage: vi.fn(),
             save: vi.fn()
         };
-
-        // Устанавливаем моки
-        (html2canvas as unknown as vi.Mock).mockResolvedValue(mockCanvas);
         (jsPDF as unknown as vi.Mock).mockImplementation(() => mockPdf);
 
         // Вызываем функцию экспорта
@@ -44,7 +42,13 @@ describe('exportHTMLToPDF', () => {
             quality: 2
         });
 
-        // Проверяем, что PDF был создан и сохранен
+        // Проверяем вызовы
+        expect(html2canvas).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
+            scale: 2,
+            useCORS: expect.any(Boolean),
+            logging: false,
+            allowTaint: true
+        }));
         expect(mockPdf.addImage).toHaveBeenCalled();
         expect(mockPdf.save).toHaveBeenCalledWith('test.pdf');
     });
