@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TModel from '../header/TModel/TModel.tsx';
 import './ShareOverlay.scss';
+import TModal from '../../shared/tmodal/TModal';
 
 interface PageShareProps {
   title?: string;
@@ -43,7 +43,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         {title}
       </Button>
 
-      <TModel isOpen={openDialog} onClose={() => setOpenDialog(false)} title="Поделиться">
+      <TModal isOpen={openDialog} onClose={() => setOpenDialog(false)} title="Поделиться">
         <Box className="share-dialog__access">
           <Typography variant="body1" className="share-dialog__label">У кого есть ссылка</Typography>
           <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
@@ -60,7 +60,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
           </Accordion>
         </Box>
         <Button className='share-dialog__copy-btn' variant="contained" onClick={handleCopyLink}>{copied ? "Скопировано!" : "Копировать ссылку"}</Button>
-      </TModel>
+      </TModal>
     </div>
   );
 };
