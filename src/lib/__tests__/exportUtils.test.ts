@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { exportToPDF } from '../exportUtils';
+import { describe, it, expect, vi, beforeEach, test } from 'vitest';
+import { exportHTMLToPDF } from '../exportUtils';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -7,7 +7,7 @@ import html2canvas from 'html2canvas';
 vi.mock('jspdf');
 vi.mock('html2canvas');
 
-describe('exportToPDF', () => {
+describe('exportHTMLToPDF', () => {
     let testElement: HTMLDivElement;
 
     beforeEach(() => {
@@ -19,7 +19,7 @@ describe('exportToPDF', () => {
         vi.clearAllMocks();
     });
 
-    it('should generate PDF file', async () => {
+    test('should export PDF', async () => {
         // Подготавливаем мок для canvas
         const mockCanvas = {
             width: 800,
@@ -38,7 +38,7 @@ describe('exportToPDF', () => {
         (jsPDF as unknown as vi.Mock).mockImplementation(() => mockPdf);
 
         // Вызываем функцию экспорта
-        await exportToPDF(testElement, {
+        await exportHTMLToPDF(testElement, {
             filename: 'test.pdf',
             margin: 10,
             quality: 2
