@@ -4,16 +4,9 @@ import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../../
  
 
 export const allowedFontFamilies: string[] = [
-  'Arial, sans-serif',
-  'Times New Roman", serif',
-  'Courier New", monospace',
-  'Georgia, serif',
-  'Verdana, sans-serif',
-  'Trebuchet MS", sans-serif',
-  'Lucida Console", monospace',
-  'Comic Sans MS", cursive',
-  'Impact, sans-serif',
-  'Tahoma, sans-serif'
+  'Varela Round', 
+  'Open Sans', 
+  'Roboto'
 ];
 
 export interface UserSettingsState {
@@ -59,12 +52,41 @@ const userSettingsSlice = createSlice({
       state.fontSize = action.payload;
       saveSettingsToLocalStorage(state);
     },
-    setFontFamily(state, action: PayloadAction<string>) {
+    setFontFamily: (state, action: PayloadAction<string>) => {
       if (allowedFontFamilies.includes(action.payload)) {
         state.fontFamily = action.payload;
+        
+        // Обновляем CSS-переменную глобально
+        if (typeof window !== 'undefined') {
+          // Обновляем корневую CSS-переменную
+          document.documentElement.style.setProperty(
+            '--app-font-family', 
+            `'${action.payload}', sans-serif`
+          );
+
+          // Принудительное обновление стилей для всех элементов
+          document.body.style.fontFamily = `'${action.payload}', sans-serif`;
+          
+          // Сохраняем в localStorage для персистентности
+          localStorage.setItem('app-font-family', action.payload);
+        }
+        
         saveSettingsToLocalStorage(state);
       }
     },
+    initializeUserSettings: (state) => {
+      const savedFont = localStorage.getItem('app-font-family');
+      if (savedFont && allowedFontFamilies.includes(savedFont)) {
+        state.fontFamily = savedFont;
+        
+        if (typeof window !== 'undefined') {
+          document.documentElement.style.setProperty(
+            '--app-font-family', 
+            `'${savedFont}', sans-serif`
+          );
+        }
+      }
+    }
   },
 });
 
@@ -73,7 +95,8 @@ export const {
   setBarColor,
   setTextColor,
   setFontSize,
-  setFontFamily
+  setFontFamily,
+  initializeUserSettings
 } = userSettingsSlice.actions;
 
 export default userSettingsSlice.reducer;
