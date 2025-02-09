@@ -1,25 +1,37 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@mui/material/Switch';
 import './SwitchButton.css';
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 
-export default function SwitchButton({checkedProp, onToggle}) {
+interface SwitchButtonProps {
+    className?: string;
+    checkedProp?: boolean;
+    onToggle?: (checked: boolean) => void;
+}
+
+const SwitchButton: React.FC<SwitchButtonProps> = ({
+    className,
+    checkedProp = false,
+    onToggle
+}) => {
     const [checked, setChecked] = useState(checkedProp);
 
     useEffect(() => {
         setChecked(checkedProp);
     }, [checkedProp]);
 
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newChecked = event.target.checked;
         setChecked(newChecked);
         const switchContainer = document.querySelector('.switch-block');
 
-        if (newChecked) {
-            switchContainer.classList.add('active');
-        } else {
-            switchContainer.classList.remove('active');
+        if (switchContainer) {
+            if (newChecked) {
+                switchContainer.classList.add('active');
+            } else {
+                switchContainer.classList.remove('active');
+            }
         }
 
         if (onToggle) {
@@ -28,7 +40,7 @@ export default function SwitchButton({checkedProp, onToggle}) {
     };
 
     return (
-        <Box className="switch-container">
+        <Box className={`switch-container ${className || ''}`}>
             <Box className="switch-block">
                 <Switch
                     checked={checked}
@@ -43,14 +55,12 @@ export default function SwitchButton({checkedProp, onToggle}) {
             </Box>
         </Box>
     );
-}
-
-SwitchButton.defaultProps = {
-    checkedProp: false,
-    onToggle: null,
 };
 
 SwitchButton.propTypes = {
+    className: PropTypes.string,
     checkedProp: PropTypes.bool,
     onToggle: PropTypes.func,
 };
+
+export default SwitchButton;

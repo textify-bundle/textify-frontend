@@ -8,7 +8,7 @@ interface Project {
   date_of_creation: string;
   date_of_change: string;
   project_name: string;
-  isRemoved: boolean;
+  isRemoved?: boolean;
 }
 
 interface Page {
@@ -21,7 +21,7 @@ interface Page {
 
 interface TreeItem {
   name: string;
-  type: 'dropdown' | 'link' | 'action';   
+  type: 'dropdown' | 'link' | 'action';
   link?: string;
   action?: string;
   icon?: string;
@@ -33,7 +33,7 @@ interface PagesState {
   tree: TreeItem[];  
   loading: boolean;
   error: string | null;
-  projectData: { name: string; dateOfChange: string }[];  
+  projectData: { name: string; dateOfChange: string; isRemoved: boolean | undefined }[];  
 }
 
 const initialState: PagesState = {
@@ -58,7 +58,7 @@ export const fetchTreeData = createAsyncThunk<
 );
 
 export const getCardData = createAsyncThunk<
-  { projectData: { name: string; dateOfChange: string }[] }, 
+  { projectData: { name: string; dateOfChange: Date | undefined }[] }, 
   void, 
   { state: RootState }
 >(
@@ -69,6 +69,7 @@ export const getCardData = createAsyncThunk<
     const projectData = projectsData.map((project: Project) => ({
       name: project.project_name,
       dateOfChange: project.date_of_change,
+      isRemoved: project.isRemoved,
     }));
 
     return { projectData };

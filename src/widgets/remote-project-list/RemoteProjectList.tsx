@@ -18,17 +18,23 @@ const RemoteProjectList: React.FC = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    const removedProjects = projectData.filter(project => project.isRemoved);
+
+    if (removedProjects.length === 0) {
+        return <div>У вас нет удалённых проектов!</div>;
+    }
+
     const getImageUrl = (index: number) => {
         const id = (index * 71287328173) % 10 + 1;
         return `/patterns/${id}.webp`;
-      };
+    };
   
     return (
-      <div  style={{ paddingTop: '18px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
-        {projectData.map((project, index) => (
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
+        {removedProjects.map((project, index) => (
           <ProjectCard
             key={index}
-            isRemoved={true}
+            isRemoved={project.isRemoved}
             imageUrl={getImageUrl(index)}
             lastEntryTime={project.dateOfChange}
             projectName={project.name}

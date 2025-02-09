@@ -2,23 +2,28 @@ import React, { useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import "./SearchBar.scss";
 import Src from './magnifyingGlass.jpg';
+
 interface NewSearchProps {
+    className?: string;
     onClick?: () => void;
     placeholder?: string;
-    onValueChange?: (value: string) => void;
+    value?: string;
+    onChange?: (value: string) => void;
 }
 
 const SearchBar: React.FC<NewSearchProps> = ({
-onClick = () => {},
-placeholder = "Поиск",
-onValueChange = () => {},
+    className,
+    onClick = () => {},
+    placeholder = "Поиск",
+    value: externalValue,
+    onChange = () => {},
 }) => {
-    const [value, setValue] = useState<string>('');
+    const [internalValue, setValue] = useState<string>(externalValue || '');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setValue(newValue);
-        onValueChange(newValue); 
+        onChange(newValue);
     };
 
     const handlePress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -28,13 +33,13 @@ onValueChange = () => {},
     };
 
     return (
-        <Box className={`search-container`} onClick={onClick}  >
+        <Box className={`${className} search-container`} onClick={onClick}  >
             <TextField
                 variant="outlined"
                 onChange={handleChange}
                 placeholder={placeholder}
                 onKeyPress={handlePress}
-                value={value}
+                value={internalValue}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
