@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { MainPage } from '../../../main-page';
 import { TrashBin } from '../../../trash-bin';
 import { ILayoutWrapperProps } from './ts';
+import React from 'react';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);

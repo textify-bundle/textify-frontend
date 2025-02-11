@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages, createProjectAndPage } from '../../shared/api/sideBar/projectsService';
+import { getProjects, getPages, createProjectAndPage, createPage, deletePage } from '../../shared/api/sideBar/projectsService';
 import { RootState } from '../index';  
 
 interface Project {
@@ -33,7 +33,7 @@ interface PagesState {
   tree: TreeItem[];  
   loading: boolean;
   error: string | null;
-  projectData: { name: string; dateOfChange: string; isRemoved: boolean | undefined }[];  
+  projectData: { name: string; dateOfChange: string; isRemoved?: boolean }[];
 }
 
 const initialState: PagesState = {
@@ -52,13 +52,12 @@ export const fetchTreeData = createAsyncThunk<
   async () => {
     const projectsData = await getProjects();
     const pagesData = await getPages();
-
     return { projectsData, pagesData }; 
   }
 );
 
 export const getCardData = createAsyncThunk<
-  { projectData: { name: string; dateOfChange: Date | undefined }[] }, 
+  { projectData: { name: string; dateOfChange: string; isRemoved?: boolean }[] }, 
   void, 
   { state: RootState }
 >(
@@ -88,6 +87,30 @@ export const createNewProjectAndPage = createAsyncThunk<
   }
 );
 
+export const createNewPage = createAsyncThunk<
+  Page,
+  { projectId: number; title: string },
+  { state: RootState }
+>(
+  'pages/createNewPage',
+  async ({ projectId, title }) => {
+    const result = await createPage(projectId, title);
+    return result;
+  }
+);
+
+export const removePageFromTree = createAsyncThunk<
+  number,
+  number,
+  { state: RootState }
+>(
+  'pages/removePageFromTree',
+  async (pageId) => {
+    await deletePage(pageId);
+    return pageId;
+  }
+);
+
 const pagesSlice = createSlice({
   name: 'pages',
   initialState,
@@ -102,14 +125,14 @@ const pagesSlice = createSlice({
         state.loading = false;
         const { projectsData, pagesData } = action.payload;
 
-        const treeStructure: TreeItem[] = projectsData.map((project: Project) => ({
+        const treeStructure: TreeItem[] = projectsData.map((project) => ({
           name: project.project_name,
           type: 'dropdown',  
           link: `/${project.id}`,
           id: project.id,
           items: pagesData
-            .filter((page: Page) => page.project_id === project.id)
-            .map((page: Page) => ({
+            .filter((page) => page.project_id === project.id)
+            .map((page) => ({
               name: page.title,
               type: 'link',   
               link: `/${project.id}?page=${page.id}`,
@@ -166,14 +189,46 @@ const pagesSlice = createSlice({
         state.projectData.push({
           name: project.project_name,
           dateOfChange: project.date_of_change,
+          isRemoved: project.isRemoved,
         });
       })
       .addCase(createNewProjectAndPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка при создании нового проекта и страницы';
+      })
+      .addCase(createNewPage.fulfilled, (state, action) => {
+        state.loading = false;
+        const newPage = action.payload;
+        const projectIndex = state.tree.findIndex(item => item.id === newPage.project_id);
+        if (projectIndex !== -1) {
+          state.tree[projectIndex].items = state.tree[projectIndex].items || [];
+          state.tree[projectIndex].items.push({
+            name: newPage.title,
+            type: 'link',
+            link: `/${newPage.project_id}?page=${newPage.id}`,
+            id: newPage.id,
+          });
+        }
+      })
+      .addCase(createNewPage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка при создании новой страницы';
+      })
+      .addCase(removePageFromTree.fulfilled, (state, action) => {
+        state.loading = false;
+        const pageId = action.payload;
+        state.tree = state.tree.map(project => {
+          if (project.items) {
+            project.items = project.items.filter(page => page.id !== pageId);
+          }
+          return project;
+        });
+      })
+      .addCase(removePageFromTree.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка при удалении страницы';
       });
   },
 });
 
 export default pagesSlice.reducer;
-
