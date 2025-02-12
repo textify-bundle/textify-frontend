@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages, createProjectAndPage } from '../../shared/api/sideBar/projectsService';
+import { getProjects, getPages, createProjectAndPage, getProjectsForCards, restoreProject as restoreProjectApi } from '../../shared/api/sideBar/projectsService';
 import { RootState } from '../index';  
 
 interface Project {
@@ -8,7 +8,7 @@ interface Project {
   date_of_creation: string;
   date_of_change: string;
   project_name: string;
-  isRemoved?: boolean;
+  isRemoved: boolean;
 }
 
 interface Page {
@@ -30,11 +30,12 @@ interface TreeItem {
 }
 
 interface PagesState {
-  tree: TreeItem[];  
+  tree: TreeItem[];
   loading: boolean;
   error: string | null;
-  projectData: { name: string; dateOfChange: string; isRemoved: boolean | undefined }[];  
+  projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean | undefined }[];
 }
+
 
 const initialState: PagesState = {
   tree: [],
@@ -58,21 +59,54 @@ export const fetchTreeData = createAsyncThunk<
 );
 
 export const getCardData = createAsyncThunk<
-  { projectData: { name: string; dateOfChange: Date | undefined }[] }, 
-  void, 
+  { projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean | undefined }[] },
+  void,
   { state: RootState }
 >(
   'pages/getCardData',
   async () => {
     const projectsData = await getProjects();
-    
+
     const projectData = projectsData.map((project: Project) => ({
+      id: project.id,
       name: project.project_name,
-      dateOfChange: project.date_of_change,
+      dateOfChange: new Date(project.date_of_change).toISOString(),
       isRemoved: project.isRemoved,
     }));
 
     return { projectData };
+  }
+);
+
+export const getCardDataForCards = createAsyncThunk<
+  { projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean }[] },
+  void,
+  { state: RootState }
+>(
+  'pages/getCardDataForCards',
+  async () => {
+    const projectsData = await getProjectsForCards();
+
+    const projectData = projectsData.map((project: Project) => ({
+      id: project.id,
+      name: project.project_name,
+      dateOfChange: new Date(project.date_of_change).toISOString(),
+      isRemoved: project.isRemoved,
+    }));
+
+    return { projectData };
+  }
+);
+
+
+export const restoreProject = createAsyncThunk<
+  void,
+  number,
+  { state: RootState }
+>(
+  'pages/restoreProject',
+  async (projectId: number) => {
+    await restoreProjectApi(projectId);
   }
 );
 
@@ -104,14 +138,14 @@ const pagesSlice = createSlice({
 
         const treeStructure: TreeItem[] = projectsData.map((project: Project) => ({
           name: project.project_name,
-          type: 'dropdown',  
+          type: 'dropdown',
           link: `/${project.id}`,
           id: project.id,
           items: pagesData
             .filter((page: Page) => page.project_id === project.id)
             .map((page: Page) => ({
               name: page.title,
-              type: 'link',   
+              type: 'link',
               link: `/${project.id}?page=${page.id}`,
               id: page.id,
             })),
@@ -135,8 +169,38 @@ const pagesSlice = createSlice({
       .addCase(getCardData.fulfilled, (state, action) => {
         state.loading = false;
         state.projectData = action.payload.projectData;
-      })     
+        console.log("Updated Project Data:", state.projectData);
+      })
       .addCase(getCardData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка при загрузке данных';
+      })
+      .addCase(restoreProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(restoreProject.fulfilled, (state, action) => {
+        state.loading = false;
+        const projectId = action.meta.arg;
+        const project = state.projectData.find(project => project.id === projectId);
+        if (project) {
+          project.isRemoved = false;
+        }
+      })
+      .addCase(restoreProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка при восстановлении проекта';
+      })
+      .addCase(getCardDataForCards.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCardDataForCards.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projectData = action.payload.projectData;
+        console.log("Updated Project Data for Cards:", state.projectData);
+      })
+      .addCase(getCardDataForCards.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка при загрузке данных';
       })
@@ -147,7 +211,7 @@ const pagesSlice = createSlice({
       .addCase(createNewProjectAndPage.fulfilled, (state, action) => {
         state.loading = false;
         const { project, page } = action.payload;
-        
+      
         const newTreeItem: TreeItem = {
           name: project.project_name,
           type: 'dropdown',
@@ -160,20 +224,20 @@ const pagesSlice = createSlice({
             id: page.id,
           }],
         };
-        
+      
         state.tree.push(newTreeItem);
-        
+      
         state.projectData.push({
+          id: project.id,
           name: project.project_name,
           dateOfChange: project.date_of_change,
+          isRemoved: project.isRemoved,
         });
-      })
-      .addCase(createNewProjectAndPage.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Ошибка при создании нового проекта и страницы';
       });
+      
   },
 });
 
 export default pagesSlice.reducer;
+
 

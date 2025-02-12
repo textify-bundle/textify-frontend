@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
+import { fetchTreeData, getCardDataForCards } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import LastProjectCard from '../../shared/ui/last-project-card/LastProjectCard';
 import {
@@ -23,7 +23,7 @@ const LastProjectList: React.FC = () => {
 
     useEffect(() => {
         dispatch(fetchTreeData());
-        dispatch(getCardData());
+        dispatch(getCardDataForCards());
     }, [dispatch]);
 
     if (loading) return <div>Loading...</div>;

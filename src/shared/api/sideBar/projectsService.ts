@@ -41,10 +41,35 @@ export const getPages = async (): Promise<Page[]> => {
   return data || [];
 };
 
+
+export const getProjectsForCards = async (): Promise<Project[]> => {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data || [];
+};
+
+
 export const getUserEmail = async (): Promise<string | null> => {
   const { data: userData } = await supabase.auth.getUser();
   return userData?.user?.email || null;
 };
+
+export const restoreProject = async (projectId: number): Promise<void> => {
+  const { error } = await supabase
+    .from('projects')
+    .update({ isRemoved: false })
+    .eq('id', projectId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
 
 export const createProjectAndPage = async (projectName: string): Promise<{ project: Project; page: Page }> => {
   const userEmail = await getUserEmail();
