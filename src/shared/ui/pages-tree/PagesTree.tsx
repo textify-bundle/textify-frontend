@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { Box, List, ListItemButton, Collapse, ListItemText, TextField, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material"
-import { ExpandLess, ExpandMore, Add, Remove } from "@mui/icons-material"
-import { Link as RouterLink, useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect, useState } from "react";
+import { Box, List, ListItemButton, Collapse, ListItemText, TextField, IconButton, Button } from "@mui/material";
+import { ExpandLess, ExpandMore, Add, Remove } from "@mui/icons-material";
+import { Link as RouterLink, useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchTreeData,
   createNewProjectAndPage,
@@ -11,6 +11,7 @@ import {
 } from "../../../store/slices/pagesSlice"
 import "./PagesTree.scss"
 import type { AppDispatch, RootState } from "../../../store"
+import TModal from "../../tmodal/TModal"
 
 interface TreeItem {
   name: string
@@ -277,21 +278,17 @@ const PagesTree: React.FC = () => {
           )}
         </List>
       </Box>
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Удалить страницу</DialogTitle>
-        <DialogContent>
-          <p>Вы уверены, что хотите удалить эту страницу?</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+     
+      <TModal isOpen={openDialog} onClose={handleCloseDialog} title={"Вы хотите удалить эту страницу?"}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <Button onClick={handleCloseDialog} color="primary">
             Отмена
           </Button>
           <Button onClick={handleDeletePage} color="primary">
             Удалить
           </Button>
-        </DialogActions>
-      </Dialog>
+        </Box>
+      </TModal>
     </Box>
   )
 }
