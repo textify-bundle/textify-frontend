@@ -201,8 +201,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
             ref={deleteButtonRef}
             style={{
               position: 'fixed',
-              top: `${(y ?? 0) - 35}px`,
-              left: `${(x ?? 0)}px`,
+              top: `${(y ?? 0) - 11}px`,
+              left: `${(x ?? 0) - 25}px`,
               zIndex: 1000,
               transition: 'transform 0.2s ease',
             }}
