@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PagesTree from "../../../../shared/ui/pages-tree/PagesTree";
 import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
 import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
