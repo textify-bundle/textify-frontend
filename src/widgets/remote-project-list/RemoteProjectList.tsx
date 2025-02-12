@@ -36,7 +36,7 @@ const RemoteProjectList: React.FC = () => {
             key={index}
             isRemoved={project.isRemoved}
             imageUrl={getImageUrl(index)}
-            lastEntryTime={project.dateOfChange}
+            lastEntryTime={new Date(project.dateOfChange)}
             projectName={project.name}
           />
         ))}
