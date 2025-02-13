@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
+import { fetchTreeData, getCardData, createProject } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import LastProjectCard from '../../shared/ui/last-project-card/LastProjectCard';
 import {
@@ -61,9 +61,9 @@ const LastProjectList: React.FC = () => {
 
     const handleCreateProject = () => {
         if (newProjectName.trim()) {
-            // Здесь надо реализоват логику создания проекта, Игорь занимается для кнопки
-            //  Создать проект (newProjectName - переменная для хранения имени нового проекта)
-            closeDialog();
+            dispatch(createProject({ name: newProjectName }));
+            setNewProjectName('');
+            setIsDialogOpen(false);
         } else {
             alert('Пожалуйста, введите имя проекта');
         }

@@ -1,5 +1,10 @@
-import { useState } from 'react';
-import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
 import Search from '../../../../shared/ui/search-bar/SearchBar';
 import SettingButton from '../buttons/SettingButton';
@@ -7,6 +12,7 @@ import ButtonInOut from '../buttons/ButtonInOut';
 import './Settings.scss';
 import TModal from '../../../../shared/tmodal/TModal';
 import { MuiColorInput } from 'mui-color-input';
+import { useNavigate } from 'react-router-dom';
 import { 
   setBackgroundColor, 
   setBarColor, 
@@ -23,10 +29,11 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [valueText, setValueText] = useState<string>('');
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [valueText, setValueText] = React.useState<string>('');
   const dispatch = useDispatch();
-  const settings = useSelector((state: RootState) => state.settings);
+  const navigate = useNavigate();
+  const settings = useSelector((state: RootState) => state.userSettings);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -90,6 +97,21 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
                 </MenuItem>
               ))}
             </Select>
+          </Box>
+
+          <Box className="settings-theme">
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                handleClose();
+                window.location.href = '/main/settings/ai';
+              }}
+              sx={{ mt: 2 }}
+            >
+              Настройки AI
+            </Button>
           </Box>
 
           <ButtonInOut placeholder="Exit" onClick={handleClose} />

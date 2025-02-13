@@ -1,0 +1,84 @@
+.container {
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container h3 {
+    margin: 0 0 24px 0;
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.field {
+    margin-bottom: 24px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.input:focus,
+.select:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.range {
+    width: 100%;
+    margin: 8px 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+}
+
+.range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #0066cc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.range::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.hint {
+    margin-top: 8px;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.hint a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.hint a:hover {
+    text-decoration: underline;
+}

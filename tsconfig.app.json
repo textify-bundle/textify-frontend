@@ -8,17 +8,15 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "types": ["vitest/globals"],
-
-    /* Bundler mode */
-    "moduleResolution": "Bundler", 
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,   
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
-    
-    /* Linting */
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

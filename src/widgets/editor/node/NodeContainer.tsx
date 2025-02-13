@@ -14,9 +14,15 @@ interface NodeContainerProps {
   node: CustomNode;
   isNewNode?: boolean;
   onFocus?: () => void;
+  onCursorPositionChange?: (nodeId: string, position: { x: number; y: number }) => void;
 }
 
-const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
+const NodeContainer: React.FC<NodeContainerProps> = ({ 
+  node, 
+  isNewNode, 
+  onFocus,
+  onCursorPositionChange 
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
@@ -91,6 +97,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     }
   };
 
+  const handleTextEditorClick = (e: React.MouseEvent) => {
+    if (onCursorPositionChange) {
+      onCursorPositionChange(node.id, { x: e.clientX, y: e.clientY });
+    }
+  };
+
   useEffect(() => {
     if (isNewNode && textEditorRef.current) {
       textEditorRef.current.focus();
@@ -131,10 +143,10 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
+      className={`node-container ${isHovered ? 'hovered' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`node-container${isHovered ? ' node-container_hover' : ''}`}
+      onClick={handleTextEditorClick}
     >
       <div ref={refs.setReference}>{/* Reference element for floating UI */}</div>
       {showDropdown && (
