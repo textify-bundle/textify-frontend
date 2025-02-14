@@ -17,7 +17,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     useSelector((state: RootState) => state.settings);
 
   const users = [
-    { id: '1', name: 'wleg' },
+    { id: '1', name: 'weg' },
     { id: '2', name: 'qwOleg' },
     { id: '3', name: 'Oleg' },
   ];
