@@ -1,55 +1,63 @@
-import { supabase } from "../../../utils/client"
+import { supabase } from '../../../utils/client';
 
 interface Project {
-  id: number
-  email: string
-  date_of_creation: string
-  date_of_change: string
-  project_name: string
-  isRemoved: boolean
+  id: number;
+  email: string;
+  date_of_creation: string;
+  date_of_change: string;
+  project_name: string;
+  isRemoved: boolean;
 }
 
 interface Page {
-  id: number
-  project_id: number
-  title: string
-  markup_json: string
-  isRemoved: boolean
+  id: number;
+  project_id: number;
+  title: string;
+  markup_json: string;
+  isRemoved: boolean;
 }
 
 export const getProjects = async (): Promise<Project[]> => {
-  const { data, error } = await supabase.from("projects").select("*").eq("isRemoved", false)
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('isRemoved', false);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
-  return data || []
-}
+  return data || [];
+};
 
 export const getPages = async (): Promise<Page[]> => {
-  const { data, error } = await supabase.from("notes").select("*").eq("isRemoved", false)
+  const { data, error } = await supabase
+    .from('notes')
+    .select('*')
+    .eq('isRemoved', false);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
-  return data || []
-}
+  return data || [];
+};
 
 export const getUserEmail = async (): Promise<string | null> => {
-  const { data: userData } = await supabase.auth.getUser()
-  return userData?.user?.email || null
-}
+  const { data: userData } = await supabase.auth.getUser();
+  return userData?.user?.email || null;
+};
 
-export const createProjectAndPage = async (projectName: string): Promise<{ project: Project; page: Page }> => {
-  const userEmail = await getUserEmail()
+export const createProjectAndPage = async (
+  projectName: string,
+): Promise<{ project: Project; page: Page }> => {
+  const userEmail = await getUserEmail();
   if (!userEmail) {
-    throw new Error("Пользователь не авторизован")
+    throw new Error('Пользователь не авторизован');
   }
 
-  const now = new Date().toISOString()
+  const now = new Date().toISOString();
 
   const { data: project, error: projectError } = await supabase
-    .from("projects")
+    .from('projects')
     .insert({
       email: userEmail,
       date_of_creation: now,
@@ -58,58 +66,59 @@ export const createProjectAndPage = async (projectName: string): Promise<{ proje
       isRemoved: false,
     })
     .select()
-    .single()
+    .single();
 
   if (projectError) {
-    throw new Error(`Ошибка при создании проекта: ${projectError.message}`)
+    throw new Error(`Ошибка при создании проекта: ${projectError.message}`);
   }
 
   const { data: page, error: pageError } = await supabase
-    .from("notes")
+    .from('notes')
     .insert({
       project_id: project.id,
-      title: "Без названия",
-      markup_json: "{}",
+      title: 'Без названия',
+      markup_json: '{}',
       isRemoved: false,
     })
     .select()
-    .single()
+    .single();
 
   if (pageError) {
-    throw new Error(`Ошибка при создании страницы: ${pageError.message}`)
+    throw new Error(`Ошибка при создании страницы: ${pageError.message}`);
   }
 
-  return { project, page }
-}
+  return { project, page };
+};
 
-export const createPage = async (projectId: number, title: string): Promise<Page> => {
+export const createPage = async (
+  projectId: number,
+  title: string,
+): Promise<Page> => {
   const { data, error } = await supabase
-    .from("notes")
+    .from('notes')
     .insert({
       project_id: projectId,
       title: title,
-      markup_json: "{}",
+      markup_json: '{}',
       isRemoved: false,
     })
     .select()
-    .single()
+    .single();
 
   if (error) {
-    throw new Error(`Ошибка при создании страницы: ${error.message}`)
+    throw new Error(`Ошибка при создании страницы: ${error.message}`);
   }
 
-  return data
-}
+  return data;
+};
 
 export const deletePage = async (pageId: number): Promise<void> => {
   const { error } = await supabase
-    .from("notes")
-    .update({ isRemoved: true }) 
-    .eq("id", pageId)
+    .from('notes')
+    .update({ isRemoved: true })
+    .eq('id', pageId);
 
   if (error) {
-    throw new Error(`Ошибка при обновлении страницы: ${error.message}`)
+    throw new Error(`Ошибка при обновлении страницы: ${error.message}`);
   }
-}
-
-
+};

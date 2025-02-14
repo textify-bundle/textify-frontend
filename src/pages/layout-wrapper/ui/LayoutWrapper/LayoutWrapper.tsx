@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import PagesTree from "../../../../shared/ui/pages-tree/PagesTree";
-import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
-import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
-import store, { RootState } from "../../../../store";
-import Editor from "../../../../widgets/editor/Editor";
+import PagesTree from '../../../../shared/ui/pages-tree/PagesTree';
+import ActionBar from '../../../../widgets/header/action-bar/ActionBar';
+import NewSearch from '../../../../shared/ui/search-bar/SearchBar';
+import store, { RootState } from '../../../../store';
+import Editor from '../../../../widgets/editor/Editor';
 import { useSelector } from 'react-redux';
 import { MainPage } from '../../../main-page';
 import { TrashBin } from '../../../trash-bin';
 import { ILayoutWrapperProps } from './ts';
 import React from 'react';
 
-const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
+const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const { backgroundColor, fontSize, fontFamily, textColor, barColor } = useSelector((state: RootState) => state.settings);  
-  
+  const { backgroundColor, fontSize, fontFamily, textColor, barColor } =
+    useSelector((state: RootState) => state.settings);
+
   const users = [
     { id: '1', name: 'wleg' },
     { id: '2', name: 'qwOleg' },
@@ -25,13 +26,18 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
   };
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--background-color', backgroundColor);
+    document.documentElement.style.setProperty(
+      '--background-color',
+      backgroundColor,
+    );
     document.documentElement.style.setProperty('--font-size', fontSize);
-    document.documentElement.style.setProperty('--background-bar-color', barColor);
+    document.documentElement.style.setProperty(
+      '--background-bar-color',
+      barColor,
+    );
     document.documentElement.style.setProperty('--text-color', textColor);
     document.documentElement.style.setProperty('--font-family', fontFamily);
-
-  }, [backgroundColor, fontSize, fontFamily, barColor,textColor]);
+  }, [backgroundColor, fontSize, fontFamily, barColor, textColor]);
 
   const layoutMap: { [key: string]: React.FC } = {
     main: MainPage,
@@ -41,18 +47,26 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
   const LayoutComponent = layoutMap[layout] || null;
 
   return (
-    <div style={{ display: 'flex', background:'var(--background-color)' }}>
+    <div style={{ display: 'flex', background: 'var(--background-color)' }}>
       <div
         style={{
           background: '#F8F7F5',
           height: '100vh',
-          position:'relative',
+          position: 'relative',
           width: isSidebarVisible ? '260px' : '0',
           transition: 'width 0.3s',
           overflow: 'hidden',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', marginInline: 15, marginTop: 15, fontSize: 12 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginInline: 15,
+            marginTop: 15,
+            fontSize: 12,
+          }}
+        >
           <div
             style={{
               borderRadius: '40px',
@@ -62,15 +76,22 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
               backgroundColor: 'var(--background-bar-color)',
             }}
           ></div>
-          
-        
+
           {store.getState().auth.user?.email || 'example@mail.ru'}
         </div>
         <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}>
           <NewSearch />
         </div>
         <PagesTree />
-        <div style={{width:'100%', height:40,bottom:0,position:'absolute', background:'var(--background-bar-color)'}}></div>
+        <div
+          style={{
+            width: '100%',
+            height: 40,
+            bottom: 0,
+            position: 'absolute',
+            background: 'var(--background-bar-color)',
+          }}
+        ></div>
       </div>
 
       <button
@@ -108,7 +129,9 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({layout}) => {
         </div>
         {LayoutComponent ? <LayoutComponent /> : null}
         {layout === 'project' && (
-          <div style={{ marginTop: '100px', width: "85%", margin: '100px auto' }}>
+          <div
+            style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
+          >
             <h1>
               Project Title
               <hr />
