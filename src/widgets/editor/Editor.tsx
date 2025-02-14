@@ -7,7 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -29,7 +29,6 @@ const Editor: React.FC = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
-
   const handleDragEnd = ({
     active,
     over,
@@ -37,7 +36,6 @@ const Editor: React.FC = () => {
     active: { id: UniqueIdentifier };
     over: { id: UniqueIdentifier } | null;
   }) => {
-
     if (over && active.id !== over.id) {
       const oldIndex = nodes.findIndex((node) => node.id === active.id);
       const newIndex = nodes.findIndex((node) => node.id === over.id);

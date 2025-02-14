@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from 'react';
-import PagesTree from "../../../../shared/ui/pages-tree/PagesTree";
-import ActionBar from "../../../../widgets/header/action-bar/ActionBar";
-import NewSearch from "../../../../shared/ui/search-bar/SearchBar";
-import store, { RootState } from "../../../../store";
-import Editor from "../../../../widgets/editor/Editor";
+import PagesTree from '../../../../shared/ui/pages-tree/PagesTree';
+import ActionBar from '../../../../widgets/header/action-bar/ActionBar';
+import NewSearch from '../../../../shared/ui/search-bar/SearchBar';
+import store, { RootState } from '../../../../store';
+import Editor from '../../../../widgets/editor/Editor';
 import { useSelector } from 'react-redux';
 import { MainPage } from '../../../main-page';
 import { TrashBin } from '../../../trash-bin';
