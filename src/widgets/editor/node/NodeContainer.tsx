@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useDispatch } from 'react-redux';
-import { updateNode, addNode } from '../../../store/slices/nodeSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateNode, addNode, removeNode } from '../../../store/slices/nodeSlice';
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
+import { RootState } from '../../../store/index';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -20,6 +21,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
+  const nodes = useSelector((state: RootState) => state.nodes.nodes);
   const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id: node.id });
   const { x, y, strategy, refs, update } = useFloating({
@@ -29,6 +31,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
+  const deleteButtonRef = useRef<HTMLDivElement>(null);
   const textEditorRef = useRef<HTMLTextAreaElement>(null);
 
   const style = {
@@ -65,6 +68,27 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
+  };
+
+  const handleDeleteNode = () => {
+    if (nodes.length > 1) {
+      const currentIndex = nodes.findIndex((n) => n.id === node.id);
+      const previousNodeId = nodes[currentIndex - 1]?.id;
+      dispatch(removeNode(node.id));
+      setTimeout(() => {
+        if (previousNodeId) {
+          const previousNodeElement = document.getElementById(`node-${previousNodeId}`);
+          if (previousNodeElement) {
+            previousNodeElement.focus();
+            const textarea = previousNodeElement.querySelector('textarea');
+            if (textarea) {
+              const value = textarea.value;
+              textarea.setSelectionRange(value.length, value.length);
+            }
+          }
+        }
+      }, 0);
+    }
   };
 
   useEffect(() => {
@@ -158,20 +182,36 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
         </div>
       )}
       {isHovered && (
-        <div 
-          ref={addButtonRef}
-          style={{
-            position: 'fixed',
-            top: `${(y ?? 0) - 11}px`,
-            left: `${x ?? 0}px`,
-            zIndex: 1000,
-            transition: 'transform 0.2s ease',
-          }}
-        >
-          <button onClick={() => {handleAddNode(node.id)}} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-            <img src="./icons/plus.svg" width="15px" alt="Add Node" />
-          </button>
-        </div>
+        <>
+          <div
+            ref={addButtonRef}
+            style={{
+              position: 'fixed',
+              top: `${(y ?? 0) - 11}px`,
+              left: `${x ?? 0}px`,
+              zIndex: 1000,
+              transition: 'transform 0.2s ease',
+            }}
+          >
+            <button onClick={() => {handleAddNode(node.id)}} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              <img src="./icons/plus.svg" width="15px" alt="Add Node" />
+            </button>
+          </div>
+          <div
+            ref={deleteButtonRef}
+            style={{
+              position: 'fixed',
+              top: `${(y ?? 0) - 11}px`,
+              left: `${(x ?? 0) - 25}px`,
+              zIndex: 1000,
+              transition: 'transform 0.2s ease',
+            }}
+          >
+            <button onClick={handleDeleteNode} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              <img src="./icons/trash.svg" width="15px" alt="Delete Node" />
+            </button>
+          </div>
+        </>
       )}
       <div ref={refs.setFloating} style={{ position: strategy, top: y ?? 0, left: x ?? 0 }}>
         {/* Floating element for dropdown */}
@@ -184,6 +224,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
           styles={node.styles}
           onContentChange={handleContentChange}
           onEnterPress={() => {handleAddNode(node.id)}}
+          nodeId={node.id}
+          onDelete={handleDeleteNode} 
         />
       </div>
       <div

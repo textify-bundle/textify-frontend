@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Card, CardActionArea, CardContent, CardMedia, Button } from '@mui/material';

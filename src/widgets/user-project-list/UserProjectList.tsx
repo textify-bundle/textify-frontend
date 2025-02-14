@@ -54,7 +54,7 @@ const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }
             <ProjectCard
               key={index}
               imageUrl={getImageUrl(index)}
-              lastEntryTime={project.dateOfChange}
+              lastEntryTime= {new Date(project.dateOfChange)}
               projectName={project.name}
             />
           ))}
