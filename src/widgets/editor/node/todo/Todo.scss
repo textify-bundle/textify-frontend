@@ -3,6 +3,7 @@
 .todo-container {
   display: flex;
   align-items: flex-start;
+  padding: 0;
 }
 
 .todo-checkbox {
@@ -12,11 +13,11 @@
 .todo-text {
   border: none;
   font-family: 'SF Compact Rounded', sans-serif;
-  padding: 5px;
   background: transparent;
   width: 100%;
   resize: none;
   outline: none;
+  padding-top: 5px;
   font-size: 12px;
   overflow: hidden;
 }

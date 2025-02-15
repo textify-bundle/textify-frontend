@@ -41,6 +41,9 @@ const Todo: React.FC<TodoProps> = ({ content, checked, onContentChange, onCheckb
         checked={isChecked}
         onChange={handleCheckboxChange}
         className="todo-checkbox"
+        style={{
+          marginTop: '6px',
+        }}
       />
       <textarea
         ref={textareaRef}
