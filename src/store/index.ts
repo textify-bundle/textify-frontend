@@ -3,14 +3,14 @@ import authReducer from './slices/authSlice';
 import pagesReducer from './slices/pagesSlice';
 import userSettingsReducer from './slices/userSettingsSlice';
 import nodeReducer from './slices/nodeSlice';
-import settingsReducer from './slices/settingsSlice';
+import openAISettingsReducer from './slices/openAISettingsSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     pages: pagesReducer,
     userSettings: userSettingsReducer,
-    settings: settingsReducer,
+    openAISettings: openAISettingsReducer,
     nodes: nodeReducer,
   },
 });

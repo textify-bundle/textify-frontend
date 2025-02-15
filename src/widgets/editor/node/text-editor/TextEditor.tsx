@@ -9,12 +9,11 @@ interface TextEditorProps {
   onContentChange: (newContent: NodeContent) => void;
   onEnterPress: () => void;
   inputId?: string;
-  nodeId: string;
   onDelete?: () => void;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
-  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete, nodeId }, ref) => {
+  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref) => {
     const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
     const [cursorPosition, setCursorPosition] = useState<number | null>(null);
 
