@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
-import { updateOpenAISettings } from '../../store/slices/settingsSlice';
+import { updateOpenAISettings } from '../../store/slices/openAISettingsSlice';
 import { AVAILABLE_MODELS } from '../../shared/config/openai';
 import styles from './OpenAISettings.module.css';
 
 export const OpenAISettings: React.FC = () => {
     const dispatch = useDispatch();
-    const settings = useSelector((state: RootState) => state.settings.openai);
+    const settings = useSelector((state: RootState) => state.openAISettings.openai);
 
     const handleChange = (field: string, value: string | number) => {
         dispatch(updateOpenAISettings({ [field]: value }));
@@ -36,6 +36,7 @@ export const OpenAISettings: React.FC = () => {
                     </a>
                 </div>
             </div>
+
             <div className={styles.field}>
                 <label htmlFor="model">Модель</label>
                 <select
@@ -44,17 +45,16 @@ export const OpenAISettings: React.FC = () => {
                     onChange={(e) => handleChange('model', e.target.value)}
                     className={styles.select}
                 >
-                    {AVAILABLE_MODELS.map(model => (
+                    {AVAILABLE_MODELS.map((model) => (
                         <option key={model.value} value={model.value}>
                             {model.label}
                         </option>
                     ))}
                 </select>
             </div>
+
             <div className={styles.field}>
-                <label htmlFor="temperature">
-                    Temperature ({settings.temperature})
-                </label>
+                <label htmlFor="temperature">Temperature</label>
                 <input
                     type="range"
                     id="temperature"
@@ -65,28 +65,20 @@ export const OpenAISettings: React.FC = () => {
                     onChange={(e) => handleChange('temperature', parseFloat(e.target.value))}
                     className={styles.range}
                 />
-                <div className={styles.hint}>
-                    Контролирует случайность ответов. Низкие значения делают ответы более предсказуемыми,
-                    высокие - более креативными.
-                </div>
+                <span className={styles.value}>{settings.temperature}</span>
             </div>
+
             <div className={styles.field}>
-                <label htmlFor="maxTokens">
-                    Максимум токенов ({settings.maxTokens})
-                </label>
+                <label htmlFor="maxTokens">Max Tokens</label>
                 <input
-                    type="range"
+                    type="number"
                     id="maxTokens"
-                    min="100"
+                    min="1"
                     max="4000"
-                    step="100"
                     value={settings.maxTokens}
-                    onChange={(e) => handleChange('maxTokens', parseInt(e.target.value, 10))}
-                    className={styles.range}
+                    onChange={(e) => handleChange('maxTokens', parseInt(e.target.value))}
+                    className={styles.input}
                 />
-                <div className={styles.hint}>
-                    Максимальное количество токенов в ответе. Больше токенов = длиннее ответ.
-                </div>
             </div>
         </div>
     );

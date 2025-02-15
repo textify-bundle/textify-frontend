@@ -29,12 +29,14 @@ interface NodeContainerProps {
   node: CustomNode;
   isNewNode?: boolean;
   onCursorPositionChange?: (nodeId: string, position: { x: number; y: number }) => void;
+  onFocus?: () => void;
 }
 
 const NodeContainer: React.FC<NodeContainerProps> = ({ 
   node, 
   isNewNode, 
-  onCursorPositionChange 
+  onCursorPositionChange,
+  onFocus
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);

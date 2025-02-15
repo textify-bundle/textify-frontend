@@ -8,13 +8,13 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { OpenAISettings } from '../../widgets/settings/OpenAISettings';
 import { RootState } from '../../store';
-import { updateOpenAISettings } from '../../store/slices/settingsSlice';
+import { updateOpenAISettings } from '../../store/slices/openAISettingsSlice';
 
 const AISettings: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isSaved, setIsSaved] = React.useState(false);
-    const settings = useSelector((state: RootState) => state.settings.openai);
+    const settings = useSelector((state: RootState) => state.openAISettings.openai);
 
     const handleSave = () => {
         dispatch(updateOpenAISettings(settings));

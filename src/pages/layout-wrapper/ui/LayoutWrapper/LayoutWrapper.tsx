@@ -12,7 +12,7 @@ import React from 'react';
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const { backgroundColor, fontSize, fontFamily, textColor, barColor } =
-    useSelector((state: RootState) => state.settings);
+    useSelector((state: RootState) => state.userSettings);
 
   const users = [
     { id: '1', name: 'weg' },

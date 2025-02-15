@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData, createProject } from '../../store/slices/pagesSlice';
+import { fetchTreeData, getCardData, createNewProjectAndPage } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import LastProjectCard from '../../shared/ui/last-project-card/LastProjectCard';
 import {
@@ -66,11 +66,11 @@ const LastProjectList: React.FC = () => {
 
     const handleCreateProject = () => {
         if (newProjectName.trim()) {
-            dispatch(createProject({ name: newProjectName }));
+            dispatch(createNewProjectAndPage(newProjectName));
             setNewProjectName('');
             setIsDialogOpen(false);
         } else {
-            alert('Пожалуйста, введите имя проекта');
+            // Показать сообщение об ошибке
         }
     };
 

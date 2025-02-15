@@ -15,7 +15,7 @@ export const AIPromptModal: React.FC<AIPromptModalProps> = ({ isOpen, onClose, o
     const [prompt, setPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const config = useSelector((state: RootState) => state.openAISettings);
+    const config = useSelector((state: RootState) => state.openAISettings.openai);
 
     const handlePromptSubmit = async () => {
         try {

@@ -12,7 +12,7 @@ export const AIPromptButton: React.FC<AIPromptButtonProps> = ({
     onGenerateText
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const openaiConfig = useSelector((state: RootState) => state.settings.openai);
+    const openaiConfig = useSelector((state: RootState) => state.openAISettings.openai);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
