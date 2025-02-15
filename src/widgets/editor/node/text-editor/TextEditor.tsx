@@ -11,10 +11,11 @@ interface TextEditorProps {
   inputId?: string;
   nodeId: string;
   onDelete?: () => void;
+  nodeType?: string;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
-  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref) => {
+  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete, nodeType }, ref) => {
     const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -56,6 +57,8 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
               resize: 'none',
               overflow: 'hidden',
               outline: 'none',
+              fontSize: nodeType === 'heading' ? '1.5em' : '1em', 
+              fontWeight: nodeType === 'heading' ? 'bold' : 'normal',
               ...styles,
             }}
             className="text-editor__input"

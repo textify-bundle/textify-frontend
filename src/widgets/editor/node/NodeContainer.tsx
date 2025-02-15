@@ -225,7 +225,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
           onContentChange={handleContentChange}
           onEnterPress={() => {handleAddNode(node.id)}}
           nodeId={node.id}
-          onDelete={handleDeleteNode} 
+          onDelete={handleDeleteNode}
+          nodeType={node.type}
         />
       </div>
       <div
