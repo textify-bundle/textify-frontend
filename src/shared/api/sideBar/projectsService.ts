@@ -46,7 +46,9 @@ export const getUserEmail = async (): Promise<string | null> => {
   return userData?.user?.email || null;
 };
 
-export const createProjectAndPage = async (projectName: string): Promise<{ project: Project; page: Page }> => {
+export const createProjectAndPage = async (
+  projectName: string,
+): Promise<{ project: Project; page: Page }> => {
   const userEmail = await getUserEmail();
   if (!userEmail) {
     throw new Error('Пользователь не авторизован');
@@ -61,7 +63,7 @@ export const createProjectAndPage = async (projectName: string): Promise<{ proje
       date_of_creation: now,
       date_of_change: now,
       project_name: projectName,
-      isRemoved: false
+      isRemoved: false,
     })
     .select()
     .single();
@@ -76,7 +78,7 @@ export const createProjectAndPage = async (projectName: string): Promise<{ proje
       project_id: project.id,
       title: 'Без названия',
       markup_json: '{}',
-      isRemoved: false
+      isRemoved: false,
     })
     .select()
     .single();
@@ -88,3 +90,35 @@ export const createProjectAndPage = async (projectName: string): Promise<{ proje
   return { project, page };
 };
 
+export const createPage = async (
+  projectId: number,
+  title: string,
+): Promise<Page> => {
+  const { data, error } = await supabase
+    .from('notes')
+    .insert({
+      project_id: projectId,
+      title: title,
+      markup_json: '{}',
+      isRemoved: false,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Ошибка при создании страницы: ${error.message}`);
+  }
+
+  return data;
+};
+
+export const deletePage = async (pageId: number): Promise<void> => {
+  const { error } = await supabase
+    .from('notes')
+    .update({ isRemoved: true })
+    .eq('id', pageId);
+
+  if (error) {
+    throw new Error(`Ошибка при обновлении страницы: ${error.message}`);
+  }
+};
