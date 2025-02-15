@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateNode, addNode, removeNode } from '../../../store/slices/nodeSlice';
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
-import TextEditor, { TextEditorImperativeHandle } from './text-editor/TextEditor';
+import TextEditor from './text-editor/TextEditor';
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
 import { RootState } from '../../../store/index';
