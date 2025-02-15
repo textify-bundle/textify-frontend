@@ -47,24 +47,24 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
 
   const LayoutComponent = layoutMap[layout] || null;
 
-  // Получение имени текущего проекта
-  const getCurrentProjectName = (): string => {
+  // Получение имени текущей страницы
+  const getCurrentPageName = (): string => {
     const currentPageId = new URLSearchParams(location.search).get('page');
     for (const project of tree) {
       if (project.items) {
         const page = project.items.find((item) => item.id?.toString() === currentPageId);
         if (page) {
-          return project.name;
+          return page.name;
         }
       }
     }
-    return 'Unknown Project';
+    return 'Unknown Page';
   };
 
-  const [currentProjectName, setCurrentProjectName] = useState(getCurrentProjectName());
+  const [currentPageName, setCurrentPageName] = useState(getCurrentPageName());
 
   useEffect(() => {
-    setCurrentProjectName(getCurrentProjectName());
+    setCurrentPageName(getCurrentPageName());
   }, [location]);
 
   return (
@@ -154,7 +154,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
             style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
           >
             <h1>
-              {currentProjectName}
+              {currentPageName}
               <hr />
             </h1>
             <Editor />
