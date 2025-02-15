@@ -19,11 +19,11 @@ interface TextEditorProps {
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
-  { content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref
+  { content, styles, inputId, onContentChange, onEnterPress, onDelete }
 ) => {
   const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
   const [isToolbarVisible, setIsToolbarVisible] = useState<boolean>(false);
-  const [selectedSize, setSelectedSize] = useState<string>('normal');
+  const [ , setSelectedSize] = useState<string>('normal');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); 
   const quillRef = useRef<ReactQuill | null>(null);
   const { x, y, refs, update } = useFloating({
@@ -178,16 +178,17 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
 
   useEffect(() => {
     const quill = quillRef.current?.getEditor();
+    
     if (quill) {
       quill.on('selection-change', handleSelectionChange);
     }
-    return () => {
-      const quill = quillRef.current?.getEditor();
+      return () => {
       if (quill) {
         quill.off('selection-change', handleSelectionChange);
       }
     };
-  }, []);
+  }, [handleSelectionChange]);
+  
 
   useEffect(() => {
     setValue(typeof content === 'string' ? content : '');
