@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useDispatch, useSelector } from 'react-redux';
 import { updateNode, addNode, removeNode, syncNodesToStorage, loadNodesFromStorage } from '../../../store/slices/nodeSlice';
-import { CustomNode, NodeType } from '../../../shared/types/editor/node';
-import './NodeContainer.scss';
-import { TextEditor, TextEditorImperativeHandle } from './text-editor/TextEditor';
-import Divider from './divider/Divider';
-import Todo from './todo/Todo'; 
+import { CustomNode, NodeType, MediaContent } from '../../../shared/types/editor/node';
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
 import { RootState } from '../../../store/index';
+
+import './NodeContainer.scss';
+import TextEditor from './text-editor/TextEditor';
+import Divider from './divider/Divider';
+import Todo from './todo/Todo'; 
+import ImageEditor from './image-editor/ImageEditor';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -244,6 +246,11 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
             onCheckboxChange={(isChecked) =>
               dispatch(updateNode({ ...node, styles: { ...node.styles, strikethrough: isChecked } }))
             }
+          />
+        ) : node.type === 'image' ? (
+          <ImageEditor
+            content={node.content as MediaContent}
+            onContentChange={(newContent) => handleContentChange(newContent)}
           />
         ) : (
           <TextEditor
