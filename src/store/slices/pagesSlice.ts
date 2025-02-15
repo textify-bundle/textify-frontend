@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages, createProjectAndPage, getProjectsForCards, restoreProject as restoreProjectApi } from '../../shared/api/sideBar/projectsService';
+import { getProjects, getPages, createProjectAndPage, createPage, deletePage, getProjectsForCards, restoreProject as restoreProjectApi } from '../../shared/api/sideBar/projectsService';
 import { RootState } from '../index';  
 
 interface Project {
@@ -25,7 +25,7 @@ interface TreeItem {
   link?: string;
   action?: string;
   icon?: string;
-  items?: TreeItem[];  
+  items?: TreeItem[];
   id?: number;
 }
 
@@ -45,38 +45,32 @@ const initialState: PagesState = {
 };
 
 export const fetchTreeData = createAsyncThunk<
-  { projectsData: Project[]; pagesData: Page[] }, 
-  void, 
-  { state: RootState }
->(
-  'pages/fetchTreeData',
-  async () => {
-    const projectsData = await getProjects();
-    const pagesData = await getPages();
-
-    return { projectsData, pagesData }; 
-  }
-);
-
-export const getCardData = createAsyncThunk<
-  { projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean | undefined }[] },
+  { projectsData: Project[]; pagesData: Page[] },
   void,
   { state: RootState }
->(
-  'pages/getCardData',
-  async () => {
-    const projectsData = await getProjects();
+>('pages/fetchTreeData', async () => {
+  const projectsData = await getProjects();
+  const pagesData = await getPages();
+  return { projectsData, pagesData };
+});
 
-    const projectData = projectsData.map((project: Project) => ({
-      id: project.id,
-      name: project.project_name,
-      dateOfChange: new Date(project.date_of_change).toISOString(),
-      isRemoved: project.isRemoved,
-    }));
+export const getCardData = createAsyncThunk<
+  {
+    projectData: { name: string; dateOfChange: string; isRemoved?: boolean }[];
+  },
+  void,
+  { state: RootState }
+>('pages/getCardData', async () => {
+  const projectsData = await getProjects();
 
-    return { projectData };
-  }
-);
+  const projectData = projectsData.map((project: Project) => ({
+    name: project.project_name,
+    dateOfChange: project.date_of_change,
+    isRemoved: project.isRemoved,
+  }));
+
+  return { projectData };
+});
 
 export const getCardDataForCards = createAsyncThunk<
   { projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean }[] },
@@ -114,13 +108,28 @@ export const createNewProjectAndPage = createAsyncThunk<
   { project: Project; page: Page },
   string,
   { state: RootState }
->(
-  'pages/createNewProjectAndPage',
-  async (projectName: string) => {
-    const result = await createProjectAndPage(projectName);
-    return result;
-  }
-);
+>('pages/createNewProjectAndPage', async (projectName: string) => {
+  const result = await createProjectAndPage(projectName);
+  return result;
+});
+
+export const createNewPage = createAsyncThunk<
+  Page,
+  { projectId: number; title: string },
+  { state: RootState }
+>('pages/createNewPage', async ({ projectId, title }) => {
+  const result = await createPage(projectId, title);
+  return result;
+});
+
+export const removePageFromTree = createAsyncThunk<
+  number,
+  number,
+  { state: RootState }
+>('pages/removePageFromTree', async (pageId) => {
+  await deletePage(pageId);
+  return pageId;
+});
 
 const pagesSlice = createSlice({
   name: 'pages',
@@ -136,14 +145,14 @@ const pagesSlice = createSlice({
         state.loading = false;
         const { projectsData, pagesData } = action.payload;
 
-        const treeStructure: TreeItem[] = projectsData.map((project: Project) => ({
+        const treeStructure: TreeItem[] = projectsData.map((project) => ({
           name: project.project_name,
           type: 'dropdown',
           link: `/${project.id}`,
           id: project.id,
           items: pagesData
-            .filter((page: Page) => page.project_id === project.id)
-            .map((page: Page) => ({
+            .filter((page) => page.project_id === project.id)
+            .map((page) => ({
               name: page.title,
               type: 'link',
               link: `/${project.id}?page=${page.id}`,
@@ -154,7 +163,12 @@ const pagesSlice = createSlice({
         state.tree = [
           { name: 'Главная', type: 'link', link: '/main' },
           { name: 'Корзина', type: 'link', link: '/trash' },
-          { name: 'Создать проект', type: 'action', action: 'create', icon: 'plus' },
+          {
+            name: 'Создать проект',
+            type: 'action',
+            action: 'create',
+            icon: 'plus',
+          },
           ...treeStructure,
         ];
       })
@@ -169,7 +183,6 @@ const pagesSlice = createSlice({
       .addCase(getCardData.fulfilled, (state, action) => {
         state.loading = false;
         state.projectData = action.payload.projectData;
-        console.log("Updated Project Data:", state.projectData);
       })
       .addCase(getCardData.rejected, (state, action) => {
         state.loading = false;
@@ -211,18 +224,19 @@ const pagesSlice = createSlice({
       .addCase(createNewProjectAndPage.fulfilled, (state, action) => {
         state.loading = false;
         const { project, page } = action.payload;
-      
         const newTreeItem: TreeItem = {
           name: project.project_name,
           type: 'dropdown',
           link: `/${project.id}`,
           id: project.id,
-          items: [{
-            name: page.title,
-            type: 'link',
-            link: `/${project.id}?page=${page.id}`,
-            id: page.id,
-          }],
+          items: [
+            {
+              name: page.title,
+              type: 'link',
+              link: `/${project.id}?page=${page.id}`,
+              id: page.id,
+            },
+          ],
         };
       
         state.tree.push(newTreeItem);
@@ -233,11 +247,50 @@ const pagesSlice = createSlice({
           dateOfChange: project.date_of_change,
           isRemoved: project.isRemoved,
         });
+      })
+      .addCase(createNewProjectAndPage.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message ||
+          'Ошибка при создании нового проекта и страницы';
+      })
+      .addCase(createNewPage.fulfilled, (state, action) => {
+        state.loading = false;
+        const newPage = action.payload;
+        const projectIndex = state.tree.findIndex(
+          (item) => item.id === newPage.project_id,
+        );
+        if (projectIndex !== -1) {
+          state.tree[projectIndex].items = state.tree[projectIndex].items || [];
+          state.tree[projectIndex].items.push({
+            name: newPage.title,
+            type: 'link',
+            link: `/${newPage.project_id}?page=${newPage.id}`,
+            id: newPage.id,
+          });
+        }
+      })
+      .addCase(createNewPage.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message || 'Ошибка при создании новой страницы';
+      })
+      .addCase(removePageFromTree.fulfilled, (state, action) => {
+        state.loading = false;
+        const pageId = action.payload;
+        state.tree = state.tree.map((project) => {
+          if (project.items) {
+            project.items = project.items.filter((page) => page.id !== pageId);
+          }
+          return project;
+        });
+      })
+      .addCase(removePageFromTree.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка при удалении страницы';
       });
       
   },
 });
 
 export default pagesSlice.reducer;
-
-

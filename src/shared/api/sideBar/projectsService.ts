@@ -59,6 +59,7 @@ export const getUserEmail = async (): Promise<string | null> => {
   return userData?.user?.email || null;
 };
 
+
 export const restoreProject = async (projectId: number): Promise<void> => {
   const { error } = await supabase
     .from('projects')
@@ -88,7 +89,7 @@ export const createProjectAndPage = async (
       date_of_creation: now,
       date_of_change: now,
       project_name: projectName,
-      isRemoved: false
+      isRemoved: false,
     })
     .select()
     .single();
@@ -103,7 +104,7 @@ export const createProjectAndPage = async (
       project_id: project.id,
       title: 'Без названия',
       markup_json: '{}',
-      isRemoved: false
+      isRemoved: false,
     })
     .select()
     .single();
@@ -115,3 +116,35 @@ export const createProjectAndPage = async (
   return { project, page };
 };
 
+export const createPage = async (
+  projectId: number,
+  title: string,
+): Promise<Page> => {
+  const { data, error } = await supabase
+    .from('notes')
+    .insert({
+      project_id: projectId,
+      title: title,
+      markup_json: '{}',
+      isRemoved: false,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Ошибка при создании страницы: ${error.message}`);
+  }
+
+  return data;
+};
+
+export const deletePage = async (pageId: number): Promise<void> => {
+  const { error } = await supabase
+    .from('notes')
+    .update({ isRemoved: true })
+    .eq('id', pageId);
+
+  if (error) {
+    throw new Error(`Ошибка при обновлении страницы: ${error.message}`);
+  }
+};

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Search from '../../../../shared/ui/search-bar/SearchBar';
@@ -7,14 +7,14 @@ import ButtonInOut from '../buttons/ButtonInOut';
 import './Settings.scss';
 import TModal from '../../../../shared/tmodal/TModal';
 import { MuiColorInput } from 'mui-color-input';
-import { 
-  setBackgroundColor, 
-  setBarColor, 
+import {
+  setBackgroundColor,
+  setBarColor,
   setTextColor,
   setFontSize,
   setFontFamily,
   allowedFontFamilies,
-  UserSettingsState
+  UserSettingsState,
 } from '../../../../store/slices/userSettingsSlice';
 import { RootState } from '../../../../store';
 
@@ -31,7 +31,13 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleColorChange = (colorType: keyof Pick<UserSettingsState, 'backgroundColor' | 'textColor' | 'barColor'>) => 
+  const handleColorChange =
+    (
+      colorType: keyof Pick<
+        UserSettingsState,
+        'backgroundColor' | 'textColor' | 'barColor'
+      >,
+    ) =>
     (color: string) => {
       switch (colorType) {
         case 'backgroundColor':
@@ -50,27 +56,48 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
     <>
       <TModal isOpen={open} onClose={handleClose} title="Settings">
         <Box className="settings-dialog">
-          {!isTrash && <Search placeholder="Search in file" value={valueText} onChange={setValueText} />}
-          {!isTrash && <SettingButton placeholder="Delete project" onClick={handleClose} />}
+          {!isTrash && (
+            <Search
+              placeholder="Search in file"
+              value={valueText}
+              onChange={setValueText}
+            />
+          )}
+          {!isTrash && (
+            <SettingButton placeholder="Delete project" onClick={handleClose} />
+          )}
 
           <Box className="settings-theme">
             <Typography variant="body1">Background Color:</Typography>
-            <MuiColorInput value={settings.backgroundColor} onChange={handleColorChange('backgroundColor')}/>
+            <MuiColorInput
+              value={settings.backgroundColor}
+              onChange={handleColorChange('backgroundColor')}
+            />
           </Box>
           <Box className="settings-theme">
             <Typography variant="body1">Main Color:</Typography>
-            <MuiColorInput value={settings.barColor} onChange={handleColorChange('barColor')}/>
+            <MuiColorInput
+              value={settings.barColor}
+              onChange={handleColorChange('barColor')}
+            />
           </Box>
           <Box className="settings-theme">
             <Typography variant="body1">Text Color:</Typography>
-            <MuiColorInput value={settings.textColor} onChange={handleColorChange('textColor')}/>
+            <MuiColorInput
+              value={settings.textColor}
+              onChange={handleColorChange('textColor')}
+            />
           </Box>
 
           <Box className="settings-theme">
             <Typography variant="body1">Font Size:</Typography>
             <Select
               value={settings.fontSize}
-              onChange={(e) => dispatch(setFontSize(e.target.value as '10px' | '12px' | '16px'))}
+              onChange={(e) =>
+                dispatch(
+                  setFontSize(e.target.value as '10px' | '12px' | '16px'),
+                )
+              }
             >
               <MenuItem value="10px">Small (10px)</MenuItem>
               <MenuItem value="12px">Medium (12px)</MenuItem>

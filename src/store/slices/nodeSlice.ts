@@ -14,35 +14,48 @@ const initialState: nodeState = {
   ],
 };
 
-const getCurrentIndex = (nodes: CustomNode[], id: string) => nodes.findIndex((node) => node.id === id);
+const getCurrentIndex = (nodes: CustomNode[], id: string) =>
+  nodes.findIndex((node) => node.id === id);
 
 const nodeSlice = createSlice({
   name: 'nodes',
   initialState,
   reducers: {
-    addNode: (state, action: PayloadAction<{node: CustomNode, index?: string}>) => {
-      if(action.payload.index){
-        state.nodes.splice(getCurrentIndex(state.nodes, action.payload.index)+1, 0, action.payload.node);
-      }
-      else{
+    addNode: (
+      state,
+      action: PayloadAction<{ node: CustomNode; index?: string }>,
+    ) => {
+      if (action.payload.index) {
+        state.nodes.splice(
+          getCurrentIndex(state.nodes, action.payload.index) + 1,
+          0,
+          action.payload.node,
+        );
+      } else {
         state.nodes.push(action.payload.node);
       }
     },
     updateNode: (state, action: PayloadAction<CustomNode>) => {
-      const index = state.nodes.findIndex(node => node.id === action.payload.id);
+      const index = state.nodes.findIndex(
+        (node) => node.id === action.payload.id,
+      );
       if (index !== -1) {
         state.nodes[index] = action.payload;
       }
     },
     removeNode: (state, action: PayloadAction<string>) => {
-      state.nodes = state.nodes.filter(node => node.id !== action.payload);
+      state.nodes = state.nodes.filter((node) => node.id !== action.payload);
     },
-    reorderNodes: (state, action: PayloadAction<{ oldIndex: number; newIndex: number }>) => {
+    reorderNodes: (
+      state,
+      action: PayloadAction<{ oldIndex: number; newIndex: number }>,
+    ) => {
       const { oldIndex, newIndex } = action.payload;
       state.nodes = arrayMove(state.nodes, oldIndex, newIndex);
     },
   },
 });
 
-export const { addNode, updateNode, removeNode, reorderNodes } = nodeSlice.actions;
+export const { addNode, updateNode, removeNode, reorderNodes } =
+  nodeSlice.actions;
 export default nodeSlice.reducer;
