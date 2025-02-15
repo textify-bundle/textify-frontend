@@ -13,14 +13,12 @@ import { RootState } from '../../../store/index';
 interface NodeContainerProps {
   node: CustomNode;
   isNewNode?: boolean;
-  onFocus?: () => void;
   onCursorPositionChange?: (nodeId: string, position: { x: number; y: number }) => void;
 }
 
 const NodeContainer: React.FC<NodeContainerProps> = ({ 
   node, 
   isNewNode, 
-  onFocus,
   onCursorPositionChange 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -28,7 +26,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
-  const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
+  const { listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id: node.id });
   const { x, y, strategy, refs, update } = useFloating({
     placement: 'left',

@@ -12,6 +12,11 @@ interface TextEditorProps {
   onDelete?: () => void;
 }
 
+interface TextEditorImperativeHandle {
+  insertTextAtCursor: (textToInsert: string) => void;
+  getCursorPosition: () => number | null;
+}
+
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
   ({ content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref) => {
     const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
@@ -60,7 +65,6 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
     };
 
     useImperativeHandle(ref, () => ({
-      ...((ref as any)?.current || {}),
       insertTextAtCursor,
       getCursorPosition: () => cursorPosition,
     }));
