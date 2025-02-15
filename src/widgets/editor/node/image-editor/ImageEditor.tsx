@@ -91,60 +91,61 @@ const ImageEditor = ({
       onMouseLeave={handleMouseUp}
     >
       {value.url ? (
-        <Resizable
-          width={size.width}
-          height={size.height}
-          onResize={(e, { size }) => setSize(size)}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              position: 'relative',
-              cursor: 'grab',
-            }}
-            onMouseDown={handleMouseDown}
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <Resizable
+            width={size.width}
+            height={size.height}
+            onResize={(e, { size }) => setSize(size)}
           >
-            <button
-              onClick={handleCloseImage}
+            <div
               style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                background: 'rgba(0,0,0,0.6)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                cursor: 'pointer',
-                fontSize: '16px',
-                zIndex: 10,
-              }}
-            >
-              &times;
-            </button>
-
-            <img
-              src={value.url || '/placeholder.svg'}
-              alt={value.altText}
-              style={{
-                position: 'absolute',
-                left: `${position.x}px`,
-                top: '0',
                 width: '100%',
-                height: 'auto',
-                objectFit: 'contain',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                zIndex: 1,
+                height: '100%',
+                position: 'relative',
+                cursor: 'grab',
               }}
-            />
-          </div>
-        </Resizable>
+              onMouseDown={handleMouseDown}
+            >
+              <img
+                src={value.url || '/placeholder.svg'}
+                alt={value.altText}
+                style={{
+                  position: 'absolute',
+                  left: `${position.x}px`,
+                  top: '0',
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                }}
+              />
+            </div>
+          </Resizable>
+          <button
+            onClick={handleCloseImage}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              background: 'rgba(0,0,0,0.6)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer',
+              fontSize: '16px',
+              zIndex: 20,
+              pointerEvents: 'auto',
+            }}
+          >
+            &times;
+          </button>
+        </div>
       ) : (
         <div
           style={{

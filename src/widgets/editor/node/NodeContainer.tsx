@@ -197,7 +197,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       {showDropdown && (
         <div
           ref={dropdownRef}
-          style={{ position: strategy, top: (y ?? 0) + 15, left: x ?? 0 }}
+          style={{
+            zIndex: 1,
+            position: strategy,
+            top: (y ?? 0) + 15,
+            left: x ?? 0,
+          }}
         >
           <div
             style={{
