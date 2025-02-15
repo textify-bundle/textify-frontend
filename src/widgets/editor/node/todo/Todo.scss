@@ -1,24 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
 .todo-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .todo-checkbox {
-    margin-right: 10px;
-  }
-  
-  .todo-text {
-    border: none;
-    padding: 5px;
-    background: transparent;
-    width: 100%;
-    resize: none;
-    outline: none;
-    font-size: 20px;
-  }
-  
-  .todo-text.checked {
-    text-decoration: line-through;
-    opacity: 0.5;
-  }
-  
+  display: flex;
+  align-items: flex-start;
+}
+
+.todo-checkbox {
+  margin-right: 10px;
+}
+
+.todo-text {
+  border: none;
+  font-family: 'SF Compact Rounded', sans-serif;
+  padding: 5px;
+  background: transparent;
+  width: 100%;
+  resize: none;
+  outline: none;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.todo-text.checked {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
