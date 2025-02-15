@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ import {
   addNode,
   removeNode,
 } from '../../../store/slices/nodeSlice';
-import { CustomNode, NodeType } from '../../../shared/types/editor/node';
+import type { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
 import {
@@ -17,10 +18,10 @@ import {
   shift,
   autoUpdate,
 } from '@floating-ui/react';
-import { SelectChangeEvent } from '@mui/material';
-import { RootState } from '../../../store/index';
+import type { SelectChangeEvent } from '@mui/material';
+import type { RootState } from '../../../store/index';
 import ImageEditor from './image-editor/ImageEditor';
-import { MediaContent } from '../../../shared/types/editor/node';
+import type { MediaContent } from '../../../shared/types/editor/node';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -131,13 +132,13 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, []);
 
   useEffect(() => {
     if (isHovered) {
       update();
     }
-  }, [transform, isHovered, update]);
+  }, [isHovered, update]);
 
   useEffect(() => {
     if (showDropdown) {
@@ -163,6 +164,26 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     'none',
   ];
 
+  const editorComponents: { [key: string]: JSX.Element | null } = {
+    text: (
+      <TextEditor
+        inputId={`node-${node.id}`}
+        ref={textEditorRef}
+        content={node.content as string}
+        styles={node.styles}
+        onContentChange={handleContentChange}
+        onEnterPress={() => {
+          handleAddNode(node.id);
+        }}
+        nodeId={node.id}
+        onDelete={handleDeleteNode}
+      />
+    ),
+    image: (
+      <ImageEditor content={node.content as MediaContent} nodeId={node.id} />
+    ),
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -172,9 +193,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       onMouseLeave={() => setIsHovered(false)}
       className={`node-container${isHovered ? ' node-container_hover' : ''}`}
     >
-      <div ref={refs.setReference}>
-        {/* Reference element for floating UI */}
-      </div>
+      <div ref={refs.setReference}></div>
       {showDropdown && (
         <div
           ref={dropdownRef}
@@ -282,18 +301,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       <div
         className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}
       >
-        <TextEditor
-          inputId={`node-${node.id}`}
-          ref={textEditorRef}
-          content={node.content}
-          styles={node.styles}
-          onContentChange={handleContentChange}
-          onEnterPress={() => {
-            handleAddNode(node.id);
-          }}
-          nodeId={node.id}
-          onDelete={handleDeleteNode}
-        />
+        {editorComponents[node.type] || null}
       </div>
       <div
         ref={setActivatorNodeRef}

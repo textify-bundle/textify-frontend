@@ -11,6 +11,7 @@ const initialState: nodeState = {
     { id: '1', type: 'text', content: 'Node 1', styles: { bold: true } },
     { id: '2', type: 'text', content: 'Node 2', styles: { italic: true } },
     { id: '3', type: 'text', content: 'Node 3', styles: { underline: true } },
+    { id: '5', type: 'image', content: { url: '', altText: '' } },
   ],
 };
 

@@ -1,8 +1,6 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { MediaContent } from '../../../../shared/types/editor/node';
-import { Button, IconButton, CircularProgress } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { CircularProgress } from '@mui/material';
 import { supabase } from '../../../../utils/client';
 import { Resizable } from 'react-resizable';
 import 'react-resizable/css/styles.css';
@@ -16,25 +14,19 @@ const ImageEditor = ({
 }) => {
   const [value, setValue] = useState(content);
   const [isLoading, setIsLoading] = useState(false);
-  const [size, setSize] = useState({ width: 100, height: 100 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isResizing, setIsResizing] = useState(false);
+  const [size, setSize] = useState({ width: 300, height: 200 });
+  const [position, setPosition] = useState({ x: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dragStartX = useRef<number>(0);
+  const dragStart = useRef<{ x: number } | null>(null);
 
   useEffect(() => {
     const savedImageUrl = localStorage.getItem(`savedImageUrl_${nodeId}`);
-
     if (savedImageUrl) {
       setValue((prevValue) => ({ ...prevValue, url: savedImageUrl }));
     } else {
       setValue(content);
     }
   }, [content, nodeId]);
-
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -45,20 +37,14 @@ const ImageEditor = ({
       try {
         const fileName = file.name;
         const filePath = `images/${fileName}`;
-
         const { error: uploadError } = await supabase.storage
           .from('images')
           .upload(filePath, file, { upsert: true });
-
-        if (uploadError) {
-          throw uploadError;
-        }
+        if (uploadError) throw uploadError;
 
         const { data } = supabase.storage.from('images').getPublicUrl(filePath);
-
         if (data) {
           const newImageUrl = data.publicUrl;
-
           setValue({ ...value, url: newImageUrl });
           localStorage.setItem(`savedImageUrl_${nodeId}`, newImageUrl);
         }
@@ -70,156 +56,134 @@ const ImageEditor = ({
     }
   };
 
-  const handleClose = () => {
-    setValue({ ...value, url: '' });
-    localStorage.removeItem(`savedImageUrl_${nodeId}`);
-    localStorage.removeItem(`savedImageSize_${nodeId}`);
-    localStorage.removeItem(`savedImagePosition_${nodeId}`);
-  };
-
-  const onResizeStart = () => {
-    setIsResizing(true);
-  };
-
-  const onResize = (
-    event: unknown,
-    { size }: { size: { width: number; height: number } },
-  ) => {
-    setSize({ width: size.width, height: size.height });
-    localStorage.setItem(`savedImageSize_${nodeId}`, JSON.stringify(size));
-  };
-
-  const onResizeStop = () => {
-    setIsResizing(false);
-  };
-
   const handleMouseDown = (event: React.MouseEvent) => {
-    if (isResizing) return;
-
-    dragStartX.current = event.clientX;
+    event.preventDefault();
+    dragStart.current = {
+      x: event.clientX - position.x,
+    };
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (isResizing || dragStartX.current === 0) return;
-
-    const deltaX = event.clientX - dragStartX.current;
-    dragStartX.current = event.clientX;
-
-    const containerWidth = (event.currentTarget as HTMLElement).offsetWidth;
-    const imageWidth = size.width;
-
-    let newX = position.x + deltaX;
-    const minX = 0;
-    const maxX = containerWidth - imageWidth;
-
-    newX = Math.max(minX, Math.min(newX, maxX));
-
-    setPosition((prev) => {
-      return { x: newX, y: prev.y };
-    });
+    if (!dragStart.current) return;
+    const newX = event.clientX - dragStart.current.x;
+    setPosition({ x: newX });
   };
 
   const handleMouseUp = () => {
-    if (isResizing) return;
+    dragStart.current = null;
+  };
 
-    localStorage.setItem(
-      `savedImagePosition_${nodeId}`,
-      JSON.stringify(position),
-    );
-    dragStartX.current = 0;
+  const handleCloseImage = () => {
+    setValue({ ...value, url: '' });
+    localStorage.removeItem(`savedImageUrl_${nodeId}`);
   };
 
   return (
     <div
-      style={{ width: '100%', position: 'relative' }}
+      style={{
+        width: '100%',
+        height: `${size.height}px`,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {!value.url && (
-        <Button
-          variant="contained"
-          onClick={handleButtonClick}
-          disabled={isLoading}
-          sx={{
-            background: 'brown',
-            color: 'white',
-            marginBottom: 2,
-            '&:hover': {
-              background: 'darkbrown',
-            },
-          }}
-        >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            'Выбрать изображение'
-          )}
-        </Button>
-      )}
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        style={{ display: 'none' }}
-      />
-
       {value.url ? (
-        <div style={{ position: 'relative', width: '100%' }}>
-          <IconButton
-            onClick={handleClose}
-            style={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
+        <Resizable
+          width={size.width}
+          height={size.height}
+          onResize={(e, { size }) => setSize(size)}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'relative',
+              cursor: 'grab',
+            }}
+            onMouseDown={handleMouseDown}
           >
-            <CloseIcon />
-          </IconButton>
-          <Resizable
-            width={size.width}
-            height={size.height}
-            onResize={onResize}
-            onResizeStart={onResizeStart}
-            onResizeStop={onResizeStop}
-            minConstraints={[20, 20]}
-            maxConstraints={[1000, 1000]}
-          >
-            <div
+            <button
+              onClick={handleCloseImage}
               style={{
-                width: `${size.width}px`,
-                height: `${size.height}px`,
+                position: 'absolute',
+                top: '8px',
+                right: '8px',
+                background: 'rgba(0,0,0,0.6)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                cursor: 'grab',
+                cursor: 'pointer',
+                fontSize: '16px',
+                zIndex: 10,
+              }}
+            >
+              &times;
+            </button>
+
+            <img
+              src={value.url || '/placeholder.svg'}
+              alt={value.altText}
+              style={{
                 position: 'absolute',
                 left: `${position.x}px`,
+                top: '0',
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+                maxWidth: '100%',
+                maxHeight: '100%',
+                zIndex: 1,
               }}
-              onMouseDown={handleMouseDown}
-            >
-              <img
-                src={value.url || '/placeholder.svg'}
-                alt={value.altText}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            </div>
-          </Resizable>
-        </div>
+            />
+          </div>
+        </Resizable>
       ) : (
         <div
           style={{
             width: '100%',
-            height: '100px',
+            height: '100%',
             background: '#f0f0f0',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            flexDirection: 'column',
           }}
         >
-          Нет изображения
+          <p>Нет изображения</p>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading}
+            style={{
+              marginTop: 8,
+              padding: '6px 12px',
+              background: 'var(--background-bar-color)',
+              borderRadius: '6px',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              'Выбрать изображение'
+            )}
+          </button>
         </div>
       )}
     </div>

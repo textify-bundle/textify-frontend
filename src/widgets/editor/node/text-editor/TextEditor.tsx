@@ -14,8 +14,13 @@ interface TextEditorProps {
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
-  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref) => {
-    const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
+  (
+    { content, styles, inputId, onContentChange, onEnterPress, onDelete },
+    ref,
+  ) => {
+    const [value, setValue] = useState<string>(
+      typeof content === 'string' ? content : '',
+    );
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = event.target.value;
@@ -70,7 +75,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         {renderContent()}
       </div>
     );
-  }
+  },
 );
 
 export default TextEditor;

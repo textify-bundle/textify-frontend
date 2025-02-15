@@ -1,6 +1,29 @@
-export type NodeType = 'text' | 'heading' | 'todo' | 'quote' | 'code' | 'divider' | 'image' | 'video' | 'file' | 'table' | 'callout' | 'bookmark' | 'link' | 'equation' | 'none';
+export type NodeType =
+  | 'text'
+  | 'heading'
+  | 'todo'
+  | 'quote'
+  | 'code'
+  | 'divider'
+  | 'image'
+  | 'video'
+  | 'file'
+  | 'table'
+  | 'callout'
+  | 'bookmark'
+  | 'link'
+  | 'equation'
+  | 'none';
 
-export type NodeContent = string | TodoContent | MediaContent | FileContent | TableContent | CalloutContent | BookmarkContent | EquationContent;
+export type NodeContent =
+  | string
+  | TodoContent
+  | MediaContent
+  | FileContent
+  | TableContent
+  | CalloutContent
+  | BookmarkContent
+  | EquationContent;
 
 export type TodoContent = {
   text: string;
@@ -18,7 +41,7 @@ export type FileContent = {
 };
 
 export type TableContent = {
-  rows: CustomNode[][];
+  rows: Node[][];
 };
 
 export type CalloutContent = {
@@ -47,6 +70,13 @@ export type NodeStyles = {
   backgroundColor?: string;
 };
 
+export type Node = {
+  id: string;
+  type: NodeType;
+  content?: NodeContent;
+  styles?: NodeStyles;
+  children?: Node[];
+};
 export type CustomNode = {
   id: string;
   type: NodeType;
