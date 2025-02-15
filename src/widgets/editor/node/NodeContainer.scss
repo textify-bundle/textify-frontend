@@ -1,7 +1,7 @@
 .node-container{
     width: 100%;
     min-height: 30px;
-    background-color: #FFF;
+    background-color: var(--background-color);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -25,23 +25,21 @@
         margin-left: 30px;
         min-height: 25px;
         display: flex;
-        flex-direction: column;
         justify-content: center;
+        flex-direction: column;
+
+        *{
+            color: var(--text-color);
+            font-size: var(--font-size);
+            font-family: var(--font-family);
+        }
+        
         &_hover {
-            // background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 0, 0, 0.023);
             // margin-left: 5px;
-            padding-left: 10px;
             border-radius: 6px;
             // width: 93%;
         }
-    }
-
-    &_hover {
-        
-    }
-
-    &__icon{
-        margin-left: 20px;
     }
 }
 

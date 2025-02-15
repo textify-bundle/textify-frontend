@@ -1,0 +1,85 @@
+.share {
+  .send-button {
+    background-color: transparent;
+    color: rgb(11, 8, 8);
+    border-radius: 6px;
+    padding: 8px;
+    text-transform: none;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #f1f3f6;
+    }
+  }
+
+  &-dialog {
+    &__content {
+      padding: 16px;
+    }
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &__close-btn {
+      margin-left: auto;
+    }
+
+    &__label {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    &__access {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    &__accordion {
+      max-width: 100%;
+      border-radius: 15px !important;
+      box-shadow: none !important;
+      transition: background-color 0.2s ease-in-out;
+
+      &-summary {
+        min-height: unset;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 15px;
+      }
+
+      .css-rizt0-MuiTypography-root {
+        font-size: 14px;
+      }
+    }
+
+    &__copy-btn {
+      text-transform: none !important;
+      margin-top: 16px;
+      width: 100%;
+      color: white;
+      border-radius: 15px !important;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 16px;
+    }
+
+   
+
+    .MuiPaper-root {
+      border-radius: 20px;
+      background: white;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6); 
+    }
+
+    .MuiBackdrop-root {
+      background: transparent;
+    }
+  }
+}
