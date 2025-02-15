@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PagesTree from '../../../../shared/ui/pages-tree/PagesTree';
 import ActionBar from '../../../../widgets/header/action-bar/ActionBar';
-import NewSearch from '../../../../shared/ui/search-bar/SearchBar';
 import store, { RootState } from '../../../../store';
 import Editor from '../../../../widgets/editor/Editor';
 import { useSelector } from 'react-redux';
@@ -79,9 +78,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
 
           {store.getState().auth.user?.email || 'example@mail.ru'}
         </div>
-        <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}>
-          <NewSearch />
-        </div>
+        <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}></div>
         <PagesTree />
         <div
           style={{

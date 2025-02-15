@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
+import { fetchTreeData, getCardDataForCards } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import ProjectCard from '../../shared/ui/project-card/ProjectCard';
 
@@ -15,7 +15,7 @@ const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }
   
     useEffect(() => {
         dispatch(fetchTreeData());
-        dispatch(getCardData());
+        dispatch(getCardDataForCards());
     }, [dispatch]);
   
     useEffect(() => {

@@ -15,6 +15,7 @@ interface TextEditorProps {
   inputId?: string;
   nodeId: string;
   onDelete?: () => void;
+  nodeType?: string;
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
@@ -34,6 +35,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
     ],
     whileElementsMounted: autoUpdate,
   });
+
 
   const sizes = ['small', 'normal', 'large', 'huge'];
 
@@ -191,6 +193,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
     setValue(typeof content === 'string' ? content : '');
   }, [content]);
 
+
   return (
     <div className="text-editor" style={styles}>
       {isToolbarVisible && (
@@ -214,6 +217,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
             handleUnderlinedClick={handleUnderlined}
             handleListClick={handleList}
             handleSizeClick={toggleSizeMenu} 
+
           />
         </div>
       )}

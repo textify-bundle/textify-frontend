@@ -167,14 +167,16 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
   const editorComponents: { [key: string]: JSX.Element | null } = {
     text: (
       <TextEditor
-          inputId={`node-${node.id}`}
-          content={node.content}
-          styles={node.styles}
-          onContentChange={handleContentChange}
-          onEnterPress={() => {handleAddNode(node.id)}}
-          nodeId={node.id}
-          onDelete={handleDeleteNode}
-        />
+        inputId={`node-${node.id}`}
+        content={node.content as string}
+        styles={node.styles}
+        onContentChange={handleContentChange}
+        onEnterPress={() => {
+          handleAddNode(node.id);
+        }}
+        nodeId={node.id}
+        onDelete={handleDeleteNode}
+      />
     ),
     image: (
       <ImageEditor content={node.content as MediaContent} nodeId={node.id} />
