@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNode, addNode, removeNode } from '../../../store/slices/nodeSlice';
+import { updateNode, addNode, removeNode, syncNodesToStorage, loadNodesFromStorage } from '../../../store/slices/nodeSlice';
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
@@ -47,6 +47,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
+    dispatch(syncNodesToStorage()); 
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -54,7 +55,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
-  };
+    dispatch(syncNodesToStorage()); 
+  }; 
 
   const handleAddNode = (currentNodeIndex?: string) => {
     const id = Date.now().toString();
@@ -65,6 +67,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       styles: {},
     };
     dispatch(addNode({node: newNode, index: currentNodeIndex}));
+    dispatch(syncNodesToStorage()); 
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -75,6 +78,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
+      dispatch(syncNodesToStorage()); 
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(`node-${previousNodeId}`);
@@ -92,6 +96,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
   };
 
   useEffect(() => {
+    dispatch(loadNodesFromStorage());
     if (isNewNode && textEditorRef.current) {
       textEditorRef.current.focus();
     }

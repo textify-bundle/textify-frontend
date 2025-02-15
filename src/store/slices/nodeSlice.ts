@@ -20,18 +20,29 @@ const nodeSlice = createSlice({
   name: 'nodes',
   initialState,
   reducers: {
+    
+    clearNodes: (state) => {
+      state.nodes = [];
+    },
+
     addNode: (state, action: PayloadAction<{node: CustomNode, index?: string}>) => {
-      if(action.payload.index){
-        state.nodes.splice(getCurrentIndex(state.nodes, action.payload.index)+1, 0, action.payload.node);
-      }
-      else{
-        state.nodes.push(action.payload.node);
+      const { node, index } = action.payload;
+      if(index){
+        const currentIndex = getCurrentIndex(state.nodes, index);
+        if (currentIndex !== -1) {
+          state.nodes.splice(currentIndex + 1, 0, node); 
+        }
+      } else {
+        state.nodes.push(node); 
       }
     },
     updateNode: (state, action: PayloadAction<CustomNode>) => {
-      const index = state.nodes.findIndex(node => node.id === action.payload.id);
-      if (index !== -1) {
-        state.nodes[index] = action.payload;
+      const { id, content, type, styles } = action.payload;
+      const node = state.nodes.find(node => node.id === id);
+      if (node) {
+        node.content = content ?? node.content;
+        node.type = type ?? node.type;
+        node.styles = styles ?? node.styles;
       }
     },
     removeNode: (state, action: PayloadAction<string>) => {
@@ -41,8 +52,18 @@ const nodeSlice = createSlice({
       const { oldIndex, newIndex } = action.payload;
       state.nodes = arrayMove(state.nodes, oldIndex, newIndex);
     },
+    syncNodesToStorage: (state) => {
+      localStorage.setItem('nodes', JSON.stringify(state.nodes));
+    },
+
+    loadNodesFromStorage: (state) => {
+      const storedNodes = localStorage.getItem('nodes');
+      if (storedNodes) {
+        state.nodes = JSON.parse(storedNodes);
+      }
+    },
   },
 });
 
-export const { addNode, updateNode, removeNode, reorderNodes } = nodeSlice.actions;
+export const { addNode, updateNode, removeNode, reorderNodes,  syncNodesToStorage, loadNodesFromStorage} = nodeSlice.actions;
 export default nodeSlice.reducer;
