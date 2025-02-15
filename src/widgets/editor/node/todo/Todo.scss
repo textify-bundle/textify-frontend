@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
+
+.todo-container {
+  display: flex;
+  align-items: flex-start;
+  padding: 0;
+}
+
+.todo-checkbox {
+  margin-right: 10px;
+}
+
+.todo-text {
+  border: none;
+  font-family: 'SF Compact Rounded', sans-serif;
+  background: transparent;
+  width: 100%;
+  resize: none;
+  outline: none;
+  padding-top: 5px;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.todo-text.checked {
+  text-decoration: line-through;
+  opacity: 0.5;
+}

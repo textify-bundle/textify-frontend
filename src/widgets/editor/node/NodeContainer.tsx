@@ -6,6 +6,8 @@ import { updateNode, addNode, removeNode, syncNodesToStorage, loadNodesFromStora
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
+import Divider from './divider/Divider';
+import Todo from './todo/Todo'; 
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
 import { RootState } from '../../../store/index';
@@ -222,16 +224,30 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
         {/* Floating element for dropdown */}
       </div>
       <div className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}>
-        <TextEditor
-          inputId={`node-${node.id}`}
-          ref={textEditorRef}
-          content={node.content}
-          styles={node.styles}
-          onContentChange={handleContentChange}
-          onEnterPress={() => {handleAddNode(node.id)}}
-          nodeId={node.id}
-          onDelete={handleDeleteNode} 
-        />
+        {node.type === 'divider' ? (
+          <Divider />
+        ) : node.type === 'todo' ? (
+          <Todo
+            content={node.content as string}
+            checked={node.styles?.strikethrough ?? false}
+            onContentChange={(newContent) => handleContentChange(newContent)}
+            onCheckboxChange={(isChecked) =>
+              dispatch(updateNode({ ...node, styles: { ...node.styles, strikethrough: isChecked } }))
+            }
+          />
+        ) : (
+          <TextEditor
+            inputId={`node-${node.id}`}
+            ref={textEditorRef}
+            content={node.content}
+            styles={node.styles}
+            onContentChange={handleContentChange}
+            onEnterPress={() => {handleAddNode(node.id)}}
+            nodeId={node.id}
+            onDelete={handleDeleteNode}
+            nodeType={node.type}
+          />
+        )}
       </div>
       <div
         ref={setActivatorNodeRef}
