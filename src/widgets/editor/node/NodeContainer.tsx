@@ -58,6 +58,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
   const deleteButtonRef = useRef<HTMLDivElement>(null);
   const textEditorRef = useRef<TextEditorImperativeHandle>(null);
 
+  useEffect(() => {
+    if (isNewNode && onFocus) {
+      onFocus();
+    }
+  }, [isNewNode, onFocus]);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
