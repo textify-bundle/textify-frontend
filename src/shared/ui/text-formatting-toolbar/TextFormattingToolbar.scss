@@ -1,5 +1,6 @@
 toolbar-paper {
   display: flex !important;
+  position: relative;
   border: 1px solid #e0e0e0 !important;
   flex-wrap: wrap !important;
   width: 362.36px !important;
@@ -32,4 +33,13 @@ toolbar-paper {
 
 .toggle-button .MuiSvgIcon-root {
   font-size: 11.65px;
+}
+
+.css-25exqx-MuiToggleButtonGroup-root .MuiToggleButtonGroup-grouped{
+    padding-top: 3px; 
+  
+}
+.css-1umw9bq-MuiSvgIcon-root{
+  width: 20px !important;
+  height: 20px !important;
 }
