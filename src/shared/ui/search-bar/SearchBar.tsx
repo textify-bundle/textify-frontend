@@ -1,37 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import './SearchBar.scss';
 
 interface SearchProps {
-  iconSrc?: './src/shared/ui/search-bar/magnifyingGlass.svg';
+  iconSrc?: string;
   onClick?: () => void;
   onChange?: (value: string) => void;
   placeholder?: string;
   value?: string;
 }
 
-const Search: React.FC<SearchProps> = ({
+const NewSearch: React.FC<SearchProps> = ({
   iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg',
   onClick,
   onChange,
   placeholder = 'Поиск',
   value = '',
 }) => {
-  const [internalValue, setInternalValue] = useState(value);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-
     if (onChange) {
-      onChange(newValue);
-    } else {
-      setInternalValue(newValue);
+      onChange(e.target.value);
     }
   };
 
   const handlePress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      console.log(internalValue);
+      console.log(value);
     }
   };
 
@@ -43,11 +37,16 @@ const Search: React.FC<SearchProps> = ({
         onChange={handleChange}
         placeholder={placeholder}
         onKeyPress={handlePress}
-        value={onChange ? value : internalValue}
+        value={value}
+        fullWidth
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <img className="search-glass_img" src={iconSrc} />
+              <img
+                className="search-glass_img"
+                src={iconSrc || '/placeholder.svg'}
+                alt="Search"
+              />
             </InputAdornment>
           ),
         }}
@@ -66,4 +65,4 @@ const Search: React.FC<SearchProps> = ({
   );
 };
 
-export default Search;
+export default NewSearch;
