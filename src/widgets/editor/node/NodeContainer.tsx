@@ -22,6 +22,7 @@ import type { SelectChangeEvent } from '@mui/material';
 import type { RootState } from '../../../store/index';
 import ImageEditor from './image-editor/ImageEditor';
 import type { MediaContent } from '../../../shared/types/editor/node';
+import { Quote } from './quote/Quote';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -33,6 +34,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
+  const [isQuote, setIsQuote] = useState(false);
   const dispatch = useDispatch();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
   const {
@@ -119,6 +121,10 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     }
   }, [isNewNode]);
 
+  const toggleQuote = () =>{
+    setIsQuote((prev) => !prev)
+  }
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -194,6 +200,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       className={`node-container${isHovered ? ' node-container_hover' : ''}`}
     >
       <div ref={refs.setReference}></div>
+
       {showDropdown && (
         <div
           ref={dropdownRef}
@@ -299,6 +306,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
           </div>
         </>
       )}
+      
       <div
         ref={refs.setFloating}
         style={{ position: strategy, top: y ?? 0, left: x ?? 0 }}
@@ -306,14 +314,22 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       <div
         className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}
       >
-        {editorComponents[node.type] || null}
+        {isQuote ?(
+            <Quote content={node.content as string}/>
+          ):
+          editorComponents[node.type] || null
+        }
+        {/* {editorComponents[node.type] || null} */}
       </div>
       <div
         ref={setActivatorNodeRef}
         {...listeners}
         className="node-container__handle"
-      >
-        <img src="./icons/draggable.svg" alt="Drag Handle" width="15px" />
+      >  
+        <img src="./icons/draggable.svg" alt="Drag Handle" width="15px" 
+                onClick={toggleQuote}
+                />
+              
       </div>
     </div>
   );
