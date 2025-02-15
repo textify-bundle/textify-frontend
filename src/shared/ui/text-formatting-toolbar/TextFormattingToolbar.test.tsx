@@ -1,109 +1,113 @@
-import { render, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import TextFormattingToolbar from './TextFormattingToolbar';
+import { render, screen, fireEvent } from '@testing-library/react';
+import TextFormattingToolbar from './TextFormattingToolbar'; 
+import { vi } from 'vitest'; 
+import '@testing-library/jest-dom'; 
+
+const mockLeftAlignClick = vi.fn();
+const mockCenterAlignClick = vi.fn();
+const mockRightAlignClick = vi.fn();
+const mockJustifyAlignClick = vi.fn();
+const mockBoldClick = vi.fn();
+const mockItalicClick = vi.fn();
+const mockUnderlinedClick = vi.fn();
+const mockStrikethroughClick = vi.fn();
+const mockListClick = vi.fn();
+const mockSizeClick = vi.fn();
 
 describe('TextFormattingToolbar', () => {
-  it('renders without crashing', () => {
-    render(<TextFormattingToolbar />);
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders all alignment buttons', () => {
-    const { getByLabelText } = render(<TextFormattingToolbar />);
+  test('renders the toolbar with all buttons', () => {
+    render(
+      <TextFormattingToolbar
+        handleLeftAlignClick={mockLeftAlignClick}
+        handleCenterAlignClick={mockCenterAlignClick}
+        handleRightAlignClick={mockRightAlignClick}
+        handleJustifyAlignClick={mockJustifyAlignClick}
+        handleBoldClick={mockBoldClick}
+        handleItalicClick={mockItalicClick}
+        handleUnderlinedClick={mockUnderlinedClick}
+        handleStrikethroughClick={mockStrikethroughClick}
+        handleListClick={mockListClick}
+        handleSizeClick={mockSizeClick}
+      />
+    );
 
-    expect(getByLabelText('left aligned')).toBeInTheDocument();
-    expect(getByLabelText('centered')).toBeInTheDocument();
-    expect(getByLabelText('right aligned')).toBeInTheDocument();
-    expect(getByLabelText('justified')).toBeInTheDocument();
+    expect(screen.getByLabelText('left-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('center-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('right-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('justify-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('bold')).toBeInTheDocument();
+    expect(screen.getByLabelText('italic')).toBeInTheDocument();
+    expect(screen.getByLabelText('underlined')).toBeInTheDocument();
+    expect(screen.getByLabelText('strikethrough')).toBeInTheDocument();
+    expect(screen.getByLabelText('list')).toBeInTheDocument();
+    expect(screen.getByLabelText('size')).toBeInTheDocument();
   });
 
-  it('renders all formatting buttons', () => {
-    const { getByLabelText } = render(<TextFormattingToolbar />);
+  test('clicking alignment buttons triggers the correct handler', () => {
+    render(
+      <TextFormattingToolbar
+        handleLeftAlignClick={mockLeftAlignClick}
+        handleCenterAlignClick={mockCenterAlignClick}
+        handleRightAlignClick={mockRightAlignClick}
+        handleJustifyAlignClick={mockJustifyAlignClick}
+        handleBoldClick={mockBoldClick}
+        handleItalicClick={mockItalicClick}
+        handleUnderlinedClick={mockUnderlinedClick}
+        handleStrikethroughClick={mockStrikethroughClick}
+        handleListClick={mockListClick}
+        handleSizeClick={mockSizeClick}
+      />
+    );
 
-    expect(getByLabelText('bold')).toBeInTheDocument();
-    expect(getByLabelText('strikethrough')).toBeInTheDocument();
-    expect(getByLabelText('underlined')).toBeInTheDocument();
-    expect(getByLabelText('italic')).toBeInTheDocument();
-    expect(getByLabelText('size')).toBeInTheDocument();
-    expect(getByLabelText('list')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('left-align'));
+    expect(mockLeftAlignClick).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByLabelText('center-align'));
+    expect(mockCenterAlignClick).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByLabelText('right-align'));
+    expect(mockRightAlignClick).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByLabelText('justify-align'));
+    expect(mockJustifyAlignClick).toHaveBeenCalled();
   });
 
-  it('calls handleLeftAlignClick when left align button is clicked', () => {
-    const handleLeftAlignClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleLeftAlignClick={handleLeftAlignClick} />);
+  test('clicking text formatting buttons triggers the correct handler', () => {
+    render(
+      <TextFormattingToolbar
+        handleLeftAlignClick={mockLeftAlignClick}
+        handleCenterAlignClick={mockCenterAlignClick}
+        handleRightAlignClick={mockRightAlignClick}
+        handleJustifyAlignClick={mockJustifyAlignClick}
+        handleBoldClick={mockBoldClick}
+        handleItalicClick={mockItalicClick}
+        handleUnderlinedClick={mockUnderlinedClick}
+        handleStrikethroughClick={mockStrikethroughClick}
+        handleListClick={mockListClick}
+        handleSizeClick={mockSizeClick}
+      />
+    );
 
-    fireEvent.click(getByLabelText('left aligned'));
-    expect(handleLeftAlignClick).toHaveBeenCalled();
-  });
+    fireEvent.click(screen.getByLabelText('bold'));
+    expect(mockBoldClick).toHaveBeenCalled();
 
-  it('calls handleCenterAlignClick when center align button is clicked', () => {
-    const handleCenterAlignClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleCenterAlignClick={handleCenterAlignClick} />);
+    fireEvent.click(screen.getByLabelText('italic'));
+    expect(mockItalicClick).toHaveBeenCalled();
 
-    fireEvent.click(getByLabelText('centered'));
-    expect(handleCenterAlignClick).toHaveBeenCalled();
-  });
+    fireEvent.click(screen.getByLabelText('underlined'));
+    expect(mockUnderlinedClick).toHaveBeenCalled();
 
-  it('calls handleRightAlignClick when right align button is clicked', () => {
-    const handleRightAlignClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleRightAlignClick={handleRightAlignClick} />);
+    fireEvent.click(screen.getByLabelText('strikethrough'));
+    expect(mockStrikethroughClick).toHaveBeenCalled();
 
-    fireEvent.click(getByLabelText('right aligned'));
-    expect(handleRightAlignClick).toHaveBeenCalled();
-  });
+    fireEvent.click(screen.getByLabelText('list'));
+    expect(mockListClick).toHaveBeenCalled();
 
-  it('calls handleJustifyAlignClick when justify align button is clicked', () => {
-    const handleJustifyAlignClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleJustifyAlignClick={handleJustifyAlignClick} />);
-
-    fireEvent.click(getByLabelText('justified'));
-    expect(handleJustifyAlignClick).toHaveBeenCalled();
-  });
-
-  it('calls handleBoldClick when bold button is clicked', () => {
-    const handleBoldClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleBoldClick={handleBoldClick} />);
-
-    fireEvent.click(getByLabelText('bold'));
-    expect(handleBoldClick).toHaveBeenCalled();
-  });
-
-  it('calls handleStrikethroughClick when strikethrough button is clicked', () => {
-    const handleStrikethroughClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleStrikethroughClick={handleStrikethroughClick} />);
-
-    fireEvent.click(getByLabelText('strikethrough'));
-    expect(handleStrikethroughClick).toHaveBeenCalled();
-  });
-
-  it('calls handleUnderlinedClick when underlined button is clicked', () => {
-    const handleUnderlinedClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleUnderlinedClick={handleUnderlinedClick} />);
-
-    fireEvent.click(getByLabelText('underlined'));
-    expect(handleUnderlinedClick).toHaveBeenCalled();
-  });
-
-  it('calls handleItalicClick when italic button is clicked', () => {
-    const handleItalicClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleItalicClick={handleItalicClick} />);
-
-    fireEvent.click(getByLabelText('italic'));
-    expect(handleItalicClick).toHaveBeenCalled();
-  });
-
-  it('calls handleSizeClick when size button is clicked', () => {
-    const handleSizeClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleSizeClick={handleSizeClick} />);
-
-    fireEvent.click(getByLabelText('size'));
-    expect(handleSizeClick).toHaveBeenCalled();
-  });
-
-  it('calls handleListClick when list button is clicked', () => {
-    const handleListClick = vi.fn();
-    const { getByLabelText } = render(<TextFormattingToolbar handleListClick={handleListClick} />);
-
-    fireEvent.click(getByLabelText('list'));
-    expect(handleListClick).toHaveBeenCalled();
+    fireEvent.click(screen.getByLabelText('size'));
+    expect(mockSizeClick).toHaveBeenCalled();
   });
 });
