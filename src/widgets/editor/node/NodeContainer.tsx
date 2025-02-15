@@ -6,14 +6,10 @@ import {
   updateNode,
   addNode,
   removeNode,
-  syncNodesToStorage,
-  loadNodesFromStorage
 } from '../../../store/slices/nodeSlice';
 import type { CustomNode, NodeType, MediaContent } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
-import Divider from './divider/Divider';
-import Todo from './todo/Todo';
 import ImageEditor from './image-editor/ImageEditor';
 import {
   useFloating,
@@ -45,7 +41,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
   
   const {
-    attributes,
     listeners,
     setNodeRef,
     transform,

@@ -10,7 +10,6 @@ interface TextEditorProps {
   onEnterPress: () => void;
   inputId?: string;
   onDelete?: () => void;
-  nodeId?: string;
   nodeType?: string;
 }
 
@@ -20,7 +19,7 @@ export interface TextEditorImperativeHandle {
 }
 
 const TextEditor = forwardRef<TextEditorImperativeHandle, TextEditorProps>(
-  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete, nodeId, nodeType }, ref) => {
+  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete, nodeType }, ref) => {
     const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
     const [cursorPosition, setCursorPosition] = useState<number | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);

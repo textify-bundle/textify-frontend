@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTreeData, getCardData, createNewProjectAndPage } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
@@ -17,19 +17,18 @@ const LastProjectList: React.FC = () => {
     const projectData = useSelector((state: RootState) => state.pages.projectData);
     const loading = useSelector((state: RootState) => state.pages.loading);
     const error = useSelector((state: RootState) => state.pages.error);
-    const { cards } = useSelector((state: RootState) => state.pages);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [newProjectName, setNewProjectName] = useState(''); 
+    const [newProjectName, setNewProjectName] = useState('');
 
-    const getCardDataForCards = () => {
+    const getCardDataForCards = useCallback(() => {
         dispatch(getCardData());
-    };
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(fetchTreeData());
         getCardDataForCards();
-    }, [dispatch]);
+    }, [dispatch, getCardDataForCards]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -61,7 +60,7 @@ const LastProjectList: React.FC = () => {
 
     const closeDialog = () => {
         setIsDialogOpen(false);
-        setNewProjectName(''); 
+        setNewProjectName('');
     };
 
     const handleCreateProject = () => {

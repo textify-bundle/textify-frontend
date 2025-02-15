@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { OpenAIService } from '../../shared/lib/openai/openai.service';
-import { OpenAIConfig } from '../../shared/types/settings';
 import styles from './PromptInput.module.css';
 
 interface PromptInputProps {
