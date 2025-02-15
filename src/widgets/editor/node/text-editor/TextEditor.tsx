@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect, useImperativeHandle } from 'react';
+import React, { forwardRef, useState, useEffect, useImperativeHandle, useRef } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import './TextEditor.scss';
 import { NodeContent, NodeStyles } from '../../../../shared/types/editor/node';
@@ -11,12 +11,19 @@ interface TextEditorProps {
   inputId?: string;
   onDelete?: () => void;
   nodeId?: string;
+  nodeType?: string;
 }
 
-const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
-  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete }, ref) => {
+export interface TextEditorImperativeHandle {
+  insertTextAtCursor: (text: string) => void;
+  getCursorPosition: () => number | null;
+}
+
+const TextEditor = forwardRef<TextEditorImperativeHandle, TextEditorProps>(
+  ({ content, styles, inputId, onContentChange, onEnterPress, onDelete, nodeId, nodeType }, ref) => {
     const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
     const [cursorPosition, setCursorPosition] = useState<number | null>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = event.target.value;
@@ -42,27 +49,27 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
       }
     };
 
-    const insertTextAtCursor = (textToInsert: string) => {
-      if (cursorPosition !== null && ref && 'current' in ref && ref.current) {
-        const textarea = ref.current;
-        const start = cursorPosition;
-        const end = cursorPosition;
-        const newValue = value.substring(0, start) + textToInsert + value.substring(end);
-        setValue(newValue);
-        onContentChange(newValue);
-        
-        setTimeout(() => {
-          textarea.focus();
-          const newPosition = start + textToInsert.length;
-          textarea.setSelectionRange(newPosition, newPosition);
-          setCursorPosition(newPosition);
-        }, 0);
-      }
-    };
-
     useImperativeHandle(ref, () => ({
-      insertTextAtCursor,
-      getCursorPosition: () => cursorPosition,
+      insertTextAtCursor: (textToInsert: string) => {
+        if (textareaRef.current) {
+          const start = textareaRef.current.selectionStart;
+          const end = textareaRef.current.selectionEnd;
+          const newValue = value.substring(0, start) + textToInsert + value.substring(end);
+          setValue(newValue);
+          onContentChange(newValue);
+          
+          // Установка курсора после вставленного текста
+          setTimeout(() => {
+            if (textareaRef.current) {
+              const newPosition = start + textToInsert.length;
+              textareaRef.current.selectionStart = newPosition;
+              textareaRef.current.selectionEnd = newPosition;
+              textareaRef.current.focus();
+            }
+          }, 0);
+        }
+      },
+      getCursorPosition: () => cursorPosition
     }));
 
     useEffect(() => {
@@ -74,7 +81,7 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
         return (
           <TextareaAutosize
             id={inputId}
-            ref={ref}
+            ref={textareaRef}
             value={value}
             onChange={handleChange}
             onSelect={handleSelect}
@@ -87,6 +94,8 @@ const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
               resize: 'none',
               overflow: 'hidden',
               outline: 'none',
+              fontSize: nodeType === 'heading' ? '1.5em' : '1em', 
+              fontWeight: nodeType === 'heading' ? 'bold' : 'normal',
               ...styles,
             }}
             className="text-editor__input"

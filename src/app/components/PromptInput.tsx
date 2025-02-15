@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { OpenAIService } from '../../shared/lib/openai/openai.service';
+import { OpenAIConfig } from '../../shared/types/settings';
 import styles from './PromptInput.module.css';
 
 interface PromptInputProps {
@@ -13,7 +14,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onInsertText }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const config = useSelector((state: RootState) => state.openAISettings);
+    const config = useSelector((state: RootState) => state.openAISettings.openai);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

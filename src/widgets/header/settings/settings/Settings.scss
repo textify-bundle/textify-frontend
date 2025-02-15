@@ -2,17 +2,17 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  border-radius: 20px; 
-  padding: 0px; 
+  border-radius: 20px;
+  padding: 0px;
 
   .settings-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
     font-weight: 600;
-    font-size: 18px; 
-    color: black; 
+    font-size: 18px;
+    color: black;
     margin-bottom: 10px;
   }
 
@@ -36,11 +36,11 @@
     transition: background-color 0.3s ease-in-out;
 
     &:hover {
-      background-color: #f1f1f1; 
+      background-color: #f1f1f1;
     }
     .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-      margin-left: 8px; 
-      flex-grow: 1; 
+      margin-left: 8px;
+      flex-grow: 1;
     }
   }
 
@@ -50,23 +50,23 @@
     align-items: center;
     padding: 10px;
     font-size: 16px;
-    color: black; 
+    color: black;
   }
 
   .settings-theme-content {
     padding: 20px;
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
-    color: black; 
-    gap: 16px; 
-    position: absolute; 
-    top: 50px; 
-    right: 20px; 
-    z-index: 999; 
-    width: 250px; 
+    color: black;
+    gap: 16px;
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    z-index: 999;
+    width: 250px;
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: white; 
+    background-color: white;
   }
 
   .settings-theme-content button {
@@ -93,11 +93,11 @@
     padding: 10px;
     background-color: #f5f5f5;
     border: none;
-    border-radius: 15px; 
+    border-radius: 15px;
     cursor: pointer;
     text-align: center;
     font-size: 16px;
-    color: black; 
+    color: black;
     transition: background-color 0.3s ease-in-out;
 
     &:hover {
@@ -106,22 +106,22 @@
   }
 
   .MuiDialog-paper {
-    border-radius: 20px; 
-    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6); 
+    border-radius: 20px;
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6);
   }
 }
 
-#settings-button{  
+#settings-button {
   display: flex;
   height: 36px;
   padding: 0;
   justify-content: center;
 
   .dot {
-    width: 6px; 
-    height: 6px; 
-    background-color: black; 
-    border-radius: 50%; 
-    margin: 0 2px; 
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 50%;
+    margin: 0 2px;
   }
 }

@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNode, addNode, removeNode } from '../../../store/slices/nodeSlice';
+import { updateNode, addNode, removeNode, syncNodesToStorage, loadNodesFromStorage } from '../../../store/slices/nodeSlice';
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
-import TextEditor from './text-editor/TextEditor';
+import { TextEditor, TextEditorImperativeHandle } from './text-editor/TextEditor';
+import Divider from './divider/Divider';
+import Todo from './todo/Todo'; 
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
 import { RootState } from '../../../store/index';
@@ -51,6 +53,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
+    dispatch(syncNodesToStorage()); 
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -58,7 +61,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
-  };
+    dispatch(syncNodesToStorage()); 
+  }; 
 
   const handleAddNode = (currentNodeIndex?: string) => {
     const id = Date.now().toString();
@@ -69,6 +73,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       styles: {},
     };
     dispatch(addNode({node: newNode, index: currentNodeIndex}));
+    dispatch(syncNodesToStorage()); 
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -79,6 +84,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
+      dispatch(syncNodesToStorage()); 
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(`node-${previousNodeId}`);
@@ -102,10 +108,11 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
   };
 
   useEffect(() => {
+    dispatch(loadNodesFromStorage());
     if (isNewNode && textEditorRef.current) {
       textEditorRef.current.focus();
     }
-  }, [isNewNode]);
+  }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -227,16 +234,30 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
         {/* Floating element for dropdown */}
       </div>
       <div className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}>
-        <TextEditor
-          inputId={`node-${node.id}`}
-          ref={textEditorRef}
-          content={node.content}
-          styles={node.styles}
-          onContentChange={handleContentChange}
-          onEnterPress={() => {handleAddNode(node.id)}}
-          nodeId={node.id}
-          onDelete={handleDeleteNode} 
-        />
+        {node.type === 'divider' ? (
+          <Divider />
+        ) : node.type === 'todo' ? (
+          <Todo
+            content={node.content as string}
+            checked={node.styles?.strikethrough ?? false}
+            onContentChange={(newContent) => handleContentChange(newContent)}
+            onCheckboxChange={(isChecked) =>
+              dispatch(updateNode({ ...node, styles: { ...node.styles, strikethrough: isChecked } }))
+            }
+          />
+        ) : (
+          <TextEditor
+            inputId={`node-${node.id}`}
+            ref={textEditorRef}
+            content={node.content}
+            styles={node.styles}
+            onContentChange={handleContentChange}
+            onEnterPress={() => {handleAddNode(node.id)}}
+            nodeId={node.id}
+            onDelete={handleDeleteNode}
+            nodeType={node.type}
+          />
+        )}
       </div>
       <div
         ref={setActivatorNodeRef}

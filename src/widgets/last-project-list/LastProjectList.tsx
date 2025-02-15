@@ -17,13 +17,18 @@ const LastProjectList: React.FC = () => {
     const projectData = useSelector((state: RootState) => state.pages.projectData);
     const loading = useSelector((state: RootState) => state.pages.loading);
     const error = useSelector((state: RootState) => state.pages.error);
+    const { cards } = useSelector((state: RootState) => state.pages);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [newProjectName, setNewProjectName] = useState(''); 
 
+    const getCardDataForCards = () => {
+        dispatch(getCardData());
+    };
+
     useEffect(() => {
         dispatch(fetchTreeData());
-        dispatch(getCardData());
+        getCardDataForCards();
     }, [dispatch]);
 
     if (loading) return <div>Loading...</div>;

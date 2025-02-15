@@ -7,7 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -27,11 +27,17 @@ const Editor: React.FC = () => {
   
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = ({
+    active,
+    over,
+  }: {
+    active: { id: UniqueIdentifier };
+    over: { id: UniqueIdentifier } | null;
+  }) => {
     if (over && active.id !== over.id) {
       const oldIndex = nodes.findIndex((node) => node.id === active.id);
       const newIndex = nodes.findIndex((node) => node.id === over.id);
@@ -40,7 +46,7 @@ const Editor: React.FC = () => {
   };
 
   const handleFocusNewNode = (id: string) => {
-    setNewNodeId(id); 
+    setNewNodeId(id);
   };
 
   return (
@@ -51,7 +57,10 @@ const Editor: React.FC = () => {
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
-        <SortableContext items={nodes.map((node) => node.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={nodes.map((node) => node.id)}
+          strategy={verticalListSortingStrategy}
+        >
           {nodes.map((node) => (
             <NodeContainer
               key={node.id}

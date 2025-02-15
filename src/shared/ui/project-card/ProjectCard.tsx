@@ -41,7 +41,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
   const handleRestoreClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onRestore();
-  };
+  }; 
 
   return (
     <Card
