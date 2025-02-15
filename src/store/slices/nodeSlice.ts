@@ -14,12 +14,14 @@ const initialState: nodeState = {
   ],
 };
 
-const getCurrentIndex = (nodes: CustomNode[], id: string) => nodes.findIndex((node) => node.id === id);
+const getCurrentIndex = (nodes: CustomNode[], id: string) =>
+  nodes.findIndex((node) => node.id === id);
 
 const nodeSlice = createSlice({
   name: 'nodes',
   initialState,
   reducers: {
+
     
     clearNodes: (state) => {
       state.nodes = [];
@@ -37,18 +39,21 @@ const nodeSlice = createSlice({
       }
     },
     updateNode: (state, action: PayloadAction<CustomNode>) => {
-      const { id, content, type, styles } = action.payload;
-      const node = state.nodes.find(node => node.id === id);
-      if (node) {
-        node.content = content ?? node.content;
-        node.type = type ?? node.type;
-        node.styles = styles ?? node.styles;
+      const index = state.nodes.findIndex(
+        (node) => node.id === action.payload.id,
+      );
+      if (index !== -1) {
+        state.nodes[index] = action.payload;
+
       }
     },
     removeNode: (state, action: PayloadAction<string>) => {
-      state.nodes = state.nodes.filter(node => node.id !== action.payload);
+      state.nodes = state.nodes.filter((node) => node.id !== action.payload);
     },
-    reorderNodes: (state, action: PayloadAction<{ oldIndex: number; newIndex: number }>) => {
+    reorderNodes: (
+      state,
+      action: PayloadAction<{ oldIndex: number; newIndex: number }>,
+    ) => {
       const { oldIndex, newIndex } = action.payload;
       state.nodes = arrayMove(state.nodes, oldIndex, newIndex);
     },
@@ -66,4 +71,5 @@ const nodeSlice = createSlice({
 });
 
 export const { addNode, updateNode, removeNode, reorderNodes,  syncNodesToStorage, loadNodesFromStorage} = nodeSlice.actions;
+
 export default nodeSlice.reducer;
