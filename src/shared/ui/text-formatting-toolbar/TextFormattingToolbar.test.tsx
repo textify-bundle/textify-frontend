@@ -1,6 +1,7 @@
-import { render, fireEvent } from '@testing-library/react';
+import React, { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import TextFormattingToolbar from './TextFormattingToolbar';
+// import TextFormattingToolbar from './TextFormattingToolbar';
 
 describe('TextFormattingToolbar', () => {
   it('renders without crashing', () => {
@@ -10,10 +11,10 @@ describe('TextFormattingToolbar', () => {
   it('renders all alignment buttons', () => {
     const { getByLabelText } = render(<TextFormattingToolbar />);
 
-    expect(getByLabelText('left aligned')).toBeInTheDocument();
-    expect(getByLabelText('centered')).toBeInTheDocument();
-    expect(getByLabelText('right aligned')).toBeInTheDocument();
-    expect(getByLabelText('justified')).toBeInTheDocument();
+    expect(getByLabelText('left')).toBeInTheDocument();
+    expect(getByLabelText('center')).toBeInTheDocument();
+    expect(getByLabelText('right')).toBeInTheDocument();
+    expect(getByLabelText('justify')).toBeInTheDocument();
   });
 
   it('renders all formatting buttons', () => {
@@ -31,7 +32,7 @@ describe('TextFormattingToolbar', () => {
     const handleLeftAlignClick = vi.fn();
     const { getByLabelText } = render(<TextFormattingToolbar handleLeftAlignClick={handleLeftAlignClick} />);
 
-    fireEvent.click(getByLabelText('left aligned'));
+    fireEvent.click(getByLabelText('left'));
     expect(handleLeftAlignClick).toHaveBeenCalled();
   });
 
@@ -39,7 +40,7 @@ describe('TextFormattingToolbar', () => {
     const handleCenterAlignClick = vi.fn();
     const { getByLabelText } = render(<TextFormattingToolbar handleCenterAlignClick={handleCenterAlignClick} />);
 
-    fireEvent.click(getByLabelText('centered'));
+    fireEvent.click(getByLabelText('center'));
     expect(handleCenterAlignClick).toHaveBeenCalled();
   });
 
@@ -47,7 +48,7 @@ describe('TextFormattingToolbar', () => {
     const handleRightAlignClick = vi.fn();
     const { getByLabelText } = render(<TextFormattingToolbar handleRightAlignClick={handleRightAlignClick} />);
 
-    fireEvent.click(getByLabelText('right aligned'));
+    fireEvent.click(getByLabelText('right'));
     expect(handleRightAlignClick).toHaveBeenCalled();
   });
 
@@ -55,7 +56,7 @@ describe('TextFormattingToolbar', () => {
     const handleJustifyAlignClick = vi.fn();
     const { getByLabelText } = render(<TextFormattingToolbar handleJustifyAlignClick={handleJustifyAlignClick} />);
 
-    fireEvent.click(getByLabelText('justified'));
+    fireEvent.click(getByLabelText('justify'));
     expect(handleJustifyAlignClick).toHaveBeenCalled();
   });
 
