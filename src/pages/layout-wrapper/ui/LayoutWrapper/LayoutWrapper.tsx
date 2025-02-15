@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PagesTree from '../../../../shared/ui/pages-tree/PagesTree';
 import ActionBar from '../../../../widgets/header/action-bar/ActionBar';
+import NewSearch from '../../../../shared/ui/search-bar/SearchBar';
 import store, { RootState } from '../../../../store';
 import Editor from '../../../../widgets/editor/Editor';
 import { useSelector } from 'react-redux';
 import { MainPage } from '../../../main-page';
 import { TrashBin } from '../../../trash-bin';
 import { ILayoutWrapperProps } from './ts';
-import React from 'react';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const { backgroundColor, fontSize, fontFamily, textColor, barColor } =
     useSelector((state: RootState) => state.settings);
-
+  const { tree } = useSelector((state: RootState) => state.pages);
   const users = [
     { id: '1', name: 'weg' },
     { id: '2', name: 'qwOleg' },
     { id: '3', name: 'Oleg' },
   ];
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setIsSidebarVisible((prev) => !prev);
@@ -44,6 +46,26 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   };
 
   const LayoutComponent = layoutMap[layout] || null;
+
+  // Получение имени текущего проекта
+  const getCurrentProjectName = (): string => {
+    const currentPageId = new URLSearchParams(location.search).get('page');
+    for (const project of tree) {
+      if (project.items) {
+        const page = project.items.find((item) => item.id?.toString() === currentPageId);
+        if (page) {
+          return project.name;
+        }
+      }
+    }
+    return 'Unknown Project';
+  };
+
+  const [currentProjectName, setCurrentProjectName] = useState(getCurrentProjectName());
+
+  useEffect(() => {
+    setCurrentProjectName(getCurrentProjectName());
+  }, [location]);
 
   return (
     <div style={{ display: 'flex', background: 'var(--background-color)' }}>
@@ -78,7 +100,9 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
 
           {store.getState().auth.user?.email || 'example@mail.ru'}
         </div>
-        <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}></div>
+        <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}>
+          <NewSearch />
+        </div>
         <PagesTree />
         <div
           style={{
@@ -130,7 +154,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
             style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
           >
             <h1>
-              Project Title
+              {currentProjectName}
               <hr />
             </h1>
             <Editor />
