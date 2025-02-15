@@ -133,13 +133,13 @@ export function validateText(text: string): boolean {
  * @param {any} error - The error object.
  * @returns {Error} A structured error object.
  */
-export function handleSpellerError(error: any): Error {
+export function handleSpellerError(error: unknown): Error {
   console.error('Speller service error:', error);
 
   const structuredError = new Error('Speller service error');
   structuredError.name = 'SpellerServiceError';
-  structuredError.message = error.message || 'An error occurred while checking the text.';
-  structuredError.stack = error.stack || '';
+  structuredError.message = (error as Error).message || 'An error occurred while checking the text.';
+  structuredError.stack = (error as Error).stack || ''
 
   return structuredError;
 }
