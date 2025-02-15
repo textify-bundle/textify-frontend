@@ -1,21 +1,21 @@
-import { FC, MouseEvent } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Card, CardActionArea, CardContent, CardMedia, Button } from '@mui/material';
-import './index.scss';
+import './ProjectCard.scss';
 
 interface ProjectCardProps {
   isRemoved?: boolean;
   imageUrl: string;
-  lastEntryTime?: string | number;
+  lastEntryTime?: Date;
   projectName?: string;
   onRestore?: () => void;
   onClick?: () => void;
 }
 
 
-const timeFromDate = (date: string | number): string => {
-  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ru });
+const timeFromDate = (date: Date): string => {
+  return formatDistanceToNow(date, { addSuffix: true, locale: ru });
 };
 
 /**
@@ -33,7 +33,7 @@ const timeFromDate = (date: string | number): string => {
 const ProjectCard: FC<ProjectCardProps> = ({
   isRemoved = false,
   imageUrl = 'default-placeholder.jpg',
-  lastEntryTime = Date.now(),
+  lastEntryTime = new Date(),
   projectName = 'Unknown Project',
   onRestore = () => {},
   onClick = () => {},
@@ -41,7 +41,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
   const handleRestoreClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onRestore();
-  };
+  }; 
 
   return (
     <Card
