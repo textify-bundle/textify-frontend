@@ -41,11 +41,8 @@ export const getPages = async (): Promise<Page[]> => {
   return data || [];
 };
 
-
 export const getProjectsForCards = async (): Promise<Project[]> => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*');
+  const { data, error } = await supabase.from('projects').select('*');
 
   if (error) {
     throw new Error(error.message);
@@ -53,12 +50,10 @@ export const getProjectsForCards = async (): Promise<Project[]> => {
   return data || [];
 };
 
-
 export const getUserEmail = async (): Promise<string | null> => {
   const { data: userData } = await supabase.auth.getUser();
   return userData?.user?.email || null;
 };
-
 
 export const restoreProject = async (projectId: number): Promise<void> => {
   const { error } = await supabase
@@ -70,7 +65,6 @@ export const restoreProject = async (projectId: number): Promise<void> => {
     throw new Error(error.message);
   }
 };
-
 
 export const createProjectAndPage = async (
   projectName: string,
@@ -146,5 +140,27 @@ export const deletePage = async (pageId: number): Promise<void> => {
 
   if (error) {
     throw new Error(`Ошибка при обновлении страницы: ${error.message}`);
+  }
+};
+
+export const deleteProject = async (projectId: number): Promise<void> => {
+  const { error: relatedError } = await supabase
+    .from('notes')
+    .update({ isRemoved: true })
+    .eq('project_id', projectId);
+
+  if (relatedError) {
+    throw new Error(
+      `Ошибка при удалении связанных страниц: ${relatedError.message}`,
+    );
+  }
+
+  const { error: projectError } = await supabase
+    .from('projects')
+    .update({ isRemoved: true })
+    .eq('id', projectId);
+
+  if (projectError) {
+    throw new Error(`Ошибка при удалении проекта: ${projectError.message}`);
   }
 };
