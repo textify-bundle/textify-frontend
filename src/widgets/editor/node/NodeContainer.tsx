@@ -100,7 +100,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     if (isNewNode && textEditorRef.current) {
       textEditorRef.current.focus();
     }
-  }, [isNewNode]);
+  }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
