@@ -71,7 +71,9 @@ export const restoreProject = async (projectId: number): Promise<void> => {
 };
 
 
-export const createProjectAndPage = async (projectName: string): Promise<{ project: Project; page: Page }> => {
+export const createProjectAndPage = async (
+  projectName: string,
+): Promise<{ project: Project; page: Page }> => {
   const userEmail = await getUserEmail();
   if (!userEmail) {
     throw new Error('Пользователь не авторизован');
