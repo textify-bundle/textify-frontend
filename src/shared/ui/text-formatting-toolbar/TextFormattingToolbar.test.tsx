@@ -1,8 +1,10 @@
-import React,{ render, screen, fireEvent } from '@testing-library/react';
-import TextFormattingToolbar from './TextFormattingToolbar'; 
-import { vi } from 'vitest';
-import '@testing-library/jest-dom'; 
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import TextFormattingToolbar from './TextFormattingToolbar'; // Adjust the import path if necessary
+import { vi } from 'vitest'; // Vitest's mocking utility
+import '@testing-library/jest-dom'; // For extended matchers like .toBeInTheDocument()
 
+// Mock functions for all handlers
 const mockLeftAlignClick = vi.fn();
 const mockCenterAlignClick = vi.fn();
 const mockRightAlignClick = vi.fn();
@@ -16,6 +18,7 @@ const mockSizeClick = vi.fn();
 
 describe('TextFormattingToolbar', () => {
   beforeEach(() => {
+    // Clear all mock function calls before each test
     vi.clearAllMocks();
   });
 
@@ -35,18 +38,17 @@ describe('TextFormattingToolbar', () => {
       />
     );
 
-    expect(screen.getByLabelText('text alignment')).toBeInTheDocument();
-    expect(screen.getByLabelText('text formatting')).toBeInTheDocument();
-    expect(screen.getByText('Left Align')).toBeInTheDocument();
-    expect(screen.getByText('Center Align')).toBeInTheDocument();
-    expect(screen.getByText('Right Align')).toBeInTheDocument();
-    expect(screen.getByText('Justify Align')).toBeInTheDocument();
-    expect(screen.getByText('Bold')).toBeInTheDocument();
-    expect(screen.getByText('Italic')).toBeInTheDocument();
-    expect(screen.getByText('Underlined')).toBeInTheDocument();
-    expect(screen.getByText('Strikethrough')).toBeInTheDocument();
-    expect(screen.getByText('List')).toBeInTheDocument();
-    expect(screen.getByText('Size')).toBeInTheDocument();
+    // Check if all buttons are rendered by their aria-label
+    expect(screen.getByLabelText('left-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('center-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('right-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('justify-align')).toBeInTheDocument();
+    expect(screen.getByLabelText('bold')).toBeInTheDocument();
+    expect(screen.getByLabelText('italic')).toBeInTheDocument();
+    expect(screen.getByLabelText('underlined')).toBeInTheDocument();
+    expect(screen.getByLabelText('strikethrough')).toBeInTheDocument();
+    expect(screen.getByLabelText('list')).toBeInTheDocument();
+    expect(screen.getByLabelText('size')).toBeInTheDocument();
   });
 
   test('clicking alignment buttons triggers the correct handler', () => {
@@ -65,6 +67,7 @@ describe('TextFormattingToolbar', () => {
       />
     );
 
+    // Simulate button clicks using aria-label for alignment buttons
     fireEvent.click(screen.getByLabelText('left-align'));
     expect(mockLeftAlignClick).toHaveBeenCalled();
 
@@ -94,6 +97,7 @@ describe('TextFormattingToolbar', () => {
       />
     );
 
+    // Simulate button clicks using aria-label for text formatting buttons
     fireEvent.click(screen.getByLabelText('bold'));
     expect(mockBoldClick).toHaveBeenCalled();
 

@@ -25,12 +25,11 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
       border: 0,
     },
   },
-  [`& .${toggleButtonGroupClasses.middleButton},& .${toggleButtonGroupClasses.lastButton}`]: {
+  [`& .${toggleButtonGroupClasses.middleButton}, & .${toggleButtonGroupClasses.lastButton}`]: {
     marginLeft: -1,
     borderLeft: '1px solid transparent',
   },
 }));
-
 
 type TextFormattingToolbarProps = {
   handleLeftAlignClick?: () => void;
@@ -41,7 +40,7 @@ type TextFormattingToolbarProps = {
   handleStrikethroughClick?: () => void;
   handleUnderlinedClick?: () => void;
   handleItalicClick?: () => void;
-  handleSizeClick?: (event: React.MouseEvent<HTMLElement>) => void; 
+  handleSizeClick?: (event: React.MouseEvent<HTMLElement>) => void;
   handleListClick?: () => void;
 };
 
@@ -59,38 +58,48 @@ const TextFormattingToolbar: React.FC<TextFormattingToolbarProps> = ({
 }) => {
   return (
     <div>
-      <Paper sx={{ display: 'flex', border: '1px solid #e0e0e0', flexWrap: 'wrap', width: '362px', height: '25px', borderRadius: '9px' }}>
+      <Paper
+        sx={{
+          display: 'flex',
+          border: '1px solid #e0e0e0',
+          flexWrap: 'wrap',
+          width: '362px',
+          height: '25px',
+          borderRadius: '9px',
+        }}
+      >
         <StyledToggleButtonGroup size="small" aria-label="text alignment">
-        <ToggleButton value="left" onClick={handleLeftAlignClick}>
-          <FormatAlignLeftIcon />
+          <ToggleButton value="left" onClick={handleLeftAlignClick} aria-label="left-align">
+            <FormatAlignLeftIcon />
           </ToggleButton>
-          <ToggleButton value="center" onClick={handleCenterAlignClick}>
+          <ToggleButton value="center" onClick={handleCenterAlignClick} aria-label="center-align">
             <FormatAlignCenterIcon />
           </ToggleButton>
-          <ToggleButton value="right" onClick={handleRightAlignClick}>
+          <ToggleButton value="right" onClick={handleRightAlignClick} aria-label="right-align">
             <FormatAlignRightIcon />
           </ToggleButton>
-          <ToggleButton value="justify" onClick={handleJustifyAlignClick}>
+          <ToggleButton value="justify" onClick={handleJustifyAlignClick} aria-label="justify-align">
             <FormatAlignJustifyIcon />
           </ToggleButton>
         </StyledToggleButtonGroup>
+
         <StyledToggleButtonGroup size="small" aria-label="text formatting">
-          <ToggleButton value="bold" onClick={handleBoldClick}>
+          <ToggleButton value="bold" onClick={handleBoldClick} aria-label="bold">
             <FormatBoldIcon />
           </ToggleButton>
-          <ToggleButton value="italic" onClick={handleItalicClick}>
+          <ToggleButton value="italic" onClick={handleItalicClick} aria-label="italic">
             <FormatItalicIcon />
           </ToggleButton>
-          <ToggleButton value="underlined" onClick={handleUnderlinedClick}>
+          <ToggleButton value="underlined" onClick={handleUnderlinedClick} aria-label="underlined">
             <FormatUnderlinedIcon />
           </ToggleButton>
-          <ToggleButton value="strikethrough" onClick={handleStrikethroughClick}>
+          <ToggleButton value="strikethrough" onClick={handleStrikethroughClick} aria-label="strikethrough">
             <FormatStrikethroughIcon />
           </ToggleButton>
-          <ToggleButton value="list" onClick={handleListClick}>
+          <ToggleButton value="list" onClick={handleListClick} aria-label="list">
             <FormatListBulletedIcon />
           </ToggleButton>
-          <ToggleButton value="size" onClick={handleSizeClick}>
+          <ToggleButton value="size" onClick={handleSizeClick} aria-label="size">
             <FormatSizeIcon />
           </ToggleButton>
         </StyledToggleButtonGroup>
