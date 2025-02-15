@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateNode, addNode, removeNode } from '../../../store/slices/nodeSlice';
 import { CustomNode, NodeType } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
-import TextEditor from './text-editor/TextEditor';
+import TextEditor, { TextEditorImperativeHandle } from './text-editor/TextEditor';
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react';
 import { SelectChangeEvent } from '@mui/material';
 import { RootState } from '../../../store/index';
@@ -36,7 +36,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
-  const textEditorRef = useRef<HTMLTextAreaElement>(null);
+  const textEditorRef = useRef<TextEditorImperativeHandle>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),

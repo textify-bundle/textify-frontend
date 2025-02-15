@@ -10,11 +10,7 @@ interface TextEditorProps {
   onEnterPress: () => void;
   inputId?: string;
   onDelete?: () => void;
-}
-
-interface TextEditorImperativeHandle {
-  insertTextAtCursor: (textToInsert: string) => void;
-  getCursorPosition: () => number | null;
+  nodeId?: string;
 }
 
 const TextEditor = forwardRef<HTMLTextAreaElement, TextEditorProps>(
