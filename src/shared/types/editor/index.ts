@@ -1,1 +1,1 @@
-export type { Node, NodeStyles } from './node';
+export type { CustomNode, NodeStyles } from './node';
