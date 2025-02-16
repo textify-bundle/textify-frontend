@@ -180,10 +180,6 @@ const pagesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getCardData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.projectData = action.payload.projectData;
-      })
       .addCase(getCardData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка при загрузке данных';
