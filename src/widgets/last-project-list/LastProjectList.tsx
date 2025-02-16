@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardDataForCards } from '../../store/slices/pagesSlice';
+import {
+  createNewProjectAndPage,
+  fetchTreeData,
+  getCardDataForCards,
+} from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import LastProjectCard from '../../shared/ui/last-project-card/LastProjectCard';
 import {
@@ -11,14 +15,16 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const LastProjectList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const projectData = useSelector((state: RootState) => state.pages.projectData);
-  const tree = useSelector((state: RootState) => state.pages.tree); 
+  const projectData = useSelector(
+    (state: RootState) => state.pages.projectData,
+  );
   const loading = useSelector((state: RootState) => state.pages.loading);
   const error = useSelector((state: RootState) => state.pages.error);
-
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
 
@@ -30,12 +36,12 @@ const LastProjectList: React.FC = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const activeProjects = projectData.filter(project => !project.isRemoved);
+  const activeProjects = projectData.filter((project) => !project.isRemoved);
 
   const AnyDaysAgo = new Date();
   AnyDaysAgo.setDate(AnyDaysAgo.getDate() - 10);
 
-  const filteredProjectData = activeProjects.filter(project => {
+  const filteredProjectData = activeProjects.filter((project) => {
     if (!project.dateOfChange) return false;
     const lastEntryTime = new Date(project.dateOfChange);
     return lastEntryTime >= AnyDaysAgo;
@@ -43,17 +49,12 @@ const LastProjectList: React.FC = () => {
 
   const newProjectButton = {
     imageUrl: 'https://cdn-icons-png.flaticon.com/512/12334/12334977.png',
-    title: 'Новый проект'
+    title: 'Новый проект',
   };
 
   const getImageUrl = (index: number) => {
-    const id = (index * 71287328173) % 10 + 1;
+    const id = ((index * 71287328173) % 10) + 1;
     return `/patterns/${id}.webp`;
-  };
-
-  const getFirstPageId = (projectId: number): number | undefined => {
-    const project = tree.find((item) => item.id === projectId);
-    return project?.items?.[0]?.id;
   };
 
   const openDialog = () => {
@@ -65,9 +66,20 @@ const LastProjectList: React.FC = () => {
     setNewProjectName('');
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     if (newProjectName.trim()) {
-      // Логика создания проекта
+      try {
+        const result = await dispatch(
+          createNewProjectAndPage(newProjectName),
+        ).unwrap();
+        setNewProjectName('');
+        navigate(`/${result.project.id}?page=${result.page.id}`);
+      } catch (error) {
+        console.error('Не удалось создать новый проект:', error);
+        alert(
+          `Ошибка при создании проекта: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`,
+        );
+      }
       closeDialog();
     } else {
       alert('Пожалуйста, введите имя проекта');
@@ -75,14 +87,20 @@ const LastProjectList: React.FC = () => {
   };
 
   return (
-    <div style={{ width: '847px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '40.82px' }}>
+    <div
+      style={{
+        width: '847px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        gap: '40.82px',
+      }}
+    >
       {filteredProjectData.map((project, index) => (
         <LastProjectCard
           key={index}
           title={project.name}
           imageUrl={getImageUrl(index)}
-          projectId={project.id}
-          firstPageId={getFirstPageId(project.id)} // Передаем ID первой страницы
         />
       ))}
       <LastProjectCard
