@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect, useRef } from 'react';
+import React, { forwardRef, useState, useEffect, useRef, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useFloating, flip, shift, autoUpdate, offset } from '@floating-ui/react';
@@ -146,7 +146,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
     setAnchorEl(null); 
   };
 
-  const handleSelectionChange = () => {
+  const handleSelectionChange = useCallback(() => {
     const quill = quillRef.current?.getEditor();
     if (quill) {
       const selection = quill.getSelection();
@@ -170,7 +170,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
         setIsToolbarVisible(false);
       }
     }
-  };
+  }, [update]);
 
   const toggleSizeMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget); 
@@ -217,8 +217,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
             handleStrikethroughClick={handleStrikethrough}
             handleUnderlinedClick={handleUnderlined}
             handleListClick={handleList}
-            handleSizeClick={toggleSizeMenu} 
-
+            handleSizeClick={() => toggleSizeMenu}
           />
         </div>
       )}

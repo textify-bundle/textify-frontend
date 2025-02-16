@@ -341,7 +341,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
         ) : (
           <TextEditor
             inputId={`node-${node.id}`}
-            ref={textEditorRef}
+            // ref={textEditorRef}
             content={node.content}
             styles={node.styles}
             onContentChange={handleContentChange}
