@@ -8,6 +8,7 @@ import { MainPage } from '../../../main-page';
 import { TrashBin } from '../../../trash-bin';
 import { ILayoutWrapperProps } from './ts';
 import { updatePageTitle } from '../../../../store/slices/pagesSlice';
+import './LayoutWrapper.scss';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -162,20 +163,28 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
           <div
             style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
           >
-            {isEditingTitle ? (
-              <input
-                type="text"
-                value={pageTitle}
-                onChange={(e) => setPageTitle(e.target.value)}
-                onBlur={handleTitleBlur}
-                autoFocus
-              />
-            ) : (
-              <h1 onClick={handleTitleClick}>
-                {pageTitle}
-                <hr />
-              </h1>
-            )}
+            <div className="title-container">
+              {isEditingTitle ? (
+                <input
+                  type="text"
+                  value={pageTitle}
+                  onChange={(e) => setPageTitle(e.target.value)}
+                  onBlur={handleTitleBlur}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleTitleBlur();
+                    }
+                  }}
+                  autoFocus
+                  className="title-input"
+                />
+              ) : (
+                <h1 onClick={handleTitleClick} className="title-display">
+                  {pageTitle}
+                </h1>
+              )}
+              <hr className="title-hr" />
+            </div>
             <Editor />
           </div>
         )}
