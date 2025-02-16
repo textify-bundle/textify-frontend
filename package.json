@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.13.0",
     "@floating-ui/react": "^0.27.4",
     "@mui/base": "^5.0.0-beta.61",
+    "react-resizable": "^3.0.4",
     "@mui/icons-material": "^6.1.8",
     "@reduxjs/toolkit": "^2.3.0",
     "@sentry/react": "^8.39.0",
