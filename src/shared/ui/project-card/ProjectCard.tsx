@@ -12,6 +12,7 @@ interface ProjectCardProps {
   projectName?: string;
   projectId: number;
   onRestore?: () => void;
+  firstPageId?: number; 
 }
 
 const timeFromDate = (date: Date): string => {
@@ -25,6 +26,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
   projectName = 'Unknown Project',
   projectId,
   onRestore = () => {},
+  firstPageId, 
 }) => {
   const navigate = useNavigate();
 
@@ -34,15 +36,15 @@ const ProjectCard: FC<ProjectCardProps> = ({
   };
 
   const handleCardClick = () => {
-    if (!isRemoved) {
-      navigate(`/${projectId}`);
+    if (!isRemoved && firstPageId) {
+      navigate(`/${projectId}?page=${firstPageId}`);
     }
   };
 
   return (
     <Card
       className="project-card"
-      sx={{ boxShadow: '0px 0px 19px rgba(0, 0, 0, 0.17)'}}
+      sx={{ boxShadow: '0px 0px 19px rgba(0, 0, 0, 0.17)' }}
       onClick={handleCardClick}
     >
       {isRemoved && (

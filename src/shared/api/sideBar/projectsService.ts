@@ -93,15 +93,15 @@ export const createProjectAndPage = async (
   }
 
   const { data: page, error: pageError } = await supabase
-    .from('notes')
-    .insert({
-      project_id: project.id,
-      title: 'Без названия',
-      markup_json: '{}',
-      isRemoved: false,
-    })
-    .select()
-    .single();
+  .from('notes')
+  .insert({
+    project_id: project.id,
+    title: 'Без названия', // Стартовое название
+    markup_json: '{}',
+    isRemoved: false,
+  })
+  .select()
+  .single();
 
   if (pageError) {
     throw new Error(`Ошибка при создании страницы: ${pageError.message}`);

@@ -6,7 +6,8 @@ import './LastProjectCard.scss';
 interface LastProjectCardProps {
   title: string;
   imageUrl?: string;
-  projectId?: number; // Make projectId optional
+  projectId?: number;
+  firstPageId?: number; 
   onClick?: () => void;
 }
 
@@ -14,13 +15,14 @@ const LastProjectCard: FC<LastProjectCardProps> = ({
   title,
   imageUrl,
   projectId,
+  firstPageId, 
   onClick = () => {},
 }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (projectId !== undefined) {
-      navigate(`/${projectId}`);
+    if (projectId !== undefined && firstPageId !== undefined) {
+      navigate(`/${projectId}?page=${firstPageId}`);
     } else {
       onClick();
     }
@@ -37,7 +39,7 @@ const LastProjectCard: FC<LastProjectCardProps> = ({
           image={imageUrl}
           alt={title}
         />
-        <CardContent sx={{padding: '3px 0px 0px 0px',}} className="last-project-card__content">
+        <CardContent sx={{ padding: '3px 0px 0px 0px' }} className="last-project-card__content">
           <div>{title}</div>
         </CardContent>
       </CardActionArea>

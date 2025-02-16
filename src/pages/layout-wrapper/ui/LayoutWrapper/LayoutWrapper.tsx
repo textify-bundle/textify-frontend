@@ -79,6 +79,28 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     }
   }, [tree]);
 
+  useEffect(() => {
+    const updateTitleFromURL = () => {
+      const pageId = new URLSearchParams(window.location.search).get('page');
+      const currentPage = tree
+        .flatMap(project => project.items || [])
+        .find(page => page.id?.toString() === pageId);
+  
+      if (currentPage) {
+        setPageTitle(currentPage.name);
+        setCurrentPageId(Number(pageId));
+      } else if (layout === 'project') {
+        setPageTitle('Новая страница');
+      }
+    };
+  
+    window.addEventListener('popstate', updateTitleFromURL);
+    updateTitleFromURL();
+  
+    return () => window.removeEventListener('popstate', updateTitleFromURL);
+  }, [tree, layout]);
+
+
   return (
     <div style={{ display: 'flex', background: 'var(--background-color)' }}>
       <div

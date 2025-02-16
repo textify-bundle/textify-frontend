@@ -15,6 +15,7 @@ import {
 const LastProjectList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const projectData = useSelector((state: RootState) => state.pages.projectData);
+  const tree = useSelector((state: RootState) => state.pages.tree); 
   const loading = useSelector((state: RootState) => state.pages.loading);
   const error = useSelector((state: RootState) => state.pages.error);
 
@@ -50,6 +51,11 @@ const LastProjectList: React.FC = () => {
     return `/patterns/${id}.webp`;
   };
 
+  const getFirstPageId = (projectId: number): number | undefined => {
+    const project = tree.find((item) => item.id === projectId);
+    return project?.items?.[0]?.id;
+  };
+
   const openDialog = () => {
     setIsDialogOpen(true);
   };
@@ -61,8 +67,7 @@ const LastProjectList: React.FC = () => {
 
   const handleCreateProject = () => {
     if (newProjectName.trim()) {
-      // Здесь надо реализоват логику создания проекта, Игорь занимается для кнопки
-      //  Создать проект (newProjectName - переменная для хранения имени нового проекта)
+      // Логика создания проекта
       closeDialog();
     } else {
       alert('Пожалуйста, введите имя проекта');
@@ -77,6 +82,7 @@ const LastProjectList: React.FC = () => {
           title={project.name}
           imageUrl={getImageUrl(index)}
           projectId={project.id}
+          firstPageId={getFirstPageId(project.id)} // Передаем ID первой страницы
         />
       ))}
       <LastProjectCard

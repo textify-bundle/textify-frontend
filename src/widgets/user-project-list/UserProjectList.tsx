@@ -11,6 +11,7 @@ interface UserProjectListProps {
 const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }) => {
   const dispatch = useDispatch<AppDispatch>();
   const projectData = useSelector((state: RootState) => state.pages.projectData);
+  const tree = useSelector((state: RootState) => state.pages.tree); 
   const error = useSelector((state: RootState) => state.pages.error);
 
   useEffect(() => {
@@ -32,6 +33,11 @@ const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }
   const getImageUrl = (index: number) => {
     const id = (index * 71287328173) % 10 + 1;
     return `/patterns/${id}.webp`;
+  };
+
+  const getFirstPageId = (projectId: number): number | undefined => {
+    const project = tree.find((item) => item.id === projectId);
+    return project?.items?.[0]?.id || undefined;
   };
 
   return (
@@ -57,6 +63,7 @@ const UserProjectList: React.FC<UserProjectListProps> = ({ onProjectsAvailable }
             lastEntryTime={new Date(project.dateOfChange)}
             projectName={project.name}
             projectId={project.id}
+            firstPageId={getFirstPageId(project.id)}
           />
         ))}
       </div>
