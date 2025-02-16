@@ -1,6 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages, createProjectAndPage, createPage, deletePage, getProjectsForCards, restoreProject as restoreProjectApi } from '../../shared/api/sideBar/projectsService';
-import { RootState } from '../index';  
+import {
+  getProjects,
+  getPages,
+  createProjectAndPage,
+  createPage,
+  deletePage,
+  getProjectsForCards,
+  restoreProject as restoreProjectApi,
+  updatePageTitle as updatePageTitleApi,
+} from '../../shared/api/sideBar/projectsService';
+import { RootState } from '../index';
 
 interface Project {
   id: number;
@@ -33,9 +42,8 @@ interface PagesState {
   tree: TreeItem[];
   loading: boolean;
   error: string | null;
-  projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean | undefined }[];
+  projectData: { id: number; name: string; dateOfChange: string; isRemoved?: boolean }[];
 }
-
 
 const initialState: PagesState = {
   tree: [],
@@ -56,7 +64,7 @@ export const fetchTreeData = createAsyncThunk<
 
 export const getCardData = createAsyncThunk<
   {
-    projectData: { name: string; dateOfChange: string; isRemoved?: boolean }[];
+    projectData: { id: number; name: string; dateOfChange: string; isRemoved?: boolean }[];
   },
   void,
   { state: RootState }
@@ -64,6 +72,7 @@ export const getCardData = createAsyncThunk<
   const projectsData = await getProjects();
 
   const projectData = projectsData.map((project: Project) => ({
+    id: project.id,
     name: project.project_name,
     dateOfChange: project.date_of_change,
     isRemoved: project.isRemoved,
@@ -91,7 +100,6 @@ export const getCardDataForCards = createAsyncThunk<
     return { projectData };
   }
 );
-
 
 export const restoreProject = createAsyncThunk<
   void,
@@ -129,6 +137,14 @@ export const removePageFromTree = createAsyncThunk<
 >('pages/removePageFromTree', async (pageId) => {
   await deletePage(pageId);
   return pageId;
+});
+
+export const updatePageTitle = createAsyncThunk<
+  void,
+  { pageId: number; title: string },
+  { state: RootState }
+>('pages/updatePageTitle', async ({ pageId, title }) => {
+  await updatePageTitleApi(pageId, title);
 });
 
 const pagesSlice = createSlice({
@@ -238,9 +254,9 @@ const pagesSlice = createSlice({
             },
           ],
         };
-      
+
         state.tree.push(newTreeItem);
-      
+
         state.projectData.push({
           id: project.id,
           name: project.project_name,
@@ -288,8 +304,19 @@ const pagesSlice = createSlice({
       .addCase(removePageFromTree.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка при удалении страницы';
+      })
+      .addCase(updatePageTitle.fulfilled, (state, action) => {
+        state.loading = false;
+        const { pageId, title } = action.meta.arg;
+        state.tree = state.tree.map((project) => {
+          if (project.items) {
+            project.items = project.items.map((page) =>
+              page.id === pageId ? { ...page, name: title } : page
+            );
+          }
+          return project;
+        });
       });
-      
   },
 });
 
