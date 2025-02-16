@@ -19,7 +19,6 @@ import TextEditor from './text-editor/TextEditor';
 import Table from './table/Table';
 import Divider from './divider/Divider';
 import Todo from './todo/Todo';
-import ReactQuill from 'react-quill';
 import {
   useFloating,
   offset,

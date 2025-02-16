@@ -170,7 +170,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
         setIsToolbarVisible(false);
       }
     }
-  }, [update]);
+  },[refs, update]);
 
   const toggleSizeMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget); 
