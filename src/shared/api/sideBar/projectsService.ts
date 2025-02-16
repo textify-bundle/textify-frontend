@@ -1,3 +1,4 @@
+import { initialState } from '../../../store/slices/nodeSlice';
 import { supabase } from '../../../utils/client';
 
 interface Project {
@@ -119,7 +120,7 @@ export const createPage = async (
     .insert({
       project_id: projectId,
       title: title,
-      markup_json: '{}',
+      markup_json: JSON.stringify(initialState.nodes),
       isRemoved: false,
     })
     .select()
