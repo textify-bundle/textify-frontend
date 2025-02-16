@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProjects, getPages, createProjectAndPage, createPage, deletePage, getProjectsForCards, restoreProject as restoreProjectApi } from '../../shared/api/sideBar/projectsService';
-import { RootState } from '../index';  
+import {
+  getProjects,
+  getPages,
+  createProjectAndPage,
+  createPage,
+  deletePage,
+  getProjectsForCards,
+  restoreProject as restoreProjectApi
+} from '../../shared/api/sideBar/projectsService';
+import { RootState } from '../index';
 
 interface Project {
   id: number;
@@ -33,9 +41,8 @@ interface PagesState {
   tree: TreeItem[];
   loading: boolean;
   error: string | null;
-  projectData: { id: number; name: string; dateOfChange: string; isRemoved: boolean | undefined }[];
+  projectData: { id: number; name: string; dateOfChange: string; isRemoved?: boolean }[];
 }
-
 
 const initialState: PagesState = {
   tree: [],
@@ -56,7 +63,7 @@ export const fetchTreeData = createAsyncThunk<
 
 export const getCardData = createAsyncThunk<
   {
-    projectData: { name: string; dateOfChange: string; isRemoved?: boolean }[];
+    projectData: { id: number; name: string; dateOfChange: string; isRemoved?: boolean }[];
   },
   void,
   { state: RootState }
@@ -64,6 +71,7 @@ export const getCardData = createAsyncThunk<
   const projectsData = await getProjects();
 
   const projectData = projectsData.map((project: Project) => ({
+    id: project.id,
     name: project.project_name,
     dateOfChange: project.date_of_change,
     isRemoved: project.isRemoved,
@@ -91,7 +99,6 @@ export const getCardDataForCards = createAsyncThunk<
     return { projectData };
   }
 );
-
 
 export const restoreProject = createAsyncThunk<
   void,
@@ -238,9 +245,9 @@ const pagesSlice = createSlice({
             },
           ],
         };
-      
+
         state.tree.push(newTreeItem);
-      
+
         state.projectData.push({
           id: project.id,
           name: project.project_name,
@@ -289,7 +296,6 @@ const pagesSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Ошибка при удалении страницы';
       });
-      
   },
 });
 
