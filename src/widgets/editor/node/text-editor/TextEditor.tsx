@@ -18,13 +18,13 @@ interface TextEditorProps {
   nodeType?: string;
 }
 
-const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
-  { content, styles, inputId, onContentChange, onEnterPress, onDelete }
-) => {
+const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
+  content, styles, inputId, onContentChange, onEnterPress, onDelete
+}) => {
   const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
   const [isToolbarVisible, setIsToolbarVisible] = useState<boolean>(false);
-  const [ , setSelectedSize] = useState<string>('normal');
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); 
+  const [, setSelectedSize] = useState<string>('normal');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const quillRef = useRef<ReactQuill | null>(null);
   const { x, y, refs, update } = useFloating({
     placement: 'left',
@@ -36,8 +36,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
     whileElementsMounted: autoUpdate,
   });
 
-
-  const sizes = ['small', 'normal', 'large', 'huge'];
+  const sizes = ['small', 'large', 'huge'];
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -84,7 +83,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
     const quill = quillRef.current?.getEditor();
     if (quill) {
       quill.root.classList.remove('justify');
-      quill.format('align', 'justify');
+      quill.format('align', 'left');
     }
   };
 
@@ -143,7 +142,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
         quill.format('size', size);
       }
     }
-    setAnchorEl(null); 
+    setAnchorEl(null); // Close the menu after selecting a size
   };
 
   const handleSelectionChange = useCallback(() => {
@@ -170,30 +169,28 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
         setIsToolbarVisible(false);
       }
     }
-  },[refs, update]);
+  }, [refs, update]);
 
   const toggleSizeMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget); 
-  };
+    setAnchorEl(event.currentTarget);
+  };  
 
   useEffect(() => {
     const quill = quillRef.current?.getEditor();
-    
+
     if (quill) {
       quill.on('selection-change', handleSelectionChange);
     }
-      return () => {
+    return () => {
       if (quill) {
         quill.off('selection-change', handleSelectionChange);
       }
     };
   }, [handleSelectionChange]);
-  
 
   useEffect(() => {
     setValue(typeof content === 'string' ? content : '');
   }, [content]);
-
 
   return (
     <div className="text-editor" style={styles}>
@@ -217,14 +214,14 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>((
             handleStrikethroughClick={handleStrikethrough}
             handleUnderlinedClick={handleUnderlined}
             handleListClick={handleList}
-            handleSizeClick={() => toggleSizeMenu}
+            handleSizeClick={toggleSizeMenu} 
           />
         </div>
       )}
 
       <Menu
-        anchorEl={anchorEl} 
-        open={Boolean(anchorEl)} 
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
       >
         {sizes.map((size) => (
