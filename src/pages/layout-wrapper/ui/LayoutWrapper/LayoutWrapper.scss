@@ -1,0 +1,29 @@
+.title-container {
+    margin-bottom: 20px;
+  }
+  
+  .title-display,
+  .title-input {
+    font-size: 2em;
+    font-weight: bold;
+    font-family: inherit;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+  }
+  
+  .title-display {
+    cursor: text;
+  }
+  
+  .title-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    color: inherit;
+  }
+  
+  .title-hr {
+    margin-top: 10px;
+  }
