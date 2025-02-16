@@ -7,6 +7,7 @@ import {
   addNode,
   removeNode,
 } from '../../../store/slices/nodeSlice';
+
 import {
   CustomNode,
   MediaContent,
@@ -18,6 +19,7 @@ import TextEditor from './text-editor/TextEditor';
 import Table from './table/Table';
 import Divider from './divider/Divider';
 import Todo from './todo/Todo';
+import ReactQuill from 'react-quill';
 import {
   useFloating,
   offset,
@@ -58,23 +60,13 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
-  const textEditorRef = useRef<HTMLTextAreaElement>(null);
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
   const handleContentChange = (newContent: CustomNode['content']) => {
-    const isEmptyWithSlash =
-      typeof newContent === 'string' && newContent === '/';
-    if (isEmptyWithSlash) {
-      setShowDropdown(true);
-    } else {
-      setShowDropdown(false);
-    }
     dispatch(updateNode({ ...node, content: newContent }));
-    // dispatch(syncNodesToStorage());
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -82,7 +74,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
-    // dispatch(syncNodesToStorage());
   };
 
   const handleAddNode = (currentNodeIndex?: string) => {
@@ -94,7 +85,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       styles: {},
     };
     dispatch(addNode({ node: newNode, index: currentNodeIndex }));
-    // dispatch(syncNodesToStorage());
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -105,7 +95,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
-      // dispatch(syncNodesToStorage());
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(
@@ -123,13 +112,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       }, 0);
     }
   };
-
-  // useEffect(() => {
-  //   dispatch(loadNodesFromStorage());
-  //   if (isNewNode && textEditorRef.current) {
-  //     textEditorRef.current.focus();
-  //   }
-  // }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -267,7 +249,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           >
             <button
               onClick={() => {
-                handleAddNode(node.id);
+                setShowDropdown(true); // Show dropdown when "+" button is clicked
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
@@ -326,7 +308,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
         ) : (
           <TextEditor
             inputId={`node-${node.id}`}
-            ref={textEditorRef}
             content={node.content}
             styles={node.styles}
             onContentChange={handleContentChange}
