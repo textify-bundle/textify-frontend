@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
@@ -51,6 +49,7 @@ interface ListItemLinkProps {
   onAddNewPage?: () => void;
   onDeletePage?: () => void;
   onDeleteProject?: () => void;
+  onPageSelect?: (pageId: number) => void; // Callback for page selection
   isEditingNewPage: boolean;
   newPageName: string;
   setNewPageName: (name: string) => void;
@@ -59,7 +58,7 @@ interface ListItemLinkProps {
   onNewPageBlur: () => void;
 }
 
-const PagesTree: React.FC = () => {
+const PagesTree: React.FC<{ onPageSelect?: (pageId: number) => void }> = ({ onPageSelect }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -103,6 +102,9 @@ const PagesTree: React.FC = () => {
     } else if (item.type === 'link' && item.link) {
       setActiveLink(item.link);
       navigate(item.link);
+      if (item.id && onPageSelect) {
+        onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+      }
     }
   };
 
@@ -232,6 +234,7 @@ const PagesTree: React.FC = () => {
     handleSaveNewPage,
     currentProjectId,
     onNewPageBlur,
+    onPageSelect,
   }) => {
     const isActive =
       item.type === 'dropdown'
@@ -244,6 +247,9 @@ const PagesTree: React.FC = () => {
         onAddNewItem?.();
       } else {
         onClick(item);
+        if (item.id && onPageSelect) {
+          onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+        }
       }
     };
 
@@ -410,6 +416,7 @@ const PagesTree: React.FC = () => {
                 handleSaveNewPage={handleSaveNewPage}
                 currentProjectId={currentProjectId}
                 onNewPageBlur={handleNewPageBlur}
+                onPageSelect={onPageSelect}
               />
 
               {item.type === 'dropdown' && item.items && (
@@ -436,6 +443,7 @@ const PagesTree: React.FC = () => {
                         handleSaveNewPage={() => {}}
                         currentProjectId={null}
                         onNewPageBlur={() => {}}
+                        onPageSelect={onPageSelect}
                       />
                     ))}
                   </List>
