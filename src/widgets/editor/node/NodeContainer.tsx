@@ -11,9 +11,11 @@ import {
   CustomNode,
   MediaContent,
   NodeType,
+  TableContent,
 } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
+import Table from './table/table';
 import Divider from './divider/Divider';
 import Todo from './todo/Todo';
 import {
@@ -316,6 +318,11 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           />
         ) : node.type === 'image' ? (
           <ImageEditor content={mediaContent} nodeId={node.id} />
+        ) : node.type === 'table' ? (
+          <Table
+            content={node.content as TableContent}
+            onContentChange={(newContent) => handleContentChange(newContent)}
+          />
         ) : (
           <TextEditor
             inputId={`node-${node.id}`}
