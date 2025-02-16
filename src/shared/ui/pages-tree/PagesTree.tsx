@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -51,9 +49,10 @@ interface ListItemLinkProps {
   onAddNewPage?: () => void;
   onDeletePage?: () => void;
   onDeleteProject?: () => void;
+  onPageSelect?: (pageId: number) => void; // Callback for page selection
 }
 
-const PagesTree: React.FC = () => {
+const PagesTree: React.FC<{ onPageSelect?: (pageId: number) => void }> = ({ onPageSelect }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -94,6 +93,9 @@ const PagesTree: React.FC = () => {
     } else if (item.type === 'link' && item.link) {
       setActiveLink(item.link);
       navigate(item.link);
+      if (item.id && onPageSelect) {
+        onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+      }
     }
   };
 
@@ -198,6 +200,7 @@ const PagesTree: React.FC = () => {
     onAddNewItem,
     onAddNewPage,
     onDeleteProject,
+    onPageSelect,
   }) => {
     const isActive =
       item.type === 'dropdown'
@@ -210,6 +213,9 @@ const PagesTree: React.FC = () => {
         onAddNewItem?.();
       } else {
         onClick(item);
+        if (item.id && onPageSelect) {
+          onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+        }
       }
     };
 
@@ -344,6 +350,7 @@ const PagesTree: React.FC = () => {
                 onAddNewPage={() => handleAddNewPage(item.id!)}
                 onDeletePage={handleDeletePage}
                 onDeleteProject={() => handleOpenProjectDialog(item.id!)}
+                onPageSelect={onPageSelect}
               />
 
               {item.type === 'dropdown' && item.items && (
@@ -364,6 +371,7 @@ const PagesTree: React.FC = () => {
                           subItem.id?.toString() === pageId
                         }
                         onDeletePage={handleDeletePage}
+                        onPageSelect={onPageSelect}
                       />
                     ))}
                   </List>
