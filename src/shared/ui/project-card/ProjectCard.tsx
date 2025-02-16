@@ -2,6 +2,7 @@ import React, { FC, MouseEvent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Card, CardActionArea, CardContent, CardMedia, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import './ProjectCard.scss';
 
 interface ProjectCardProps {
@@ -9,45 +10,42 @@ interface ProjectCardProps {
   imageUrl: string;
   lastEntryTime?: Date;
   projectName?: string;
+  projectId: number;
   onRestore?: () => void;
-  onClick?: () => void;
+  firstPageId?: number; 
 }
-
 
 const timeFromDate = (date: Date): string => {
   return formatDistanceToNow(date, { addSuffix: true, locale: ru });
 };
 
-/**
- * ProjectCard component displays a card with project information.
- * 
- * @param {boolean} isRemoved - Indicates if the project is removed. Default is false.
- * @param {string} imageUrl - URL of the project's image.
- * @param {number} lastEntryTime - Timestamp of the last entry time. Default is the current time.
- * @param {string} projectName - Name of the project. Default is 'Unknown Project'.
- * @param {Function} onRestore - Callback function to handle restore action. Default is an empty function.
- * @param {Function} onClick - Callback function to handle card click action. Default is an empty function.
- * 
- * @returns {JSX.Element} The rendered ProjectCard component.
- */
 const ProjectCard: FC<ProjectCardProps> = ({
   isRemoved = false,
   imageUrl = 'default-placeholder.jpg',
   lastEntryTime = new Date(),
   projectName = 'Unknown Project',
+  projectId,
   onRestore = () => {},
-  onClick = () => {},
+  firstPageId, 
 }) => {
+  const navigate = useNavigate();
+
   const handleRestoreClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onRestore();
-  }; 
+  };
+
+  const handleCardClick = () => {
+    if (!isRemoved && firstPageId) {
+      navigate(`/${projectId}?page=${firstPageId}`);
+    }
+  };
 
   return (
     <Card
       className="project-card"
-      sx={{ boxShadow: '0px 0px 19px rgba(0, 0, 0, 0.17)'}}
-      onClick={!isRemoved ? onClick : undefined}
+      sx={{ boxShadow: '0px 0px 19px rgba(0, 0, 0, 0.17)' }}
+      onClick={handleCardClick}
     >
       {isRemoved && (
         <Button

@@ -6,4 +6,6 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase URL or Key in environment variables");
 }
-export const supabase= createClient(supabaseUrl, supabaseKey);
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+

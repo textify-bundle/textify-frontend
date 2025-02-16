@@ -196,10 +196,6 @@ const pagesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getCardData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.projectData = action.payload.projectData;
-      })
       .addCase(getCardData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка при загрузке данных';
@@ -240,6 +236,9 @@ const pagesSlice = createSlice({
       .addCase(createNewProjectAndPage.fulfilled, (state, action) => {
         state.loading = false;
         const { project, page } = action.payload;
+        if (window.location.pathname === `/${project.id}`) {
+          window.history.replaceState({}, '', `/${project.id}?page=${page.id}`);
+        }
         const newTreeItem: TreeItem = {
           name: project.project_name,
           type: 'dropdown',
