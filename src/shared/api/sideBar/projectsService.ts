@@ -98,7 +98,7 @@ export const createProjectAndPage = async (
   .insert({
     project_id: project.id,
     title: 'Без названия', // Стартовое название
-    markup_json: '{}',
+    markup_json: JSON.stringify(initialState.nodes),
     isRemoved: false,
   })
   .select()
