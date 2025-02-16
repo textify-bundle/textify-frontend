@@ -6,8 +6,6 @@ import {
   updateNode,
   addNode,
   removeNode,
-  syncNodesToStorage,
-  loadNodesFromStorage,
 } from '../../../store/slices/nodeSlice';
 import {
   CustomNode,
@@ -37,7 +35,7 @@ interface NodeContainerProps {
   onFocus?: () => void;
 }
 
-const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
+const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [isHovered, setIsHovered] = useState(false);
   const mediaContent: MediaContent = { url: '', altText: '' };
   const [showDropdown, setShowDropdown] = useState(false);
@@ -76,7 +74,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
-    dispatch(syncNodesToStorage());
+    // dispatch(syncNodesToStorage());
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -84,7 +82,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
-    dispatch(syncNodesToStorage());
+    // dispatch(syncNodesToStorage());
   };
 
   const handleAddNode = (currentNodeIndex?: string) => {
@@ -96,7 +94,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       styles: {},
     };
     dispatch(addNode({ node: newNode, index: currentNodeIndex }));
-    dispatch(syncNodesToStorage());
+    // dispatch(syncNodesToStorage());
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -107,7 +105,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
-      dispatch(syncNodesToStorage());
+      // dispatch(syncNodesToStorage());
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(
@@ -126,12 +124,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node, isNewNode }) => {
     }
   };
 
-  useEffect(() => {
-    dispatch(loadNodesFromStorage());
-    if (isNewNode && textEditorRef.current) {
-      textEditorRef.current.focus();
-    }
-  }, [isNewNode, dispatch]);
+  // useEffect(() => {
+  //   dispatch(loadNodesFromStorage());
+  //   if (isNewNode && textEditorRef.current) {
+  //     textEditorRef.current.focus();
+  //   }
+  // }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

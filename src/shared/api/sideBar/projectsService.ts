@@ -1,3 +1,4 @@
+import { initialState } from '../../../store/slices/nodeSlice';
 import { supabase } from '../../../utils/client';
 
 interface Project {
@@ -93,15 +94,15 @@ export const createProjectAndPage = async (
   }
 
   const { data: page, error: pageError } = await supabase
-    .from('notes')
-    .insert({
-      project_id: project.id,
-      title: 'Без названия',
-      markup_json: '{}',
-      isRemoved: false,
-    })
-    .select()
-    .single();
+  .from('notes')
+  .insert({
+    project_id: project.id,
+    title: 'Без названия', // Стартовое название
+    markup_json: JSON.stringify(initialState.nodes),
+    isRemoved: false,
+  })
+  .select()
+  .single();
 
   if (pageError) {
     throw new Error(`Ошибка при создании страницы: ${pageError.message}`);
@@ -119,7 +120,7 @@ export const createPage = async (
     .insert({
       project_id: projectId,
       title: title,
-      markup_json: '{}',
+      markup_json: JSON.stringify(initialState.nodes),
       isRemoved: false,
     })
     .select()
@@ -162,5 +163,19 @@ export const deleteProject = async (projectId: number): Promise<void> => {
 
   if (projectError) {
     throw new Error(`Ошибка при удалении проекта: ${projectError.message}`);
+  }
+};
+
+export const updatePageTitle = async (
+  pageId: number,
+  title: string,
+): Promise<void> => {
+  const { error } = await supabase
+    .from('notes')
+    .update({ title })
+    .eq('id', pageId);
+
+  if (error) {
+    throw new Error(`Ошибка при обновлении названия страницы: ${error.message}`);
   }
 };

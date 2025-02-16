@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
   List,
@@ -51,9 +49,16 @@ interface ListItemLinkProps {
   onAddNewPage?: () => void;
   onDeletePage?: () => void;
   onDeleteProject?: () => void;
+  onPageSelect?: (pageId: number) => void; // Callback for page selection
+  isEditingNewPage: boolean;
+  newPageName: string;
+  setNewPageName: (name: string) => void;
+  handleSaveNewPage: () => void;
+  currentProjectId: number | null;
+  onNewPageBlur: () => void;
 }
 
-const PagesTree: React.FC = () => {
+const PagesTree: React.FC<{ onPageSelect?: (pageId: number) => void }> = ({ onPageSelect }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -78,6 +83,9 @@ const PagesTree: React.FC = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [menuPageId, setMenuPageId] = useState<number | null>(null);
 
+  const newItemInputRef = useRef<HTMLInputElement>(null);
+  const newPageInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     dispatch(fetchTreeData());
   }, [dispatch]);
@@ -94,6 +102,9 @@ const PagesTree: React.FC = () => {
     } else if (item.type === 'link' && item.link) {
       setActiveLink(item.link);
       navigate(item.link);
+      if (item.id && onPageSelect) {
+        onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+      }
     }
   };
 
@@ -119,6 +130,9 @@ const PagesTree: React.FC = () => {
 
   const handleAddNewItem = () => {
     setIsEditingNewItem(true);
+    setTimeout(() => {
+      newItemInputRef.current?.focus();
+    }, 0);
   };
 
   const handleSaveNewItem = async () => {
@@ -142,6 +156,9 @@ const PagesTree: React.FC = () => {
   const handleAddNewPage = (projectId: number) => {
     setCurrentProjectId(projectId);
     setIsEditingNewPage(true);
+    setTimeout(() => {
+      newPageInputRef.current?.focus();
+    }, 0);
   };
 
   const handleSaveNewPage = async () => {
@@ -191,6 +208,19 @@ const PagesTree: React.FC = () => {
     setSearchQuery(value);
   };
 
+  const handleNewItemBlur = () => {
+    if (newItemName.trim() === '') {
+      setIsEditingNewItem(false);
+    }
+  };
+
+  const handleNewPageBlur = () => {
+    if (newPageName.trim() === '') {
+      setIsEditingNewPage(false);
+      setCurrentProjectId(null);
+    }
+  };
+
   const ListItemLink: React.FC<ListItemLinkProps> = ({
     item,
     open,
@@ -198,6 +228,13 @@ const PagesTree: React.FC = () => {
     onAddNewItem,
     onAddNewPage,
     onDeleteProject,
+    isEditingNewPage,
+    newPageName,
+    setNewPageName,
+    handleSaveNewPage,
+    currentProjectId,
+    onNewPageBlur,
+    onPageSelect,
   }) => {
     const isActive =
       item.type === 'dropdown'
@@ -210,6 +247,9 @@ const PagesTree: React.FC = () => {
         onAddNewItem?.();
       } else {
         onClick(item);
+        if (item.id && onPageSelect) {
+          onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+        }
       }
     };
 
@@ -270,6 +310,32 @@ const PagesTree: React.FC = () => {
               </IconButton>
             )}
         </ListItemButton>
+        {item.type === 'dropdown' &&
+          isEditingNewPage &&
+          currentProjectId === item.id && (
+            <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
+              <TextField
+                placeholder="Название новой страницы"
+                value={newPageName}
+                onChange={(e) => setNewPageName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveNewPage();
+                  }
+                }}
+                onBlur={onNewPageBlur}
+                fullWidth
+                autoFocus
+                inputRef={newPageInputRef}
+                variant="standard"
+                sx={{
+                  '& .MuiInput-underline:before': { borderBottom: 'none' },
+                  '& .MuiInput-underline:after': { borderBottom: 'none' },
+                  '& .MuiInputBase-input': { padding: 0 },
+                }}
+              />
+            </ListItemButton>
+          )}
       </li>
     );
   };
@@ -344,6 +410,13 @@ const PagesTree: React.FC = () => {
                 onAddNewPage={() => handleAddNewPage(item.id!)}
                 onDeletePage={handleDeletePage}
                 onDeleteProject={() => handleOpenProjectDialog(item.id!)}
+                isEditingNewPage={isEditingNewPage}
+                newPageName={newPageName}
+                setNewPageName={setNewPageName}
+                handleSaveNewPage={handleSaveNewPage}
+                currentProjectId={currentProjectId}
+                onNewPageBlur={handleNewPageBlur}
+                onPageSelect={onPageSelect}
               />
 
               {item.type === 'dropdown' && item.items && (
@@ -364,6 +437,13 @@ const PagesTree: React.FC = () => {
                           subItem.id?.toString() === pageId
                         }
                         onDeletePage={handleDeletePage}
+                        isEditingNewPage={false}
+                        newPageName=""
+                        setNewPageName={() => {}}
+                        handleSaveNewPage={() => {}}
+                        currentProjectId={null}
+                        onNewPageBlur={() => {}}
+                        onPageSelect={onPageSelect}
                       />
                     ))}
                   </List>
@@ -383,31 +463,10 @@ const PagesTree: React.FC = () => {
                     handleSaveNewItem();
                   }
                 }}
+                onBlur={handleNewItemBlur}
                 fullWidth
                 autoFocus
-                variant="standard"
-                sx={{
-                  '& .MuiInput-underline:before': { borderBottom: 'none' },
-                  '& .MuiInput-underline:after': { borderBottom: 'none' },
-                  '& .MuiInputBase-input': { padding: 0 },
-                }}
-              />
-            </ListItemButton>
-          )}
-
-          {isEditingNewPage && (
-            <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
-              <TextField
-                placeholder="Название новой страницы"
-                value={newPageName}
-                onChange={(e) => setNewPageName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSaveNewPage();
-                  }
-                }}
-                fullWidth
-                autoFocus
+                inputRef={newItemInputRef}
                 variant="standard"
                 sx={{
                   '& .MuiInput-underline:before': { borderBottom: 'none' },
