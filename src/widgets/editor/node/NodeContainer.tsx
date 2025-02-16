@@ -248,7 +248,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           >
             <button
               onClick={() => {
-                setShowDropdown(true); // Show dropdown when "+" button is clicked
+                setShowDropdown(true); 
+                handleAddNode();
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
