@@ -15,7 +15,7 @@ import {
 } from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
-import Table from './table/table';
+import Table from './table/Table';
 import Divider from './divider/Divider';
 import Todo from './todo/Todo';
 import {
