@@ -26,6 +26,8 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const [, setSelectedSize] = useState<string>('normal');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const quillRef = useRef<ReactQuill | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [toolbarMaxLeft, setToolbarMaxLeft] = useState<number>(0);
   const { x, y, refs, update } = useFloating({
     placement: 'left',
     middleware: [
@@ -36,7 +38,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     whileElementsMounted: autoUpdate,
   });
 
-  const sizes = ['small', 'large', 'huge'];
+  const sizes = ['small','normal', 'large', 'huge'];
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -142,7 +144,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
         quill.format('size', size);
       }
     }
-    setAnchorEl(null); // Close the menu after selecting a size
+    setAnchorEl(null); 
   };
 
   const handleSelectionChange = useCallback(() => {
@@ -192,6 +194,14 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     setValue(typeof content === 'string' ? content : '');
   }, [content]);
 
+  useEffect(() => {
+    if (containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      setToolbarMaxLeft(containerRect.right - 365); 
+    }
+  }, []);
+  
+
   return (
     <div className="text-editor" style={styles}>
       {isToolbarVisible && (
@@ -199,8 +209,9 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
           ref={refs.setFloating}
           style={{
             position: 'relative',
-            top: y ?? 0,
-            left: x ?? 0,
+            maxWidth: '365px',
+            top: `${Math.min(Math.max((y ?? 0) / window.innerWidth * 100, 5), 20)}%`,
+            left: `${Math.min(Math.max((x ?? 0) / window.innerWidth * 100, 10), 30)}%`,
             zIndex: 10,
           }}
         >
