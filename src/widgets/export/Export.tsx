@@ -2,18 +2,25 @@ import React, { useState } from 'react';
 import { Button, Box } from '@mui/material';
 import TModal from '../../shared/tmodal/TModal';
 import html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 
+interface ExportModalProps {
 interface ExportModalProps {
   buttonText?: string;
   modalTitle?: string;
   containerClass?: string;
   handleExportToHTML?: () => void; 
   handleExportToPdf?: () => void;   
+  containerClass?: string;
+  handleExportToHTML?: () => void; 
+  handleExportToPdf?: () => void;   
 }
 
 const ExportModal: React.FC<ExportModalProps> = ({
+const ExportModal: React.FC<ExportModalProps> = ({
   buttonText = 'Экспортировать',
   modalTitle = 'Экспортировать',
+  containerClass = 'page-container',
   containerClass = 'page-container',
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -134,9 +141,11 @@ const ExportModal: React.FC<ExportModalProps> = ({
           fontSize: '14px',
           fontWeight: 'normal',
           outline: 'none',
+          outline: 'none',
           boxShadow: 'none',
           '&:hover': {
             backgroundColor: 'rgba(220, 217, 217, 0.328)',
+          },
           },
         }}
       >
@@ -149,12 +158,15 @@ const ExportModal: React.FC<ExportModalProps> = ({
             variant="outlined"
             fullWidth
             onClick={handleExportToHTML}
+            onClick={handleExportToHTML}
             sx={{
               textTransform: 'none',
               padding: '10px',
               borderRadius: '8px',
               color: 'black',
               fontSize: '18px',
+              border: 'none',
+              '&:hover': { backgroundColor: 'rgba(220, 220, 220, 0.29)' },
               border: 'none',
               '&:hover': { backgroundColor: 'rgba(220, 220, 220, 0.29)' },
             }}
@@ -165,6 +177,7 @@ const ExportModal: React.FC<ExportModalProps> = ({
             variant="outlined"
             fullWidth
             onClick={handleExportToPdf}
+            onClick={handleExportToPdf}
             sx={{
               textTransform: 'none',
               padding: '10px',
@@ -172,6 +185,7 @@ const ExportModal: React.FC<ExportModalProps> = ({
               color: 'black',
               fontSize: '18px',
               border: 'none',
+              '&:hover': { backgroundColor: 'rgba(220, 220, 220, 0.29)' },
               '&:hover': { backgroundColor: 'rgba(220, 220, 220, 0.29)' },
             }}
           >
