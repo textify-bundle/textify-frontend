@@ -182,7 +182,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
         </div>
         {LayoutComponent ? <LayoutComponent /> : null}
         {layout === 'project' && (
-          <div
+          <div className='page-container'
             style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
           >
             <div className="title-container">
