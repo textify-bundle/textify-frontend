@@ -1,48 +1,47 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 import { arrayMove } from '@dnd-kit/sortable';
-import { CustomNode } from '../../shared/types/editor/node';
-import { supabase } from '../../utils/client';
+import type { CustomNode } from '../../shared/types/editor/node';
+import { wrap, type Remote } from 'comlink';
+import DataWorker from '../../workers/dataWorker?worker';
+import type { WorkerApi } from '../../workers/dataWorker';
+
+const worker: Remote<WorkerApi> = wrap(new DataWorker());
 
 interface nodeState {
   nodes: CustomNode[];
 }
 
 export const initialState: nodeState = {
-  nodes: [
-    { id: '1', type: 'text', content: '', styles: { bold: true } },
-  ],
+  nodes: [{ id: '1', type: 'text', content: '', styles: { bold: true } }],
 };
-
-const getCurrentIndex = (nodes: CustomNode[], id: string) =>
-  nodes.findIndex((node) => node.id === id);
 
 export const loadNodesFromServer = createAsyncThunk(
   'nodes/loadNodesFromServer',
   async (pageId: number) => {
     try {
-      const { data, error } = await supabase.from('notes').select('markup_json').eq('id', pageId).single();
-      if (error) return initialState.nodes;
-      if (!data || !data.markup_json) return initialState.nodes;
-
-      return JSON.parse(data.markup_json);
-    }
-    catch (error) { 
-      console.error('Failed to load or parse notes from server', error);
+      const nodes = await worker.loadNodesFromServer(pageId);
+      return nodes.length > 0 ? nodes : initialState.nodes;
+    } catch (error) {
+      console.error('Failed to load nodes from server', error);
       return initialState.nodes;
     }
-  }
+  },
 );
 
 export const saveNodesToServer = createAsyncThunk(
   'nodes/saveNodesToServer',
-  async ({ pageId, nodes }: { pageId: number, nodes: CustomNode[] }) => {
-    const markup_json = JSON.stringify(nodes);
-    const { error } = await supabase
-      .from('notes')
-      .update({ markup_json })
-      .eq('id', pageId);
-    if (error) throw error;
-  }
+  async ({ pageId, nodes }: { pageId: number; nodes: CustomNode[] }) => {
+    try {
+      await worker.saveNodesToServer({ pageId, nodes });
+    } catch (error) {
+      console.error('Failed to save nodes to server', error);
+      throw error;
+    }
+  },
 );
 
 const nodeSlice = createSlice({
@@ -52,15 +51,18 @@ const nodeSlice = createSlice({
     clearNodes: (state) => {
       state.nodes = [];
     },
-    addNode: (state, action: PayloadAction<{node: CustomNode, index?: string}>) => {
+    addNode: (
+      state,
+      action: PayloadAction<{ node: CustomNode; index?: string }>,
+    ) => {
       const { node, index } = action.payload;
-      if(index){
-        const currentIndex = getCurrentIndex(state.nodes, index);
+      if (index) {
+        const currentIndex = state.nodes.findIndex((n) => n.id === index);
         if (currentIndex !== -1) {
-          state.nodes.splice(currentIndex + 1, 0, node); 
+          state.nodes.splice(currentIndex + 1, 0, node);
         }
       } else {
-        state.nodes.push(node); 
+        state.nodes.push(node);
       }
     },
     updateNode: (state, action: PayloadAction<CustomNode>) => {
@@ -93,21 +95,19 @@ const nodeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadNodesFromServer.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.nodes = action.payload;
-      }
+      state.nodes = action.payload;
     });
-  }
+  },
 });
 
-export const { 
-  addNode, 
-  updateNode, 
-  removeNode, 
-  reorderNodes,  
-  syncNodesToStorage, 
+export const {
+  addNode,
+  updateNode,
+  removeNode,
+  reorderNodes,
+  syncNodesToStorage,
   loadNodesFromStorage,
-  clearNodes
+  clearNodes,
 } = nodeSlice.actions;
 
 export default nodeSlice.reducer;

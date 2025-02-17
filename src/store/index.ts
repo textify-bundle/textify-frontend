@@ -11,6 +11,16 @@ const store = configureStore({
     settings: settingsReducer,
     nodes: nodeReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Игнорируем некоторые действия для веб-воркера
+        ignoredActions: [
+          'nodes/loadNodesFromServer/fulfilled',
+          'nodes/saveNodesToServer/fulfilled',
+        ],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
