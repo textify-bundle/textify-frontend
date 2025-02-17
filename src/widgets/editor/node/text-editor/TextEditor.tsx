@@ -27,7 +27,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const quillRef = useRef<ReactQuill | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [toolbarMaxLeft, setToolbarMaxLeft] = useState<number>(0);
+  const [, setToolbarMaxLeft] = useState<number>(0);
   const { x, y, refs, update } = useFloating({
     placement: 'left',
     middleware: [
