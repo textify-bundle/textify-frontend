@@ -1,5 +1,5 @@
-import { describe, expect, test, beforeEach, afterEach } from 'vitest';
-import React,{ render, screen, cleanup } from '@testing-library/react';
+import { describe, test, beforeEach, afterEach } from 'vitest';
+import React,{ render,  cleanup } from '@testing-library/react';
 import ExportModal from './Export';
 
 describe("ExportBox component", () => {
