@@ -113,7 +113,8 @@ const LastProjectList: React.FC = () => {
       <Dialog open={isDialogOpen} onClose={closeDialog}>
         <DialogTitle>Создание нового проекта</DialogTitle>
         <DialogContent>
-          <TextField
+          <TextField 
+            name="projectName"
             autoFocus
             margin="dense"
             label="Введите имя проекта"
@@ -127,7 +128,7 @@ const LastProjectList: React.FC = () => {
           <Button onClick={closeDialog} color="secondary">
             Отмена
           </Button>
-          <Button onClick={handleCreateProject} color="primary">
+          <Button onClick={handleCreateProject} color="primary" name="modalButtonCreateProject">
             Создать
           </Button>
         </DialogActions>

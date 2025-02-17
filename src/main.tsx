@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import store from './store';
 
 import * as Sentry from "@sentry/react";
+import React from 'react';
 
 
 Sentry.init({
