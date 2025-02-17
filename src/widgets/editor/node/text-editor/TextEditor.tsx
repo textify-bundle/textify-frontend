@@ -85,7 +85,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     const quill = quillRef.current?.getEditor();
     if (quill) {
       quill.root.classList.remove('justify');
-      quill.format('align', 'left');
+      quill.format('align', 'justify');
     }
   };
 
