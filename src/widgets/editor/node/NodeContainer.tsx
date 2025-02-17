@@ -7,10 +7,17 @@ import {
   addNode,
   removeNode,
 } from '../../../store/slices/nodeSlice';
-import type { CustomNode, NodeType, MediaContent } from '../../../shared/types/editor/node';
+import {
+  CustomNode,
+  MediaContent,
+  NodeType,
+  TableContent,
+} from '../../../shared/types/editor/node';
 import './NodeContainer.scss';
 import TextEditor from './text-editor/TextEditor';
-import ImageEditor from './image-editor/ImageEditor';
+import Table from './table/Table';
+import Divider from './divider/Divider';
+import Todo from './todo/Todo';
 import {
   useFloating,
   offset,
@@ -18,8 +25,9 @@ import {
   shift,
   autoUpdate,
 } from '@floating-ui/react';
-import type { SelectChangeEvent } from '@mui/material';
-import type { RootState } from '../../../store/index';
+import { SelectChangeEvent } from '@mui/material';
+import { RootState } from '../../../store/index';
+import ImageEditor from './image-editor/ImageEditor';
 
 interface NodeContainerProps {
   node: CustomNode;
@@ -28,13 +36,9 @@ interface NodeContainerProps {
   onFocus?: () => void;
 }
 
-const NodeContainer: React.FC<NodeContainerProps> = ({ 
-  node, 
-  isNewNode, 
-  onCursorPositionChange,
-  onFocus
-}) => {
+const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const mediaContent: MediaContent = { url: '', altText: '' };
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
@@ -78,6 +82,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
+    // dispatch(syncNodesToStorage());
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -85,6 +90,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
+    // dispatch(syncNodesToStorage());
   };
 
   const handleAddNode = (currentNodeIndex?: string) => {
@@ -96,6 +102,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       styles: {},
     };
     dispatch(addNode({ node: newNode, index: currentNodeIndex }));
+    // dispatch(syncNodesToStorage());
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -106,6 +113,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
+      // dispatch(syncNodesToStorage());
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(
@@ -124,17 +132,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
     }
   };
 
-  const handleTextEditorClick = (e: React.MouseEvent) => {
-    if (onCursorPositionChange) {
-      onCursorPositionChange(node.id, { x: e.clientX, y: e.clientY });
-    }
-  };
-
-  useEffect(() => {
-    if (isNewNode && textEditorRef.current) {
-      textEditorRef.current.focus();
-    }
-  }, [isNewNode]);
+  // useEffect(() => {
+  //   dispatch(loadNodesFromStorage());
+  //   if (isNewNode && textEditorRef.current) {
+  //     textEditorRef.current.focus();
+  //   }
+  // }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -149,13 +152,13 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dropdownRef]);
 
   useEffect(() => {
     if (isHovered) {
       update();
     }
-  }, [isHovered, update]);
+  }, [transform, isHovered, update]);
 
   useEffect(() => {
     if (showDropdown) {
@@ -181,26 +184,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
     'none',
   ];
 
-  const editorComponents: { [key: string]: JSX.Element | null } = {
-    text: (
-      <TextEditor
-        inputId={`node-${node.id}`}
-        ref={textEditorRef}
-        content={node.content as string}
-        styles={node.styles}
-        onContentChange={handleContentChange}
-        onEnterPress={() => {
-          handleAddNode(node.id);
-        }}
-        nodeId={node.id}
-        onDelete={handleDeleteNode}
-      />
-    ),
-    image: (
-      <ImageEditor content={node.content as MediaContent} nodeId={node.id} />
-    ),
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -210,7 +193,9 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleTextEditorClick}
     >
-      <div ref={refs.setReference}></div>
+      <div ref={refs.setReference}>
+        {/* Reference element for floating UI */}
+      </div>
       {showDropdown && (
         <div
           ref={dropdownRef}
@@ -269,7 +254,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
                     (e.currentTarget.style.backgroundColor = '#FFFFFF')
                   }
                 >
-                  <img src={`./node-types/${type}.png`} alt="" width={`30px`} />
+                  <img src={`/node-types/${type}.png`} alt="" width={`30px`} />
                   <h4>{type}</h4>
                 </div>
               ))}
@@ -294,7 +279,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <img src="./icons/plus.svg" width="15px" alt="Add Node" />
+              <img src="/icons/plus.svg" width="15px" alt="Add Node" />
             </button>
           </div>
           <div
@@ -311,7 +296,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
               onClick={handleDeleteNode}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <img src="./icons/trash.svg" width="15px" alt="Delete Node" />
+              <img src="/icons/trash.svg" width="15px" alt="Delete Node" />
             </button>
           </div>
         </>
@@ -323,14 +308,51 @@ const NodeContainer: React.FC<NodeContainerProps> = ({
       <div
         className={`node-container__editor${isHovered ? ' node-container__editor_hover' : ''}`}
       >
-        {editorComponents[node.type] || null}
+        {node.type === 'divider' ? (
+          <Divider />
+        ) : node.type === 'todo' ? (
+          <Todo
+            content={node.content as string}
+            checked={node.styles?.strikethrough ?? false}
+            onContentChange={(newContent) => handleContentChange(newContent)}
+            onCheckboxChange={(isChecked) =>
+              dispatch(
+                updateNode({
+                  ...node,
+                  styles: { ...node.styles, strikethrough: isChecked },
+                }),
+              )
+            }
+          />
+        ) : node.type === 'image' ? (
+          <ImageEditor content={mediaContent} nodeId={node.id} />
+        ) : node.type === 'table' ? (
+          <Table
+            content={node.content as TableContent}
+            onContentChange={(newContent) => handleContentChange(newContent)}
+          />
+        ) : (
+          <TextEditor
+            inputId={`node-${node.id}`}
+            ref={textEditorRef}
+            content={node.content}
+            styles={node.styles}
+            onContentChange={handleContentChange}
+            onEnterPress={() => {
+              handleAddNode(node.id);
+            }}
+            nodeId={node.id}
+            onDelete={handleDeleteNode}
+            nodeType={node.type}
+          />
+        )}
       </div>
       <div
         ref={setActivatorNodeRef}
         {...listeners}
         className="node-container__handle"
       >
-        <img src="./icons/draggable.svg" alt="Drag Handle" width="15px" />
+        <img src="/icons/draggable.svg" alt="Drag Handle" width="15px" />
       </div>
     </div>
   );

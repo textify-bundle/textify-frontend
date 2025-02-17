@@ -95,7 +95,7 @@ const ImageEditor = ({
           <Resizable
             width={size.width}
             height={size.height}
-            onResize={(e, { size }) => setSize(size)}
+            onResize={(_e, { size }) => setSize(size)}
           >
             <div
               style={{

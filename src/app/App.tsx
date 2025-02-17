@@ -35,6 +35,7 @@ const App: React.FC = () => {
         <Route path="/trash" element={<LayoutWrapper layout={'trash'}></LayoutWrapper>} />
         <Route path="/main/settings/ai" element={<AISettings />} />
         <Route path="/:projectId" element={<LayoutWrapper layout={'project'}></LayoutWrapper>} />
+        <Route path="/shared/" element={<LayoutWrapper layout={'project'}></LayoutWrapper>} />
       </Route>
     </Routes>
   );

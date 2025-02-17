@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
   List,
@@ -30,6 +28,8 @@ import './PagesTree.scss';
 import type { AppDispatch, RootState } from '../../../store';
 import TModal from '../../tmodal/TModal';
 import NewSearch from '../search-bar/SearchBar';
+import { deleteProject } from '../../api/sideBar/projectsService';
+
 interface TreeItem {
   name: string;
   type: 'dropdown' | 'link' | 'action';
@@ -48,9 +48,17 @@ interface ListItemLinkProps {
   onAddNewItem?: () => void;
   onAddNewPage?: () => void;
   onDeletePage?: () => void;
+  onDeleteProject?: () => void;
+  onPageSelect?: (pageId: number) => void; // Callback for page selection
+  isEditingNewPage: boolean;
+  newPageName: string;
+  setNewPageName: (name: string) => void;
+  handleSaveNewPage: () => void;
+  currentProjectId: number | null;
+  onNewPageBlur: () => void;
 }
 
-const PagesTree: React.FC = () => {
+const PagesTree: React.FC<{ onPageSelect?: (pageId: number) => void }> = ({ onPageSelect }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -58,6 +66,10 @@ const PagesTree: React.FC = () => {
   const pageId = searchParams.get('page');
   const { tree } = useSelector((state: RootState) => state.pages);
   const location = useLocation();
+  const [openProjectDialog, setOpenProjectDialog] = useState<boolean>(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
+    null,
+  );
 
   const [openStates, setOpenStates] = useState<{ [key: string]: boolean }>({});
   const [activeLink, setActiveLink] = useState<string | null>(null);
@@ -70,6 +82,9 @@ const PagesTree: React.FC = () => {
 
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [menuPageId, setMenuPageId] = useState<number | null>(null);
+
+  const newItemInputRef = useRef<HTMLInputElement>(null);
+  const newPageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     dispatch(fetchTreeData());
@@ -87,11 +102,37 @@ const PagesTree: React.FC = () => {
     } else if (item.type === 'link' && item.link) {
       setActiveLink(item.link);
       navigate(item.link);
+      if (item.id && onPageSelect) {
+        onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+      }
     }
+  };
+
+  const handleDeleteProject = async () => {
+    if (selectedProjectId) {
+      try {
+        await deleteProject(selectedProjectId);
+        dispatch(fetchTreeData());
+        setOpenProjectDialog(false);
+      } catch (error) {
+        console.error('Ошибка при удалении проекта:', error);
+        alert(
+          `Ошибка при удалении проекта: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`,
+        );
+      }
+    }
+  };
+
+  const handleOpenProjectDialog = (projectId: number) => {
+    setSelectedProjectId(projectId);
+    setOpenProjectDialog(true);
   };
 
   const handleAddNewItem = () => {
     setIsEditingNewItem(true);
+    setTimeout(() => {
+      newItemInputRef.current?.focus();
+    }, 0);
   };
 
   const handleSaveNewItem = async () => {
@@ -115,6 +156,9 @@ const PagesTree: React.FC = () => {
   const handleAddNewPage = (projectId: number) => {
     setCurrentProjectId(projectId);
     setIsEditingNewPage(true);
+    setTimeout(() => {
+      newPageInputRef.current?.focus();
+    }, 0);
   };
 
   const handleSaveNewPage = async () => {
@@ -164,12 +208,33 @@ const PagesTree: React.FC = () => {
     setSearchQuery(value);
   };
 
+  const handleNewItemBlur = () => {
+    if (newItemName.trim() === '') {
+      setIsEditingNewItem(false);
+    }
+  };
+
+  const handleNewPageBlur = () => {
+    if (newPageName.trim() === '') {
+      setIsEditingNewPage(false);
+      setCurrentProjectId(null);
+    }
+  };
+
   const ListItemLink: React.FC<ListItemLinkProps> = ({
     item,
     open,
     onClick,
     onAddNewItem,
     onAddNewPage,
+    onDeleteProject,
+    isEditingNewPage,
+    newPageName,
+    setNewPageName,
+    handleSaveNewPage,
+    currentProjectId,
+    onNewPageBlur,
+    onPageSelect,
   }) => {
     const isActive =
       item.type === 'dropdown'
@@ -182,6 +247,9 @@ const PagesTree: React.FC = () => {
         onAddNewItem?.();
       } else {
         onClick(item);
+        if (item.id && onPageSelect) {
+          onPageSelect(item.id); // Notify LayoutWrapper of the selected page
+        }
       }
     };
 
@@ -210,15 +278,26 @@ const PagesTree: React.FC = () => {
           )}
           <ListItemText primary={item.name} className="list-item__text" />
           {item.type === 'dropdown' && (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddNewPage?.();
-              }}
-            >
-              <Add fontSize="small" />
-            </IconButton>
+            <>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddNewPage?.();
+                }}
+              >
+                <Add fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteProject?.();
+                }}
+              >
+                <Remove fontSize="small" />
+              </IconButton>
+            </>
           )}
           {item.type === 'link' &&
             item.name !== 'Главная' &&
@@ -231,6 +310,32 @@ const PagesTree: React.FC = () => {
               </IconButton>
             )}
         </ListItemButton>
+        {item.type === 'dropdown' &&
+          isEditingNewPage &&
+          currentProjectId === item.id && (
+            <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
+              <TextField
+                placeholder="Название новой страницы"
+                value={newPageName}
+                onChange={(e) => setNewPageName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveNewPage();
+                  }
+                }}
+                onBlur={onNewPageBlur}
+                fullWidth
+                autoFocus
+                inputRef={newPageInputRef}
+                variant="standard"
+                sx={{
+                  '& .MuiInput-underline:before': { borderBottom: 'none' },
+                  '& .MuiInput-underline:after': { borderBottom: 'none' },
+                  '& .MuiInputBase-input': { padding: 0 },
+                }}
+              />
+            </ListItemButton>
+          )}
       </li>
     );
   };
@@ -304,6 +409,14 @@ const PagesTree: React.FC = () => {
                 onAddNewItem={handleAddNewItem}
                 onAddNewPage={() => handleAddNewPage(item.id!)}
                 onDeletePage={handleDeletePage}
+                onDeleteProject={() => handleOpenProjectDialog(item.id!)}
+                isEditingNewPage={isEditingNewPage}
+                newPageName={newPageName}
+                setNewPageName={setNewPageName}
+                handleSaveNewPage={handleSaveNewPage}
+                currentProjectId={currentProjectId}
+                onNewPageBlur={handleNewPageBlur}
+                onPageSelect={onPageSelect}
               />
 
               {item.type === 'dropdown' && item.items && (
@@ -324,6 +437,13 @@ const PagesTree: React.FC = () => {
                           subItem.id?.toString() === pageId
                         }
                         onDeletePage={handleDeletePage}
+                        isEditingNewPage={false}
+                        newPageName=""
+                        setNewPageName={() => {}}
+                        handleSaveNewPage={() => {}}
+                        currentProjectId={null}
+                        onNewPageBlur={() => {}}
+                        onPageSelect={onPageSelect}
                       />
                     ))}
                   </List>
@@ -343,31 +463,10 @@ const PagesTree: React.FC = () => {
                     handleSaveNewItem();
                   }
                 }}
+                onBlur={handleNewItemBlur}
                 fullWidth
                 autoFocus
-                variant="standard"
-                sx={{
-                  '& .MuiInput-underline:before': { borderBottom: 'none' },
-                  '& .MuiInput-underline:after': { borderBottom: 'none' },
-                  '& .MuiInputBase-input': { padding: 0 },
-                }}
-              />
-            </ListItemButton>
-          )}
-
-          {isEditingNewPage && (
-            <ListItemButton className="list-item__button" sx={{ pl: 4 }}>
-              <TextField
-                placeholder="Название новой страницы"
-                value={newPageName}
-                onChange={(e) => setNewPageName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSaveNewPage();
-                  }
-                }}
-                fullWidth
-                autoFocus
+                inputRef={newItemInputRef}
                 variant="standard"
                 sx={{
                   '& .MuiInput-underline:before': { borderBottom: 'none' },
@@ -390,6 +489,21 @@ const PagesTree: React.FC = () => {
             Отмена
           </Button>
           <Button onClick={handleDeletePage} color="primary">
+            Удалить
+          </Button>
+        </Box>
+      </TModal>
+
+      <TModal
+        isOpen={openProjectDialog}
+        onClose={() => setOpenProjectDialog(false)}
+        title={'Вы хотите удалить этот проект?'}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <Button onClick={() => setOpenProjectDialog(false)} color="primary">
+            Отмена
+          </Button>
+          <Button onClick={handleDeleteProject} color="primary">
             Удалить
           </Button>
         </Box>

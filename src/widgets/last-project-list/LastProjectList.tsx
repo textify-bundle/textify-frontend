@@ -1,118 +1,139 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData, createNewProjectAndPage } from '../../store/slices/pagesSlice';
+import {
+  createNewProjectAndPage,
+  fetchTreeData,
+  getCardDataForCards,
+} from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import LastProjectCard from '../../shared/ui/last-project-card/LastProjectCard';
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const LastProjectList: React.FC = () => {
-    const dispatch = useDispatch<AppDispatch>();
-    const projectData = useSelector((state: RootState) => state.pages.projectData);
-    const loading = useSelector((state: RootState) => state.pages.loading);
-    const error = useSelector((state: RootState) => state.pages.error);
+  const dispatch = useDispatch<AppDispatch>();
+  const projectData = useSelector(
+    (state: RootState) => state.pages.projectData,
+  );
+  const loading = useSelector((state: RootState) => state.pages.loading);
+  const error = useSelector((state: RootState) => state.pages.error);
+  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [newProjectName, setNewProjectName] = useState('');
+  useEffect(() => {
+    dispatch(fetchTreeData());
+    dispatch(getCardDataForCards());
+  }, [dispatch]);
 
-    const getCardDataForCards = useCallback(() => {
-        dispatch(getCardData());
-    }, [dispatch]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
-    useEffect(() => {
-        dispatch(fetchTreeData());
-        getCardDataForCards();
-    }, [dispatch, getCardDataForCards]);
+  const activeProjects = projectData.filter((project) => !project.isRemoved);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+  const AnyDaysAgo = new Date();
+  AnyDaysAgo.setDate(AnyDaysAgo.getDate() - 10);
 
-    const activeProjects = projectData.filter(project => !project.isRemoved);
+  const filteredProjectData = activeProjects.filter((project) => {
+    if (!project.dateOfChange) return false;
+    const lastEntryTime = new Date(project.dateOfChange);
+    return lastEntryTime >= AnyDaysAgo;
+  });
 
-    const AnyDaysAgo = new Date();
-    AnyDaysAgo.setDate(AnyDaysAgo.getDate() - 10);
+  const newProjectButton = {
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/12334/12334977.png',
+    title: 'Новый проект',
+  };
 
-    const filteredProjectData = activeProjects.filter(project => {
-        if (!project.dateOfChange) return false;
-        const lastEntryTime = new Date(project.dateOfChange);
-        return lastEntryTime >= AnyDaysAgo;
-    });
+  const getImageUrl = (index: number) => {
+    const id = ((index * 71287328173) % 10) + 1;
+    return `/patterns/${id}.webp`;
+  };
 
-    const newProjectButton = {
-        imageUrl: 'https://cdn-icons-png.flaticon.com/512/12334/12334977.png',
-        title: 'Новый проект'
-    };
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
 
-    const getImageUrl = (index: number) => {
-        const id = (index * 71287328173) % 10 + 1;
-        return `/patterns/${id}.webp`;
-    };
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setNewProjectName('');
+  };
 
-    const openDialog = () => {
-        setIsDialogOpen(true);
-    };
-
-    const closeDialog = () => {
-        setIsDialogOpen(false);
+  const handleCreateProject = async () => {
+    if (newProjectName.trim()) {
+      try {
+        const result = await dispatch(
+          createNewProjectAndPage(newProjectName),
+        ).unwrap();
         setNewProjectName('');
-    };
+        navigate(`/${result.project.id}?page=${result.page.id}`);
+      } catch (error) {
+        console.error('Не удалось создать новый проект:', error);
+        alert(
+          `Ошибка при создании проекта: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`,
+        );
+      }
+      closeDialog();
+    } else {
+      alert('Пожалуйста, введите имя проекта');
+    }
+  };
 
-    const handleCreateProject = () => {
-        if (newProjectName.trim()) {
-            dispatch(createNewProjectAndPage(newProjectName));
-            setNewProjectName('');
-            setIsDialogOpen(false);
-        } else {
-            // Показать сообщение об ошибке
-        }
-    };
+  return (
+    <div
+      style={{
+        width: '847px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        gap: '40.82px',
+      }}
+    >
+      {filteredProjectData.map((project, index) => (
+        <LastProjectCard
+          key={index}
+          title={project.name}
+          imageUrl={getImageUrl(index)}
+        />
+      ))}
+      <LastProjectCard
+        key="new-project"
+        imageUrl={newProjectButton.imageUrl}
+        title={newProjectButton.title}
+        onClick={openDialog}
+      />
 
-    return (
-        <div style={{ width: '847px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '40.82px' }}>
-            {filteredProjectData.map((project, index) => (
-                <LastProjectCard
-                    key={index}
-                    title={project.name}
-                    imageUrl={getImageUrl(index)}
-                />
-            ))}
-            <LastProjectCard
-                key="new-project"
-                imageUrl={newProjectButton.imageUrl}
-                title={newProjectButton.title}
-                onClick={openDialog} 
-            />
-
-            <Dialog open={isDialogOpen} onClose={closeDialog}>
-                <DialogTitle>Создание нового проекта</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Введите имя проекта"
-                        type="text"
-                        fullWidth
-                        value={newProjectName}
-                        onChange={(e) => setNewProjectName(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeDialog} color="secondary">
-                        Отмена
-                    </Button>
-                    <Button onClick={handleCreateProject} color="primary">
-                        Создать
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
+      <Dialog open={isDialogOpen} onClose={closeDialog}>
+        <DialogTitle>Создание нового проекта</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Введите имя проекта"
+            type="text"
+            fullWidth
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="secondary">
+            Отмена
+          </Button>
+          <Button onClick={handleCreateProject} color="primary">
+            Создать
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 };
 
 export default LastProjectList;
