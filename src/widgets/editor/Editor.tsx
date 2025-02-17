@@ -74,6 +74,7 @@ const Editor: React.FC = () => {
     const loadData = async () => {
       try {
         if (token) {
+
           const { data, error } = await supabase
             .from('notes_tokens')
             .select('pageId, canWrite')
