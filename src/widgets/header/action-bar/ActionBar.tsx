@@ -9,21 +9,14 @@ import ExportBox from '../../export/Export';
 import Settings from '../settings/settings/Settings';
 import ShareOverlay from '../../overlay/ShareOverlay';
 
-interface User {
-  id: string;
-  name: string;
-}
-
 interface ActionBarProps {
-  users: User[];
+  users: string[];
   onClick?: (index: number) => void;
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick }) => {
-  const colors = ['#4C84EA', '#2B8643', '#0751D8'];
-  const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
-  const shuffleArray = (array: User[]) => {
+  const shuffleArray = (array: string[]) => {
     return [...array].sort(() => Math.random() - 0.5);
   };
 
@@ -50,9 +43,9 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick }) => {
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', minWidth: '80px' }}>
-            {randomUsers.map((user: User, index: number) => (
+            {randomUsers.map((user: string, index: number) => (
               <Button
-                key={user.id}
+                key={index}
                 className="user-button"
                 sx={{
                   color: 'white',
@@ -64,14 +57,14 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick }) => {
                   minWidth: '35px',
                   padding: 0,
                   borderRadius: '50%',
-                  backgroundColor: getRandomColor(),
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   position: 'absolute',
                   left: `${index * 18}px`,
                   zIndex: randomUsers.length - index,
                 }}
                 onClick={() => onClick && onClick(index)}
               >
-                {user.name.charAt(0).toUpperCase()}
+                {user.charAt(0).toUpperCase()}
               </Button>
             ))}
           </Box>

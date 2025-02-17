@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTreeData, getCardData } from '../../store/slices/pagesSlice';
+import { fetchTreeData, getCardDataForCards, restoreProject } from '../../store/slices/pagesSlice';
 import { AppDispatch, RootState } from '../../store/index';
 import ProjectCard from '../../shared/ui/project-card/ProjectCard';
 
@@ -9,12 +9,16 @@ const RemoteProjectList: React.FC = () => {
     const projectData = useSelector((state: RootState) => state.pages.projectData);
     const loading = useSelector((state: RootState) => state.pages.loading);
     const error = useSelector((state: RootState) => state.pages.error);
-  
+
     useEffect(() => {
         dispatch(fetchTreeData());
-        dispatch(getCardData());
+        dispatch(getCardDataForCards());
     }, [dispatch]);
-  
+
+    const handleRestore = (projectId: number) => {
+        dispatch(restoreProject(projectId));
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -28,7 +32,7 @@ const RemoteProjectList: React.FC = () => {
         const id = (index * 71287328173) % 10 + 1;
         return `/patterns/${id}.webp`;
     };
-  
+
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '11px' }}>
         {removedProjects.map((project, index) => (
@@ -36,12 +40,13 @@ const RemoteProjectList: React.FC = () => {
             key={index}
             isRemoved={project.isRemoved}
             imageUrl={getImageUrl(index)}
-            lastEntryTime={project.dateOfChange}
+            lastEntryTime={new Date(project.dateOfChange)}
             projectName={project.name}
+            onRestore={() => handleRestore(project.id)}
           />
         ))}
       </div>
     );
-  };
-  
-  export default RemoteProjectList;
+};
+
+export default RemoteProjectList;
