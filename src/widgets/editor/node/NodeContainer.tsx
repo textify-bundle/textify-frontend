@@ -32,6 +32,7 @@ import ImageEditor from './image-editor/ImageEditor';
 interface NodeContainerProps {
   node: CustomNode;
   isNewNode?: boolean;
+  onCursorPositionChange?: (nodeId: string, position: { x: number; y: number }) => void;
   onFocus?: () => void;
 }
 
@@ -42,14 +43,15 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
+  
   const {
-    attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
     setActivatorNodeRef,
   } = useSortable({ id: node.id });
+
   const { x, y, strategy, refs, update } = useFloating({
     placement: 'left',
     middleware: [offset(), flip(), shift()],
@@ -58,7 +60,13 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
-  const textEditorRef = useRef<HTMLTextAreaElement>(null);
+  const textEditorRef = useRef<TextEditorImperativeHandle>(null);
+
+  useEffect(() => {
+    if (isNewNode && onFocus) {
+      onFocus();
+    }
+  }, [isNewNode, onFocus]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -180,10 +188,10 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
+      className={`node-container ${isHovered ? 'hovered' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`node-container${isHovered ? ' node-container_hover' : ''}`}
+      onClick={handleTextEditorClick}
     >
       <div ref={refs.setReference}>
         {/* Reference element for floating UI */}

@@ -1,0 +1,143 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.error {
+    background-color: #fff2f2;
+    border: 1px solid #ffcdd2;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    color: #d32f2f;
+}
+
+.error p {
+    margin: 0 0 8px 0;
+}
+
+.settingsButton {
+    background: none;
+    border: none;
+    color: #0066cc;
+    padding: 0;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.settingsButton:hover {
+    color: #0052a3;
+}
+
+.generatedText {
+    margin: 16px 0;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.generatedText h3 {
+    margin: 0 0 12px 0;
+    color: #333;
+}
+
+.textContent {
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.cancelButton,
+.generateButton,
+.insertButton {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelButton {
+    background: none;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+.cancelButton:hover {
+    background: #f5f5f5;
+}
+
+.generateButton {
+    background: #0066cc;
+    border: none;
+    color: white;
+}
+
+.generateButton:hover:not(:disabled) {
+    background: #0052a3;
+}
+
+.generateButton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.insertButton {
+    background: #4caf50;
+    border: none;
+    color: white;
+    width: 100%;
+}
+
+.insertButton:hover {
+    background: #43a047;
+}

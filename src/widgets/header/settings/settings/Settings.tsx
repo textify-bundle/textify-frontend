@@ -26,18 +26,12 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [valueText, setValueText] = useState<string>('');
   const dispatch = useDispatch();
-  const settings = useSelector((state: RootState) => state.settings);
+  const settings = useSelector((state: RootState) => state.userSettings);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleColorChange =
-    (
-      colorType: keyof Pick<
-        UserSettingsState,
-        'backgroundColor' | 'textColor' | 'barColor'
-      >,
-    ) =>
+  const handleColorChange = (colorType: keyof Pick<UserSettingsState, 'backgroundColor' | 'textColor' | 'barColor'>) => 
     (color: string) => {
       switch (colorType) {
         case 'backgroundColor':
@@ -56,48 +50,27 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
     <>
       <TModal isOpen={open} onClose={handleClose} title="Settings">
         <Box className="settings-dialog">
-          {!isTrash && (
-            <Search
-              placeholder="Search in file"
-              value={valueText}
-              onChange={setValueText}
-            />
-          )}
-          {!isTrash && (
-            <SettingButton placeholder="Delete project" onClick={handleClose} />
-          )}
+          {!isTrash && <Search placeholder="Search in file" value={valueText} onChange={setValueText} />}
+          {!isTrash && <SettingButton placeholder="Delete project" onClick={handleClose} />}
 
           <Box className="settings-theme">
             <Typography variant="body1">Background Color:</Typography>
-            <MuiColorInput
-              value={settings.backgroundColor}
-              onChange={handleColorChange('backgroundColor')}
-            />
+            <MuiColorInput value={settings.backgroundColor} onChange={handleColorChange('backgroundColor')}/>
           </Box>
           <Box className="settings-theme">
             <Typography variant="body1">Main Color:</Typography>
-            <MuiColorInput
-              value={settings.barColor}
-              onChange={handleColorChange('barColor')}
-            />
+            <MuiColorInput value={settings.barColor} onChange={handleColorChange('barColor')}/>
           </Box>
           <Box className="settings-theme">
             <Typography variant="body1">Text Color:</Typography>
-            <MuiColorInput
-              value={settings.textColor}
-              onChange={handleColorChange('textColor')}
-            />
+            <MuiColorInput value={settings.textColor} onChange={handleColorChange('textColor')}/>
           </Box>
 
           <Box className="settings-theme">
             <Typography variant="body1">Font Size:</Typography>
             <Select
               value={settings.fontSize}
-              onChange={(e) =>
-                dispatch(
-                  setFontSize(e.target.value as '10px' | '12px' | '16px'),
-                )
-              }
+              onChange={(e) => dispatch(setFontSize(e.target.value as '10px' | '12px' | '16px'))}
             >
               <MenuItem value="10px">Small (10px)</MenuItem>
               <MenuItem value="12px">Medium (12px)</MenuItem>
@@ -113,10 +86,25 @@ const Settings: React.FC<SettingsProps> = ({ isTrash = false }) => {
             >
               {allowedFontFamilies.map((font) => (
                 <MenuItem key={font} value={font}>
-                  {font.split(',')[0].replace(/['"]/g, '')}
+                  {font}
                 </MenuItem>
               ))}
             </Select>
+          </Box>
+
+          <Box className="settings-theme">
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                handleClose();
+                window.location.href = '/main/settings/ai';
+              }}
+              sx={{ mt: 2 }}
+            >
+              Настройки AI
+            </Button>
           </Box>
 
           <ButtonInOut placeholder="Exit" onClick={handleClose} />
