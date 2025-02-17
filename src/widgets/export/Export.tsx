@@ -25,14 +25,11 @@ const ExportModal: React.FC<ExportModalProps> = ({
         throw new Error(`Элемент с классом .${containerClass} не найден на странице.`);
       }
 
-      // Удаляем изображения с src="./icons/draggable.svg"
       const images = element.querySelectorAll('img[src="./icons/draggable.svg"]');
       images.forEach((img) => img.remove());
 
-      // Получаем HTML-контент
       const htmlContent = element.outerHTML;
 
-      // Создаем и скачиваем HTML
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
 
@@ -57,11 +54,9 @@ const ExportModal: React.FC<ExportModalProps> = ({
         return;
       }
 
-      // Удаляем изображения с src="./icons/draggable.svg"
       const images = element.querySelectorAll('img[src="./icons/draggable.svg"]');
       images.forEach((img) => img.remove());
 
-      // Используем html2pdf.js для преобразования HTML в PDF
       const options = {
         margin: 10,
         filename: 'document.pdf',
