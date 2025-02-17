@@ -36,7 +36,7 @@ const ExportModal: React.FC<ExportModalProps> = ({
         .map((sheet) => {
           try {
             return Array.from(sheet.cssRules).map((rule) => rule.cssText).join('\n');
-          } catch (e) {
+          } catch (error) {
             return '';
           }
         })

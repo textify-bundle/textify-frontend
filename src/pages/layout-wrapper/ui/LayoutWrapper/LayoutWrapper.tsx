@@ -120,7 +120,6 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     const visitInterval = setInterval(updateVisit, 10000);
     const fetchInterval = setInterval(fetchRecentVisitors, 2000);
 
-    // Initial calls
     updateVisit();
     fetchRecentVisitors();
 
@@ -128,7 +127,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
       clearInterval(visitInterval);
       clearInterval(fetchInterval);
     };
-  }, []);
+  }, [pageId, tokenPageId]);
 
 
   const toggleSidebar = () => {
