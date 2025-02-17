@@ -33,6 +33,7 @@ const App: React.FC = () => {
         <Route path="/main" element={<LayoutWrapper layout={'main'}></LayoutWrapper>} />
         <Route path="/trash" element={<LayoutWrapper layout={'trash'}></LayoutWrapper>} />
         <Route path="/:projectId" element={<LayoutWrapper layout={'project'}></LayoutWrapper>} />
+        <Route path="/shared/" element={<LayoutWrapper layout={'project'}></LayoutWrapper>} />
       </Route>
     </Routes>
   );
