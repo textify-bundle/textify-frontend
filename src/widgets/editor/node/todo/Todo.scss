@@ -1,13 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=SF+Compact+Rounded:wght@400&display=swap');
 
 .todo-container {
+  // height: 100%;
   display: flex;
   align-items: flex-start;
   padding: 0;
+  // position: absolute;
+  margin-top: 5px;
+  // justify-content: center;
 }
 
 .todo-checkbox {
+  display: flex;
   margin-right: 10px;
+  padding-top: 10px;
+  justify-content: center;
+
 }
 
 .todo-text {
@@ -19,6 +27,7 @@
   outline: none;
   padding-top: 5px;
   font-size: 12px;
+  height: 100% !important;
   overflow: hidden;
 }
 
