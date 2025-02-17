@@ -70,47 +70,38 @@ const Editor: React.FC = () => {
     [nodes, dispatch],
   );
 
-  // loading nodes from server
   useEffect(() => {
-    if (token) {
-      // Load nodes from server using token
-      (async () => {
-        try {
+    const loadData = async () => {
+      try {
+        if (token) {
+
           const { data, error } = await supabase
             .from('notes_tokens')
-            .select('pageId')
+            .select('pageId, canWrite')
             .eq('token', token)
             .single();
+
           if (error) throw error;
           if (!data) throw new Error('Token not found');
-          const tokenPageId = data.pageId;
-          setPageId(tokenPageId);
-          await dispatch(loadNodesFromServer(tokenPageId));
-          const { data: pageData, error: pageError } = await supabase
-            .from('notes_tokens')
-            .select('canWrite')
-            .eq('token', token)
-            .single();
-          if (pageError) throw pageError;
-          setCanWrite(pageData.canWrite);
-        } catch (error) {
-          console.error('Failed to load nodes from server using token', error);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    } else {
-      setCanWrite(true);
-      setPageId(initialPageId);
-      (async () => {
-        try {
+
+          setPageId(data.pageId);
+          setCanWrite(data.canWrite);
+          await dispatch(loadNodesFromServer(data.pageId));
+        } else {
+          setCanWrite(true);
+          setPageId(initialPageId);
           await dispatch(loadNodesFromServer(initialPageId));
-        } finally {
-          setLoading(false);
         }
-      })();
-    }
+      } catch (error) {
+        console.error('Failed to load nodes from server', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [initialPageId, dispatch, token]);
+
 
 
   useEffect(() => {
