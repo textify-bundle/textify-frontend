@@ -27,7 +27,6 @@ const ExportModal: React.FC<ExportModalProps> = ({
         throw new Error(`Элемент с классом .${containerClass} не найден на странице.`);
       }
 
-      // Удаляем ненужные изображения
       const images2 = element.querySelectorAll('.btn');
       images2.forEach((img) => img.remove());
 
@@ -35,7 +34,6 @@ const ExportModal: React.FC<ExportModalProps> = ({
       const images = element.querySelectorAll('img[src="/icons/draggable.svg"]');
       images.forEach((img) => img.remove());
 
-      // Получаем все стили со страницы
       const styleSheets = Array.from(document.styleSheets).map(sheet => {
         try {
           return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n');
@@ -82,11 +80,9 @@ const ExportModal: React.FC<ExportModalProps> = ({
         return;
       }
   
-      // Удаляем ненужные иконки
       const images = element.querySelectorAll('img[src="/icons/draggable.svg"]');
       images.forEach((img) => img.remove());
   
-      // Создаем стили для PDF
       const styles = `
         <style>
           * { box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -107,14 +103,12 @@ const ExportModal: React.FC<ExportModalProps> = ({
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
   
-      // Создаем временный div с нужными стилями
       const clonedElement = element.cloneNode(true) as HTMLElement;
       const tempContainer = document.createElement('div');
       tempContainer.innerHTML = styles;
       tempContainer.appendChild(clonedElement);
       document.body.appendChild(tempContainer);
   
-      // Экспортируем в PDF
       html2pdf().from(tempContainer).set(options).save().then(() => {
         document.body.removeChild(tempContainer);
       });
