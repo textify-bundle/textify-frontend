@@ -32,24 +32,9 @@ const ExportModal: React.FC<ExportModalProps> = ({
       const images = element.querySelectorAll('img[src="/icons/draggable.svg"]');
       images.forEach((img) => img.remove());
 
-      const styleSheets = Array.from(document.styleSheets)
-        .map((sheet) => {
-          try {
-            return Array.from(sheet.cssRules).map((rule) => rule.cssText).join('\n');
-          } catch (error) {
-            return '';
-          }
-        })
-        .join('\n');
-
-      const htmlContent = `
-        <html>
-          <head>
-            <style>${styleSheets}</style>
-          </head>
-          <body>${element.outerHTML}</body>
-        </html>
-      `;
+      
+      const htmlContent = element.outerHTML;
+       
 
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
