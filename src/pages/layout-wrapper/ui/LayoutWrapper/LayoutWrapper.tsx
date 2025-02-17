@@ -9,6 +9,8 @@ import { TrashBin } from '../../../trash-bin';
 import { ILayoutWrapperProps } from './ts';
 import { updatePageTitle } from '../../../../store/slices/pagesSlice';
 import './LayoutWrapper.scss';
+import { useSearchParams } from 'react-router-dom';
+import { supabase } from '../../../../utils/client';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -20,11 +22,114 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const { tree } = useSelector((state: RootState) => state.pages);
   const dispatch = useDispatch<AppDispatch>();
 
-  const users = [
-    { id: '1', name: 'weg' },
-    { id: '2', name: 'qwOleg' },
-    { id: '3', name: 'Oleg' },
-  ];
+  const [tokenPageId, setTokenPageId] = useState<number | null>(null);
+
+  const [searchParams] = useSearchParams();
+  const pageId = parseInt(searchParams.get('page') || '0', 10);
+  const token = searchParams.get('token');
+  const [canWrite, setCanWrite] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchTokenAndPageData = async () => {
+      try {
+        if (!token) {
+          setCanWrite(true);
+          return;
+        }
+
+        const { data: tokenData, error: tokenError } = await supabase
+          .from('notes_tokens')
+          .select('canWrite, pageId')
+          .eq('token', token)
+          .single();
+
+        setTokenPageId(tokenData?.pageId);
+
+        if (tokenError) throw tokenError;
+        if (!tokenData) return;
+
+        setCanWrite(tokenData.canWrite);
+
+        const { data: pageData, error: pageError } = await supabase
+          .from('notes')
+          .select('title')
+          .eq('id', tokenData.pageId)
+          .single();
+
+        if (pageError) throw pageError;
+        if (pageData) {
+          setPageTitle(pageData.title);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setCanWrite(false);
+      }
+    };
+
+    fetchTokenAndPageData();
+  }, [token]);
+
+
+  const [users, setUsers] = useState<string[]>([]);
+
+  useEffect(() => {
+    const pageIdForUpdate = pageId || tokenPageId;
+
+    const fetchRecentVisitors = async () => {
+      const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
+
+      if (!pageIdForUpdate) return;
+
+      const { data, error } = await supabase
+        .from('notes_visits')
+        .select('user_mail')
+        .eq('pageId', pageIdForUpdate)
+        .gte('last_visit', oneMinuteAgo)
+        .order('last_visit', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching visitors:', error);
+        return;
+      }
+
+      if (data) {
+        setUsers(data.map(user => user.user_mail));
+      }
+    };
+
+    const updateVisit = async () => {
+      const userId = store.getState().auth.user?.id;
+
+      if (pageId && userId) {
+        await supabase.from('notes_visits').delete().match({ userId });
+        const { error } = await supabase
+          .from('notes_visits')
+          .upsert({
+            pageId: pageIdForUpdate,
+            userId,
+            last_visit: new Date().toISOString(),
+            user_mail: store.getState().auth.user?.email,
+          });
+
+        if (error) {
+          console.error('Error updating visit:', error);
+        }
+      }
+    };
+
+    const visitInterval = setInterval(updateVisit, 10000);
+    const fetchInterval = setInterval(fetchRecentVisitors, 2000);
+
+    // Initial calls
+    updateVisit();
+    fetchRecentVisitors();
+
+    return () => {
+      clearInterval(visitInterval);
+      clearInterval(fetchInterval);
+    };
+  }, []);
+
 
   const toggleSidebar = () => {
     setIsSidebarVisible((prev) => !prev);
@@ -185,7 +290,10 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
           <div className='page-container'
             style={{ marginTop: '100px', width: '85%', margin: '100px auto' }}
           >
-            <div className="title-container">
+            <div className="title-container" style={{
+              pointerEvents: canWrite ? 'auto' : 'none',
+              opacity: canWrite ? 1 : 0.7
+            }}>
               {isEditingTitle ? (
                 <input
                   type="text"
