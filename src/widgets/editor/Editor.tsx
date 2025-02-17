@@ -31,7 +31,6 @@ const Editor: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
 
-  // Local loading state
   const [loading, setLoading] = useState(true);
   const [newNodeId, setNewNodeId] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
@@ -69,10 +68,8 @@ const Editor: React.FC = () => {
     [nodes, dispatch]
   );
 
-  // loading nodes from server
   useEffect(() => {
     if(token){
-      // Load nodes from server using token
       (async () => {
         try {
           const { data, error } = await supabase
@@ -106,7 +103,6 @@ const Editor: React.FC = () => {
     }
   }, [pageId, dispatch, token]);
 
-  // debounced saving
   useEffect(() => {
 
     const debounceTimer = setTimeout(() => {
