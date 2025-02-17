@@ -4,6 +4,16 @@ import { loadSettingsFromLocalStorage, saveSettingsToLocalStorage } from '../../
  
 
 export const allowedFontFamilies: string[] = [
+  'Arial, sans-serif',
+  'Times New Roman", serif',
+  'Courier New", monospace',
+  'Georgia, serif',
+  'Verdana, sans-serif',
+  'Trebuchet MS", sans-serif',
+  'Lucida Console", monospace',
+  'Comic Sans MS", cursive',
+  'Impact, sans-serif',
+  'Tahoma, sans-serif',
   'Varela Round', 
   'Open Sans', 
   'Roboto'

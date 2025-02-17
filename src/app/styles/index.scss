@@ -1,8 +1,23 @@
+/* System Fonts */
+/* Эти шрифты уже установлены в системе, поэтому их не нужно импортировать через Google Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Open+Sans&family=Roboto&display=swap');
 @import './global-font.scss';
 
 :root {
   --app-font-family: 'Varela Round', sans-serif;
+  
+  /* Font Family Variables */
+  --font-arial: Arial, sans-serif;
+  --font-times: 'Times New Roman', serif;
+  --font-courier: 'Courier New', monospace;
+  --font-georgia: Georgia, serif;
+  --font-verdana: Verdana, sans-serif;
+  --font-trebuchet: 'Trebuchet MS', sans-serif;
+  --font-lucida: 'Lucida Console', monospace;
+  --font-comic: 'Comic Sans MS', cursive;
+  --font-impact: Impact, sans-serif;
+  --font-tahoma: Tahoma, sans-serif;
 }
 
 body {
