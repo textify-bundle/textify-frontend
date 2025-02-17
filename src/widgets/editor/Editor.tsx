@@ -112,13 +112,34 @@ const Editor: React.FC = () => {
     }
   }, [initialPageId, dispatch, token]);
 
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (!loading) {
+        try {
+          const { payload: updatedNodes } = await dispatch(loadNodesFromServer(pageId)).unwrap();
+  
+          // Обновляем только если есть новые изменения
+          dispatch({
+            type: 'nodes/mergeUpdates',
+            payload: updatedNodes,
+          });
+        } catch (error) {
+          console.error('Ошибка при обновлении данных:', error);
+        }
+      }
+    }, 3000);
+  
+    return () => clearInterval(interval);
+  }, [pageId, dispatch, loading]);
+
   // debounced saving
   useEffect(() => {
     if (!canWrite) return;
 
     const debounceTimer = setTimeout(() => {
       dispatch(saveNodesToServer({ pageId, nodes }));
-    }, 1000);
+    }, 10);
     return () => clearTimeout(debounceTimer);
   }, [pageId, nodes, dispatch, canWrite]);
 
