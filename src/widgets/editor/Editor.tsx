@@ -25,6 +25,7 @@ import {
   loadNodesFromServer,
   saveNodesToServer,
 } from '../../store/slices/nodeSlice';
+import { supabase } from '../../utils/client';
 
 const Editor: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +36,8 @@ const Editor: React.FC = () => {
   const [newNodeId, setNewNodeId] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const pageId = parseInt(searchParams.get('page') || '0', 10);
+  const token = searchParams.get('token');
+  const [canWrite, setCanWrite] = useState<boolean>(true);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -68,17 +71,44 @@ const Editor: React.FC = () => {
 
   // loading nodes from server
   useEffect(() => {
-    (async () => {
-      try {
-        await dispatch(loadNodesFromServer(pageId));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [pageId, dispatch]);
+    if(token){
+      // Load nodes from server using token
+      (async () => {
+        try {
+          const { data, error } = await supabase
+            .from('notes_tokens')
+            .select('pageId')
+            .eq('token', token)
+            .single();
+          if (error) throw error;
+          if (!data) throw new Error('Token not found');
+          const pageId = data.pageId;
+          await dispatch(loadNodesFromServer(pageId));
+          const { data: pageData, error: pageError } = await supabase.from('notes_tokens').select('canWrite').eq('token', token).single();
+          if (pageError) throw pageError;
+          setCanWrite(pageData.canWrite);
+        } catch (error) {
+          console.error('Failed to load nodes from server using token', error);
+        } finally {
+          setLoading(false);
+        }
+      })();
+      return;
+    }else {
+      setCanWrite(true);
+      (async () => {
+        try {
+          await dispatch(loadNodesFromServer(pageId));
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [pageId, dispatch, token]);
 
   // debounced saving
   useEffect(() => {
+
     const debounceTimer = setTimeout(() => {
       dispatch(saveNodesToServer({ pageId, nodes }));
     }, 1000);
@@ -94,26 +124,32 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis]}
-    >
-      <SortableContext
-        items={nodes.map((node) => node.id)}
-        strategy={verticalListSortingStrategy}
+    <div
+      style={{
+        pointerEvents: canWrite ? 'auto' : 'none',
+        opacity: canWrite ? 1 : 0.7
+      }}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
       >
-        {nodes.map((node) => (
-          <NodeContainer
-            key={node.id}
-            node={node}
-            isNewNode={node.id === newNodeId}
-            onFocus={() => handleFocusNewNode(node.id)}
-          />
-        ))}
-      </SortableContext>
-    </DndContext>
+        <SortableContext
+          items={nodes.map((node) => node.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {nodes.map((node) => (
+            <NodeContainer
+              key={node.id}
+              node={node}
+              isNewNode={node.id === newNodeId}
+              onFocus={() => handleFocusNewNode(node.id)}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 };
 

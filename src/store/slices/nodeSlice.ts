@@ -23,7 +23,7 @@ export const loadNodesFromServer = createAsyncThunk(
       const { data, error } = await supabase.from('notes').select('markup_json').eq('id', pageId).single();
       if (error) return initialState.nodes;
       if (!data || !data.markup_json) return initialState.nodes;
-      
+
       return JSON.parse(data.markup_json);
     }
     catch (error) { 

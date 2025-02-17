@@ -227,7 +227,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
                     (e.currentTarget.style.backgroundColor = '#FFFFFF')
                   }
                 >
-                  <img src={`./node-types/${type}.png`} alt="" width={`30px`} />
+                  <img src={`/node-types/${type}.png`} alt="" width={`30px`} />
                   <h4>{type}</h4>
                 </div>
               ))}
@@ -253,7 +253,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <img src="./icons/plus.svg" width="15px" alt="Add Node" />
+              <img src="/icons/plus.svg" width="15px" alt="Add Node" />
             </button>
           </div>
           <div
@@ -270,7 +270,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
               onClick={handleDeleteNode}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <img src="./icons/trash.svg" width="15px" alt="Delete Node" />
+              <img src="/icons/trash.svg" width="15px" alt="Delete Node" />
             </button>
           </div>
         </>
@@ -325,7 +325,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
         {...listeners}
         className="node-container__handle"
       >
-        <img src="./icons/draggable.svg" alt="Drag Handle" width="15px" />
+        <img src="/icons/draggable.svg" alt="Drag Handle" width="15px" />
       </div>
     </div>
   );
