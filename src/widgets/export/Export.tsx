@@ -7,6 +7,8 @@ interface ExportModalProps {
   buttonText?: string;
   modalTitle?: string;
   containerClass?: string;
+  handleExportToHTML?: () => void; 
+  handleExportToPdf?: () => void;   
 }
 
 const ExportModal: React.FC<ExportModalProps> = ({
