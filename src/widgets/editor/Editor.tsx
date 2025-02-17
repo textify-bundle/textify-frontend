@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   DndContext,
@@ -7,7 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  UniqueIdentifier,
+  type UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -19,7 +20,7 @@ import { useSearchParams } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 
 import NodeContainer from './node/NodeContainer';
-import { AppDispatch, RootState } from '../../store';
+import type { AppDispatch, RootState } from '../../store';
 import {
   reorderNodes,
   loadNodesFromServer,
@@ -31,19 +32,19 @@ const Editor: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
 
-  // Local loading state
   const [loading, setLoading] = useState(true);
   const [newNodeId, setNewNodeId] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
-  const pageId = parseInt(searchParams.get('page') || '0', 10);
+  const initialPageId = Number.parseInt(searchParams.get('page') || '0', 10);
   const token = searchParams.get('token');
   const [canWrite, setCanWrite] = useState<boolean>(true);
+  const [pageId, setPageId] = useState<number>(initialPageId);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleFocusNewNode = (id: string) => {
@@ -66,12 +67,12 @@ const Editor: React.FC = () => {
 
       dispatch(reorderNodes({ oldIndex, newIndex }));
     },
-    [nodes, dispatch]
+    [nodes, dispatch],
   );
 
   // loading nodes from server
   useEffect(() => {
-    if(token){
+    if (token) {
       // Load nodes from server using token
       (async () => {
         try {
@@ -82,9 +83,14 @@ const Editor: React.FC = () => {
             .single();
           if (error) throw error;
           if (!data) throw new Error('Token not found');
-          const pageId = data.pageId;
-          await dispatch(loadNodesFromServer(pageId));
-          const { data: pageData, error: pageError } = await supabase.from('notes_tokens').select('canWrite').eq('token', token).single();
+          const tokenPageId = data.pageId;
+          setPageId(tokenPageId);
+          await dispatch(loadNodesFromServer(tokenPageId));
+          const { data: pageData, error: pageError } = await supabase
+            .from('notes_tokens')
+            .select('canWrite')
+            .eq('token', token)
+            .single();
           if (pageError) throw pageError;
           setCanWrite(pageData.canWrite);
         } catch (error) {
@@ -93,27 +99,28 @@ const Editor: React.FC = () => {
           setLoading(false);
         }
       })();
-      return;
-    }else {
+    } else {
       setCanWrite(true);
+      setPageId(initialPageId);
       (async () => {
         try {
-          await dispatch(loadNodesFromServer(pageId));
+          await dispatch(loadNodesFromServer(initialPageId));
         } finally {
           setLoading(false);
         }
       })();
     }
-  }, [pageId, dispatch, token]);
+  }, [initialPageId, dispatch, token]);
 
   // debounced saving
   useEffect(() => {
+    if (!canWrite) return;
 
     const debounceTimer = setTimeout(() => {
       dispatch(saveNodesToServer({ pageId, nodes }));
     }, 1000);
     return () => clearTimeout(debounceTimer);
-  }, [pageId, nodes, dispatch]);
+  }, [pageId, nodes, dispatch, canWrite]);
 
   if (loading) {
     return (
@@ -127,8 +134,9 @@ const Editor: React.FC = () => {
     <div
       style={{
         pointerEvents: canWrite ? 'auto' : 'none',
-        opacity: canWrite ? 1 : 0.7
-      }}>
+        opacity: canWrite ? 1 : 0.7,
+      }}
+    >
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
