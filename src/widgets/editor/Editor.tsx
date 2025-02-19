@@ -27,6 +27,7 @@ import {
   saveNodesToServer,
 } from '../../store/slices/nodeSlice';
 import { supabase } from '../../utils/client';
+import ChatWidget from './ChatWidget';
 
 const Editor: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -120,33 +121,36 @@ const Editor: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        pointerEvents: canWrite ? 'auto' : 'none',
-        opacity: canWrite ? 1 : 0.7,
-      }}
-    >
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
+    <Box sx={{ height: '100vh', bgcolor: 'background.default' }}>
+      <div
+        style={{
+          pointerEvents: canWrite ? 'auto' : 'none',
+          opacity: canWrite ? 1 : 0.7,
+        }}
       >
-        <SortableContext
-          items={nodes.map((node) => node.id)}
-          strategy={verticalListSortingStrategy}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis]}
         >
-          {nodes.map((node) => (
-            <NodeContainer
-              key={node.id}
-              node={node}
-              isNewNode={node.id === newNodeId}
-              onFocus={() => handleFocusNewNode(node.id)}
-            />
-          ))}
-        </SortableContext>
-      </DndContext>
-    </div>
+          <SortableContext
+            items={nodes.map((node) => node.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {nodes.map((node) => (
+              <NodeContainer
+                key={node.id}
+                node={node}
+                isNewNode={node.id === newNodeId}
+                onFocus={() => handleFocusNewNode(node.id)}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
+      <ChatWidget />
+    </Box>
   );
 };
 
