@@ -43,9 +43,10 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const sizes = ['small','normal', 'large', 'huge'];
  
   const handleChange = (newValue: string) => {
+    setValue(newValue);
+    onContentChange(newValue);
+
     const plainText = newValue.replace(/<[^>]+>/g, '').trim();
-    setValue(plainText);
-    onContentChange(plainText);
 
     if (plainText.startsWith('/')) {
       onDropdown?.(true);
