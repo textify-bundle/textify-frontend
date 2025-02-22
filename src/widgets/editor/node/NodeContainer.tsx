@@ -7,7 +7,6 @@ import {
   addNode,
   removeNode,
 } from '../../../store/slices/nodeSlice';
-
 import {
   CustomNode,
   MediaContent,
@@ -59,12 +58,20 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
   const handleContentChange = (newContent: CustomNode['content']) => {
+    const isEmptyWithSlash =
+      typeof newContent === 'string' && newContent === '/';
+    if (isEmptyWithSlash) {
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
     dispatch(updateNode({ ...node, content: newContent }));
   };
 
@@ -248,8 +255,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           >
             <button
               onClick={() => {
-                setShowDropdown(true); 
-                handleAddNode();
+                handleAddNode(node.id);
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
@@ -307,17 +313,18 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           />
         ) : (
           <TextEditor
-            inputId={`node-${node.id}`}
-            content={node.content}
-            styles={node.styles}
-            onContentChange={handleContentChange}
-            onEnterPress={() => {
-              handleAddNode(node.id);
-            }}
-            nodeId={node.id}
-            onDelete={handleDeleteNode}
-            nodeType={node.type}
-          />
+          inputId={`node-${node.id}`}
+          content={node.content}
+          styles={node.styles}
+          onContentChange={handleContentChange}
+          onEnterPress={() => {
+            handleAddNode(node.id);
+          }}
+          nodeId={node.id}
+          onDelete={handleDeleteNode}
+          nodeType={node.type}
+          onDropdown = {setShowDropdown}
+        />
         )}
       </div>
       <div

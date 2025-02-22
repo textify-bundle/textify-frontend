@@ -16,10 +16,11 @@ interface TextEditorProps {
   nodeId: string;
   onDelete?: () => void;
   nodeType?: string;
+  onDropdown?: (value: boolean) => void; 
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
-  content, styles, inputId, onContentChange, onEnterPress, onDelete
+  content, styles, inputId, onContentChange, onEnterPress, onDelete, onDropdown
 }) => {
   const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
   const [isToolbarVisible, setIsToolbarVisible] = useState<boolean>(false);
@@ -28,6 +29,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const quillRef = useRef<ReactQuill | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [, setToolbarMaxLeft] = useState<number>(0);
+
   const { x, y, refs, update } = useFloating({
     placement: 'left',
     middleware: [
@@ -39,13 +41,21 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   });
 
   const sizes = ['small','normal', 'large', 'huge'];
-
+ 
   const handleChange = (newValue: string) => {
-    setValue(newValue);
-    onContentChange(newValue);
+    const plainText = newValue.replace(/<[^>]+>/g, '').trim();
+    setValue(plainText);
+    onContentChange(plainText);
+
+    if (plainText.startsWith('/')) {
+      onDropdown?.(true);
+    } else {
+      onDropdown?.(false);
+    }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       onEnterPress();
@@ -54,8 +64,13 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
       if (onDelete) {
         onDelete();
       }
-    }
+    }     
   };
+
+  useEffect(() => {
+    setValue(typeof content === 'string' ? content : '');
+  }, [content]);
+  
 
   const handleBold = () => {
     const quill = quillRef.current?.getEditor();
