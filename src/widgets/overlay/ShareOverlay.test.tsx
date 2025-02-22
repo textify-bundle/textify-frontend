@@ -1,6 +1,7 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
-import {  cleanup } from '@testing-library/react';
-// import ShareOverlay from './ShareOverlay';
+import { render, cleanup } from '@testing-library/react';
+import ShareOverlay from './ShareOverlay';
+import React from 'react';
 
 describe("PageShare component", () => {
     beforeEach(() => {
@@ -11,7 +12,7 @@ describe("PageShare component", () => {
             writable: true
         });
 
-        // render(<ShareOverlay pageId={123} />);
+        render(<ShareOverlay pageId={1} />);
     });
 
     afterEach(cleanup);
