@@ -22,6 +22,7 @@
     "@floating-ui/react": "^0.27.4",
     "@mui/base": "^5.0.0-beta.61",
     "@mui/icons-material": "^6.1.8",
+    "@mui/x-data-grid": "^7.27.0",
     "@reduxjs/toolkit": "^2.3.0",
     "@sentry/react": "^8.39.0",
     "@supabase/supabase-js": "^2.46.1",
