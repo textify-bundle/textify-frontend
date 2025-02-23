@@ -24,7 +24,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3000/start-session', {
+    fetch('https://amenable-grizzled-variraptor.glitch.me/start-session', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         .catch(error => console.error('Error starting session:', error));
 
     return () => {
-        fetch('http://localhost:3000/end-session', {
+        fetch('https://amenable-grizzled-variraptor.glitch.me/end-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
 
   const handleSendButtonClick = async () => {
     try {
-        const response = await fetch('http://localhost:3000/click', {
+        const response = await fetch('https://amenable-grizzled-variraptor.glitch.me/click', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
