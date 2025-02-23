@@ -10,6 +10,7 @@ export const ClickCounter: React.FC<ClickCounterProps> = ({ userName }) => {
     const [clickCount, setClickCount] = useState<number>(0);
     const [showTooltip, setShowTooltip] = useState(false);
 
+
     useEffect(() => {
         // Start session when component mounts
         fetch('http://localhost:3000/start-session', {
@@ -35,8 +36,8 @@ export const ClickCounter: React.FC<ClickCounterProps> = ({ userName }) => {
         };
     }, [userName]);
 
-    const handleClick = () => {
-        fetch('http://localhost:3000/click', {
+    const handleClick = async () => {
+        await fetch('http://localhost:3000/click', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

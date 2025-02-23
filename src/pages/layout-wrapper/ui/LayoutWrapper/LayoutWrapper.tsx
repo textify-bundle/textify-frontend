@@ -21,6 +21,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const { backgroundColor, fontSize, fontFamily, textColor, barColor } =
     useSelector((state: RootState) => state.settings);
   const { tree } = useSelector((state: RootState) => state.pages);
+  const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const [tokenPageId, setTokenPageId] = useState<number | null>(null);
@@ -99,7 +100,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     };
 
     const updateVisit = async () => {
-      const userId = store.getState().auth.user?.id;
+      const userId = user?.id;
 
       if (pageId && userId) {
         await supabase.from('notes_visits').delete().match({ userId });
@@ -109,7 +110,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
             pageId: pageIdForUpdate,
             userId,
             last_visit: new Date().toISOString(),
-            user_mail: store.getState().auth.user?.email,
+            user_mail: user?.email,
           });
 
         if (error) {
@@ -129,7 +130,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
       clearInterval(visitInterval);
       clearInterval(fetchInterval);
     };
-  }, []);
+  }, [pageId, tokenPageId, user]);
 
 
   const toggleSidebar = () => {
@@ -238,7 +239,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
             }}
           ></div>
 
-          {store.getState().auth.user?.email || 'example@mail.ru'}
+          {user?.email || 'example@mail.ru'}
         </div>
         <div style={{ marginLeft: 11, marginTop: 20, width: 200 }}></div>
         <PagesTree onPageSelect={handlePageSelect} />
@@ -316,8 +317,12 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
               )}
               <hr className="title-hr" />
             </div>
-            <Editor />
-            <ClickCounter userName="artem" />
+            <div className="layout-wrapper__content">
+              <Editor />
+              {user?.email && (
+                <ClickCounter userName={user.email} />
+              )}
+            </div>
           </div>
         )}
       </div>
