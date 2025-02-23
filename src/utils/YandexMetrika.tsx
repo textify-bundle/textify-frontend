@@ -2,8 +2,12 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    ym: (id: number, action: string, params?: any) => void;
+    ym: (id: number, action: string, params?: unknown) => void;
   }
+}
+
+interface YandexMetrikaWindow extends Window {
+  [key: string]: unknown;
 }
 
 const YANDEX_METRIKA_ID = 100006634;
@@ -14,19 +18,32 @@ export function YandexMetrika() {
     if (typeof window === 'undefined') return;
 
     const loadYandexMetrika = () => {
-      ((m: Window, e: Document, t: string, r: string, i: string) => {
-        (m as any)[i] =
-          (m as any)[i] ||
-          ((...args: any[]) => {
-            ((m as any)[i].a = (m as any)[i].a || []).push(args);
+      ((
+        m: YandexMetrikaWindow,
+        e: Document,
+        t: string,
+        r: string,
+        i: string,
+      ) => {
+        m[i] =
+          m[i] ||
+          ((...args: unknown[]) => {
+            ((m[i] as { a: unknown[] }).a =
+              (m[i] as { a: unknown[] }).a || []).push(args);
           });
-        (m as any)[i].l = 1 * new Date().getTime();
+        (m[i] as { l: number }).l = 1 * new Date().getTime();
         const k = e.createElement(t) as HTMLScriptElement;
         const a = e.getElementsByTagName(t)[0];
         k.async = true;
         k.src = r;
         a.parentNode?.insertBefore(k, a);
-      })(window, document, 'script', YANDEX_METRIKA_SCRIPT_URL, 'ym');
+      })(
+        window as unknown as YandexMetrikaWindow,
+        document,
+        'script',
+        YANDEX_METRIKA_SCRIPT_URL,
+        'ym',
+      );
 
       window.ym(YANDEX_METRIKA_ID, 'init', {
         clickmap: true,
