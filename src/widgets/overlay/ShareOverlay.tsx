@@ -34,7 +34,9 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
     })
         .then(response => response.json())
         .then(data => setClickCount(data.clicks))
-        .catch(error => {});
+        .catch(() => {
+         
+        });
 
     return () => {
         fetch(`${API_URL}/end-session`, {
@@ -43,7 +45,9 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ userName }),
-        }).catch(error => {});
+        }).catch(() => {
+       
+        });
     };
   }, [userName, API_URL]);
 
@@ -87,7 +91,8 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         });
         const data = await response.json();
         setClickCount(data.clicks);
-    } catch (error) {
+    } catch {
+        
     }
 
     setOpenDialog(true);
