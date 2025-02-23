@@ -92,7 +92,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         const data = await response.json();
         setClickCount(data.clicks);
     } catch {
-        
+        /* Игнорируем ошибку обновления счетчика */
     }
 
     setOpenDialog(true);

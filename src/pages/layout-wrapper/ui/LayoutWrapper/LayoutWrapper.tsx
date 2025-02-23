@@ -67,7 +67,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     };
 
     fetchTokenAndPageData();
-  }, [token, pageId, tokenPageId]);
+  }, [token]);
 
 
   const [users, setUsers] = useState<string[]>([]);
