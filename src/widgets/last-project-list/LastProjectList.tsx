@@ -22,6 +22,7 @@ const LastProjectList: React.FC = () => {
   const projectData = useSelector(
     (state: RootState) => state.pages.projectData,
   );
+  const tree = useSelector((state: RootState) => state.pages.tree); 
   const loading = useSelector((state: RootState) => state.pages.loading);
   const error = useSelector((state: RootState) => state.pages.error);
   const navigate = useNavigate();
@@ -86,6 +87,11 @@ const LastProjectList: React.FC = () => {
     }
   };
 
+  const getFirstPageId = (projectId: number): number | undefined => {
+    const project = tree.find((item) => item.id === projectId);
+    return project?.items?.[0]?.id || undefined;
+  };
+
   return (
     <div
       style={{
@@ -96,13 +102,17 @@ const LastProjectList: React.FC = () => {
         gap: '40.82px',
       }}
     >
-      {filteredProjectData.map((project, index) => (
-        <LastProjectCard
-          key={index}
-          title={project.name}
-          imageUrl={getImageUrl(index)}
-        />
-      ))}
+      {filteredProjectData.map((project, index) => {
+        return (
+          <LastProjectCard
+            key={index}
+            title={project.name}
+            imageUrl={getImageUrl(index)}
+            projectId={project.id}
+            firstPageId={getFirstPageId(project.id)}
+          />
+        );
+      })}
       <LastProjectCard
         key="new-project"
         imageUrl={newProjectButton.imageUrl}
@@ -113,7 +123,7 @@ const LastProjectList: React.FC = () => {
       <Dialog open={isDialogOpen} onClose={closeDialog}>
         <DialogTitle>Создание нового проекта</DialogTitle>
         <DialogContent>
-          <TextField 
+          <TextField
             name="projectName"
             autoFocus
             margin="dense"
