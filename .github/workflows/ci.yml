@@ -89,5 +89,5 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
