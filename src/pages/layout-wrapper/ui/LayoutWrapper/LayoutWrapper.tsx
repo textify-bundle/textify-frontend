@@ -319,9 +319,6 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
             </div>
             <div className="layout-wrapper__content">
               <Editor />
-              {user?.email && (
-                <ClickCounter userName={user.email} />
-              )}
             </div>
           </div>
         )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './ShareOverlay.scss';
@@ -9,26 +9,49 @@ import { useSearchParams } from 'react-router-dom';
 interface PageShareProps {
   title?: string;
   link?: string;
-  pageId: number; // Add pageId prop
+  pageId: number;
+  userName: string;
 }
 
-const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }) => {
+const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", userName }) => {
   const [selectedItem, setSelectedItem] = useState<string>('Только чтение');
   const [expanded, setExpanded] = useState<string | false>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [generatedLink, setGeneratedLink] = useState<string>('');
   const [searchParams] = useSearchParams();
+  const [clickCount, setClickCount] = useState<number>(0);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/start-session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName }),
+    })
+        .then(response => response.json())
+        .then(data => setClickCount(data.clicks))
+        .catch(error => console.error('Error starting session:', error));
+
+    return () => {
+        fetch('http://localhost:3000/end-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userName }),
+        }).catch(error => console.error('Error ending session:', error));
+    };
+  }, [userName]);
 
   const generateToken = async () => {
-    // Generate a random token
     const token = Math.random().toString(36).substring(2, 15) + 
                  Math.random().toString(36).substring(2, 15);
-    // Determine write permissions based on selected option
     const canWrite = selectedItem === 'Редактирование';
 
     try {
-      // Insert token into the database
       const { error } = await supabase
         .from('notes_tokens')
         .insert([
@@ -42,7 +65,6 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }
 
       if (error) throw error;
 
-      // Generate shareable link with token
       const shareableLink = `${window.location.origin}/shared/?token=${token}`;
       setGeneratedLink(shareableLink);
       return shareableLink;
@@ -51,6 +73,26 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }
       console.error('Error generating share link:', error);
       return null;
     }
+  };
+
+  const handleSendButtonClick = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userName }),
+        });
+        const data = await response.json();
+        console.log('Получены данные с сервера:', data);
+        setClickCount(data.clicks);
+        console.log('Состояние обновлено на:', data.clicks);
+    } catch (error) {
+        console.error('Error updating clicks:', error);
+    }
+
+    setOpenDialog(true);
   };
 
   const handleCopyLink = async () => {
@@ -76,7 +118,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }
 
   const handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedItem(event.target.value);
-    setGeneratedLink(''); // Reset link when permissions change
+    setGeneratedLink('');
   };
 
   const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -85,9 +127,19 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }
 
   return (
     <div className='share'>
-      <Button className="send-button" onClick={() => setOpenDialog(true)}>
-        {title}
-      </Button>
+      <div className="share-button-wrapper">
+        <Button 
+          className="send-button" 
+          onClick={handleSendButtonClick}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          {title}
+        </Button>
+        <div className={`count-tooltip ${showTooltip ? 'visible' : ''}`}>
+          Total Clicks: {clickCount}
+        </div>
+      </div>
 
       <TModal isOpen={openDialog} onClose={() => setOpenDialog(false)} title="Поделиться">
         <Box className="share-dialog__access">
