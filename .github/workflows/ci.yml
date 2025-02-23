@@ -76,7 +76,7 @@ jobs:
         run: npm ci
 
       - name: Start Vite server
-        run: npm run dev &
+        run: nohup npm run dev > vite.log 2>&1 &
 
       - name: Wait for Vite server to start
         run: |
