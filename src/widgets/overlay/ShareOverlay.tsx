@@ -22,9 +22,10 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
   const [searchParams] = useSearchParams();
   const [clickCount, setClickCount] = useState<number>(0);
   const [showTooltip, setShowTooltip] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch('https://amenable-grizzled-variraptor.glitch.me/start-session', {
+    fetch(`${API_URL}/start-session`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -33,18 +34,18 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
     })
         .then(response => response.json())
         .then(data => setClickCount(data.clicks))
-        .catch(error => console.error('Error starting session:', error));
+        .catch(error => {});
 
     return () => {
-        fetch('https://amenable-grizzled-variraptor.glitch.me/end-session', {
+        fetch(`${API_URL}/end-session`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ userName }),
-        }).catch(error => console.error('Error ending session:', error));
+        }).catch(error => {});
     };
-  }, [userName]);
+  }, [userName, API_URL]);
 
   const generateToken = async () => {
     const token = Math.random().toString(36).substring(2, 15) + 
@@ -77,7 +78,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
 
   const handleSendButtonClick = async () => {
     try {
-        const response = await fetch('https://amenable-grizzled-variraptor.glitch.me/click', {
+        const response = await fetch(`${API_URL}/click`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,11 +86,8 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
             body: JSON.stringify({ userName }),
         });
         const data = await response.json();
-        console.log('Получены данные с сервера:', data);
         setClickCount(data.clicks);
-        console.log('Состояние обновлено на:', data.clicks);
     } catch (error) {
-        console.error('Error updating clicks:', error);
     }
 
     setOpenDialog(true);
