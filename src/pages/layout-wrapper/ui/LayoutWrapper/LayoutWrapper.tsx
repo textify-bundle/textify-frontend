@@ -11,6 +11,7 @@ import { updatePageTitle } from '../../../../store/slices/pagesSlice';
 import './LayoutWrapper.scss';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../../../../utils/client';
+import {ClickCounter} from '../../../../widgets/editor/node/click-counter/ClickCounter';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -316,6 +317,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
               <hr className="title-hr" />
             </div>
             <Editor />
+            <ClickCounter userName="artem" />
           </div>
         )}
       </div>
