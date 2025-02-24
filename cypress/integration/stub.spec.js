@@ -23,8 +23,8 @@ describe('Change project data', () => {
       cy.get('button[type="submit"]').click();
       cy.url().should('include', '/main');
       cy.contains('Главная').should('be.visible');
-      cy.get('.last-project-card').eq(0).click();
-      cy.get('.text-editor').type('Simple Example text');
+      cy.get('.project-card').eq(0).click();
+      cy.get('.text-editor').type('Simple Example text')
       cy.contains('Simple Example text').should('exist');
     });
 });
