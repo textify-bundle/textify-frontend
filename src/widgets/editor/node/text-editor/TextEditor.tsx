@@ -4,8 +4,10 @@ import 'react-quill/dist/quill.snow.css';
 import { useFloating, flip, shift, autoUpdate, offset } from '@floating-ui/react';
 import { Menu, MenuItem } from '@mui/material';
 import './TextEditor.scss';
-import { NodeContent, NodeStyles } from '../../../../shared/types/editor/node';
+import { NodeContent, NodeStyles, NodeType } from '../../../../shared/types/editor/node';
 import TextFormattingToolbar from '../../../../shared/ui/text-formatting-toolbar/TextFormattingToolbar';
+import { useDispatch } from 'react-redux';
+import { updateNode } from '../../../../store/slices/nodeSlice';
 
 interface TextEditorProps {
   content: NodeContent;
@@ -14,21 +16,23 @@ interface TextEditorProps {
   onEnterPress: () => void;
   inputId?: string;
   nodeId: string;
+  nodeType: NodeType; 
   onDelete?: () => void;
-  nodeType?: string;
   onDropdown?: (value: boolean) => void;
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
-  content, styles, inputId, onContentChange, onEnterPress, onDelete, onDropdown
+  content, styles, inputId, onContentChange, onEnterPress, onDelete, onDropdown, nodeType
 }) => {
   const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
   const [isToolbarVisible, setIsToolbarVisible] = useState<boolean>(false);
   const [, setSelectedSize] = useState<string>('normal');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const quillRef = useRef<ReactQuill | null>(null);
+  const valueRef = useRef(value);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [, setToolbarMaxLeft] = useState<number>(0);
+  const dispatch = useDispatch();
 
   const { x, y, refs, update } = useFloating({
     placement: 'left',
@@ -43,6 +47,11 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const sizes = ['small','normal', 'large', 'huge'];
 
   const handleChange = (newValue: string) => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    const selection = quill.getSelection();
+    valueRef.current = newValue;
     setValue(newValue);
     onContentChange(newValue);
 
@@ -53,30 +62,55 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     } else {
       onDropdown?.(false);
     }
-  };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      onEnterPress();
-    } else if (event.key === 'Backspace' && value === '' && !event.shiftKey) {
-      event.preventDefault();
-      if (onDelete) {
-        onDelete();
-      }
+    if (inputId) {
+      dispatch(updateNode({ id: inputId, type: nodeType, content: newValue, styles }));
     }
+
+    setTimeout(() => {
+      if (selection) {
+        quill.setSelection(selection); 
+      }
+    }, 0);
   };
 
   useEffect(() => {
-    setValue(typeof content === 'string' ? content : '');
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    if (value !== content) {
+      const selection = quill.getSelection();
+      setValue(typeof content === 'string' ? content : '');
+
+      setTimeout(() => {
+        if (selection) {
+          quill.setSelection(selection);
+        }
+      }, 0);
+    }
   }, [content]);
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const quill = quillRef.current?.getEditor();
+    const plainText = value.replace(/<[^>]+>/g, '').trim();
+    if (!quill) return;
+  
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      onEnterPress();
+    } else if (event.key === 'Backspace' && plainText === '') {
+      event.preventDefault();
+      onDelete?.();
+    } 
+  };
 
   useEffect(() => {
     if (quillRef.current) {
       quillRef.current.focus();
     }
-  }, []);
-
+  }, []); 
+  
   const handleBold = () => {
     const quill = quillRef.current?.getEditor();
     if (quill) {
@@ -208,11 +242,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
         quill.off('selection-change', handleSelectionChange);
       }
     };
-  }, [handleSelectionChange]);
-
-  useEffect(() => {
-    setValue(typeof content === 'string' ? content : '');
-  }, [content]);
+  }, [handleSelectionChange]); 
 
   useEffect(() => {
     if (containerRef.current) {
@@ -264,7 +294,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
       <ReactQuill
         ref={quillRef}
         id={inputId}
-        value={value}
+        value={valueRef.current}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         style={{
