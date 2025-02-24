@@ -1,43 +1,47 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
-import UserProjectList from './UserProjectList';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import { BrowserRouter } from 'react-router-dom';
+import UserProjectList from './UserProjectList';
 
 vi.mock('../../store/slices/pagesSlice', () => ({
     fetchTreeData: () => ({ type: 'pages/fetchTreeData' }),
     getCardDataForCards: () => ({ type: 'pages/getCardDataForCards' })
 }));
 
-describe('UserProjectList', () => {
-    const mockStore = configureStore({
-        reducer: {
-            pages: (state = {
-                projectData: [
-                    { id: 1, name: 'Тестовый проект', isRemoved: false, dateOfChange: new Date().toISOString() }
-                ],
-                tree: [
-                    { id: 1, items: [{ id: 10 }] }
-                ],
-                error: null
-            }) => state
-        }
-    });
+const mockStore = configureStore({
+    reducer: {
+        pages: (state = {
+            projectData: [
+                { id: 1, name: 'Тестовый проект', isRemoved: false, dateOfChange: new Date().toISOString() }
+            ],
+            tree: [
+                { id: 1, items: [{ id: 10 }] }
+            ],
+            error: null
+        }) => state
+    }
+});
 
+describe('UserProjectList', () => {
     it('должен вызывать onProjectsAvailable с правильным значением', () => {
         const onProjectsAvailable = vi.fn();
-        const { container } = render(
-            <Provider store={mockStore}>
-                <UserProjectList onProjectsAvailable={onProjectsAvailable} />
-            </Provider>
+        
+        render(
+            <BrowserRouter>
+                <Provider store={mockStore}>
+                    <UserProjectList onProjectsAvailable={onProjectsAvailable} />
+                </Provider>
+            </BrowserRouter>
         );
         
         expect(onProjectsAvailable).toHaveBeenCalledWith(true);
-        expect(container.querySelector('.MuiButton-root')).toBeTruthy();
+        expect(screen.getByRole('button')).toBeTruthy();
     });
 
     it('должен показывать сообщение об ошибке', () => {
-        const store = configureStore({
+        const errorStore = configureStore({
             reducer: {
                 pages: (state = {
                     projectData: [],
@@ -48,9 +52,11 @@ describe('UserProjectList', () => {
         });
 
         render(
-            <Provider store={store}>
-                <UserProjectList />
-            </Provider>
+            <BrowserRouter>
+                <Provider store={errorStore}>
+                    <UserProjectList onProjectsAvailable={() => {}} />
+                </Provider>
+            </BrowserRouter>
         );
 
         expect(screen.getByText('Error: Тестовая ошибка')).toBeTruthy();
