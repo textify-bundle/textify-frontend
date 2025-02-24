@@ -16,7 +16,7 @@ interface TextEditorProps {
   nodeId: string;
   onDelete?: () => void;
   nodeType?: string;
-  onDropdown?: (value: boolean) => void; 
+  onDropdown?: (value: boolean) => void;
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
@@ -41,7 +41,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   });
 
   const sizes = ['small','normal', 'large', 'huge'];
-  
+
   const handleChange = (newValue: string) => {
     setValue(newValue);
     onContentChange(newValue);
