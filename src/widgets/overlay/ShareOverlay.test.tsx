@@ -53,18 +53,14 @@ describe('ShareOverlay component', () => {
             </BrowserRouter>
         );
         
-        // Нажимаем на кнопку "Отправить"
         const sendButton = screen.getByText('Отправить');
         fireEvent.click(sendButton);
 
-        // Проверяем, что диалог открылся
         expect(screen.getByText('У кого есть ссылка')).toBeInTheDocument();
         
-        // Нажимаем на аккордеон для раскрытия радио кнопок
         const accordion = screen.getByRole('button', { name: 'Только чтение' });
         fireEvent.click(accordion);
 
-        // Теперь проверяем радио кнопки
         expect(screen.getByLabelText('Только чтение')).toBeInTheDocument();
         expect(screen.getByLabelText('Редактирование')).toBeInTheDocument();
     });

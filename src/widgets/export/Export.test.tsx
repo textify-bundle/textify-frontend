@@ -13,7 +13,6 @@ describe('Export component', () => {
             </ThemeProvider>
         );
         
-        // Проверяем наличие кнопки по классу
         const button = container.querySelector('.MuiButton-root');
         expect(button).toBeTruthy();
     });
