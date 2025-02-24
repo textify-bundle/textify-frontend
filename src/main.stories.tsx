@@ -4,6 +4,7 @@ import App from './app/App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import store from './store';
+import React from 'react';
 
 const meta: Meta<typeof App> = {
   title: 'Main/App',

@@ -7,7 +7,7 @@ interface LastProjectCardProps {
   title: string;
   imageUrl?: string;
   projectId?: number;
-  firstPageId?: number; 
+  firstPageId?: number;
   onClick?: () => void;
 }
 
@@ -15,7 +15,7 @@ const LastProjectCard: FC<LastProjectCardProps> = ({
   title,
   imageUrl,
   projectId,
-  firstPageId, 
+  firstPageId,
   onClick = () => {},
 }) => {
   const navigate = useNavigate();
