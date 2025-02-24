@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@adobe/css-tools": "^4.4.2",
     "@chromatic-com/storybook": "^3.2.2",
     "@eslint/js": "^9.13.0",
     "@mui/material": "^6.2.1",
@@ -92,6 +93,27 @@
     "typescript-eslint": "^8.11.0",
     "vite": "^5.4.10",
     "vitest": "^3.0.6"
+  },
+  "node_modules/@angular/core": {
+    "version": "6.1.10",
+    "resolved": "https://registry.npmjs.org/@angular/core/-/core-6.1.10.tgz",
+    "integrity": "sha512-61l3rIQTVdT45eOf6/fBJIeVmV10mcrxqS4N/1OWkuDT29YSJTZSxGcv8QjAyyutuhcqWWpO6gVRkN07rWmkPg==",
+    "license": "MIT",
+    "peer": true,
+    "dependencies": {
+      "tslib": "^1.9.0"
+    },
+    "peerDependencies": {
+      "rxjs": "^6.0.0",
+      "zone.js": "~0.8.26"
+    }
+  },
+  "node_modules/@angular/core/node_modules/tslib": {
+    "version": "1.14.1",
+    "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz",
+    "integrity": "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==",
+    "license": "0BSD",
+    "peer": true
   },
   "eslintConfig": {
     "extends": [
