@@ -5,6 +5,20 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import LastProjectList from './LastProjectList';
 
+// Мок для Supabase клиента
+vi.mock('../../utils/client', () => ({
+    supabase: {
+        from: () => ({
+            select: () => ({
+                eq: () => ({
+                    data: [],
+                    error: null
+                })
+            })
+        })
+    }
+}));
+
 // Мок для Worker API
 const mockWorkerApi = {
     loadNodesFromServer: vi.fn(),
