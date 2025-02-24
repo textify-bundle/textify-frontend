@@ -235,10 +235,10 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
           {copied ? "Скопировано!" : "Копировать ссылку"}
         </Button>
         <Button className='share-dialog__user-btn' variant="contained" onClick={() => setOpenUsersDialog(true)}>
-          Пользователи
+          Токены
         </Button>
       </TModal>
-      <TModal isOpen={openUsersDialog} onClose={() => setOpenUsersDialog(false)} title="Пользователи">
+      <TModal isOpen={openUsersDialog} onClose={() => setOpenUsersDialog(false)} title="Токены">
         <Paper style={{ height: 400, width: '100%' }}>
           <DataGrid rows={tokens} columns={columns} pageSizeOptions={[5, 10]} />
         </Paper>
