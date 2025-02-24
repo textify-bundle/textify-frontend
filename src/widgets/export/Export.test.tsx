@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../../app/styles/theme';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Export from './Export';
+
+const theme = createTheme();
 
 describe('Export component', () => {
     it('renders export button', () => {

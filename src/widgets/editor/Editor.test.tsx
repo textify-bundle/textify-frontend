@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -20,23 +20,23 @@ interface PagesState {
     error: string | null;
 }
 
-const mockDispatch = it.fn();
-it.mock('react-redux', async () => {
-  const actual = await it.importActual('react-redux');
+const mockDispatch = vi.fn();
+vi.mock('react-redux', async () => {
+  const actual = await vi.importActual('react-redux');
   return {
     ...actual,
     useDispatch: () => mockDispatch
   };
 });
 
-it.mock('../../store/slices/nodeSlice', () => ({
+vi.mock('../../store/slices/nodeSlice', () => ({
   default: (state: NodeState = { nodes: [], loading: false, error: null }) => state,
   reorderNodes: () => ({ type: 'nodes/reorderNodes' }),
   loadNodesFromServer: () => ({ type: 'nodes/loadNodesFromServer' }),
   saveNodesToServer: () => ({ type: 'nodes/saveNodesToServer' })
 }));
 
-it.mock('../../utils/client', () => ({
+vi.mock('../../utils/client', () => ({
   supabase: {
     from: () => ({
       select: () => ({
@@ -49,6 +49,21 @@ it.mock('../../utils/client', () => ({
       })
     })
   }
+}));
+
+vi.mock('../../workers/dataWorker', () => ({
+    default: class MockWorker {
+        postMessage() {}
+        addEventListener() {}
+    }
+}));
+
+vi.mock('comlink', () => ({
+    wrap: () => ({
+        loadNodesFromServer: vi.fn(),
+        saveNodesToServer: vi.fn(),
+        reorderNodes: vi.fn()
+    })
 }));
 
 const mockStore = configureStore({
@@ -95,7 +110,7 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await it.act(async () => {
+    await vi.act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -126,7 +141,7 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await it.act(async () => {
+    await vi.act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -139,10 +154,10 @@ describe('Editor Component', () => {
     const secondNode = document.querySelector('[data-handler-id="2"]');
 
     if (firstNode && secondNode) {
-      await it.act(async () => {
-        it.fireEvent.dragStart(firstNode);
-        it.fireEvent.dragOver(secondNode);
-        it.fireEvent.drop(secondNode);
+      await vi.act(async () => {
+        vi.fireEvent.dragStart(firstNode);
+        vi.fireEvent.dragOver(secondNode);
+        vi.fireEvent.drop(secondNode);
       });
 
       expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({
