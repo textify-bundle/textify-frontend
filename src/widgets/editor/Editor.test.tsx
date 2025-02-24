@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
@@ -82,15 +82,16 @@ const mockStore = configureStore({
 });
 
 describe('Editor Component', () => {
-  it('renders without crashing', () => {
-    const { container } = render(
-      <Provider store={mockStore}>
+  it('renders without crashing', async () => {
+    await act(async () => {
+      render(
         <BrowserRouter>
-          <Editor />
+          <Provider store={mockStore}>
+            <Editor />
+          </Provider>
         </BrowserRouter>
-      </Provider>
-    );
-    expect(container).toBeTruthy();
+      );
+    });
   });
 
   it('renders nodes from store', async () => {
@@ -110,13 +111,13 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await vi.act(async () => {
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Provider store={store}>
             <Editor />
-          </BrowserRouter>
-        </Provider>
+          </Provider>
+        </BrowserRouter>
       );
     });
 
@@ -141,20 +142,20 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await vi.act(async () => {
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Provider store={store}>
             <Editor />
-          </BrowserRouter>
-        </Provider>
+          </Provider>
+        </BrowserRouter>
       );
     });
     const firstNode = document.querySelector('[data-handler-id="1"]');
     const secondNode = document.querySelector('[data-handler-id="2"]');
 
     if (firstNode && secondNode) {
-      await vi.act(async () => {
+      await act(async () => {
         vi.fireEvent.dragStart(firstNode);
         vi.fireEvent.dragOver(secondNode);
         vi.fireEvent.drop(secondNode);

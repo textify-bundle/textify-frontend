@@ -17,7 +17,8 @@ vi.mock('../../../utils/client', () => ({
 const mockStore = configureStore({
     reducer: {
         auth: (state = { user: null, loading: false, error: null }) => state,
-        node: (state = { nodes: [], loading: false, error: null }) => state
+        node: (state = { nodes: [], loading: false, error: null }) => state,
+        users: (state = { users: ['User1', 'User2'], loading: false, error: null }) => state
     }
 });
 
