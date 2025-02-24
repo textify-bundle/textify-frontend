@@ -28,3 +28,19 @@ describe('Change project data', () => {
       cy.contains('Example text').should('exist');
     });
 });
+describe('Title checker', () => {
+    it('Should log in and verify the presence of the title', () => {
+        cy.visit('http://localhost:5173');
+  
+        cy.get('input[name="email"]').type('test@example.com');
+        cy.get('input[name="password"]').type('password123');
+        cy.get('button[type="submit"]').click();
+        cy.url().should('include', '/main');    
+        cy.contains('Последние проекты').should('exist');  
+        cy.contains('Ваши проекты').should('exist'); 
+        cy.wait(4000);
+        cy.contains('Корзина').click();
+        cy.url().should('include', '/trash');
+        cy.contains('Удаленные проекты', { timeout: 1000 }).should('be.visible');
+    });
+});
