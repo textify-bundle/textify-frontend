@@ -1,27 +1,27 @@
-import { describe, expect, test, vi } from 'vitest';
-import { render, act, fireEvent } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import Editor from './Editor';
 
-const mockDispatch = vi.fn();
-vi.mock('react-redux', async () => {
-  const actual = await vi.importActual('react-redux');
+const mockDispatch = it.fn();
+it.mock('react-redux', async () => {
+  const actual = await it.importActual('react-redux');
   return {
     ...actual,
     useDispatch: () => mockDispatch
   };
 });
 
-vi.mock('../../store/slices/nodeSlice', () => ({
+it.mock('../../store/slices/nodeSlice', () => ({
   default: (state = { nodes: [] }, action: any) => state,
   reorderNodes: () => ({ type: 'nodes/reorderNodes' }),
   loadNodesFromServer: () => ({ type: 'nodes/loadNodesFromServer' }),
   saveNodesToServer: () => ({ type: 'nodes/saveNodesToServer' })
 }));
 
-vi.mock('../../utils/client', () => ({
+it.mock('../../utils/client', () => ({
   supabase: {
     from: () => ({
       select: () => ({
@@ -36,28 +36,34 @@ vi.mock('../../utils/client', () => ({
   }
 }));
 
+const mockStore = configureStore({
+  reducer: {
+    node: (state = {
+      nodes: [],
+      loading: false,
+      error: null
+    }) => state,
+    pages: (state = {
+      currentPage: null,
+      loading: false,
+      error: null
+    }) => state
+  }
+});
+
 describe('Editor Component', () => {
-  test('renders without crashing', async () => {
-    const store = configureStore({
-      reducer: {
-        nodes: (state = { nodes: [] }) => state
-      }
-    });
-
-    await act(async () => {
-      render(
-        <Provider store={store}>
-          <BrowserRouter>
-            <Editor />
-          </BrowserRouter>
-        </Provider>
-      );
-    });
-
-    expect(document.body).toBeInTheDocument();
+  it('renders without crashing', () => {
+    const { container } = render(
+      <Provider store={mockStore}>
+        <BrowserRouter>
+          <Editor />
+        </BrowserRouter>
+      </Provider>
+    );
+    expect(container).toBeTruthy();
   });
 
-  test('renders nodes from store', async () => {
+  it('renders nodes from store', async () => {
     const initialState = {
       nodes: {
         nodes: [
@@ -74,7 +80,7 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await act(async () => {
+    await it.act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -88,7 +94,7 @@ describe('Editor Component', () => {
     expect(document.body.textContent).toContain('Test Node 2');
   });
 
-  test('handles node reordering', async () => {
+  it('handles node reordering', async () => {
     const initialState = {
       nodes: {
         nodes: [
@@ -105,7 +111,7 @@ describe('Editor Component', () => {
       preloadedState: initialState
     });
 
-    await act(async () => {
+    await it.act(async () => {
       render(
         <Provider store={store}>
           <BrowserRouter>
@@ -118,10 +124,10 @@ describe('Editor Component', () => {
     const secondNode = document.querySelector('[data-handler-id="2"]');
 
     if (firstNode && secondNode) {
-      await act(async () => {
-        fireEvent.dragStart(firstNode);
-        fireEvent.dragOver(secondNode);
-        fireEvent.drop(secondNode);
+      await it.act(async () => {
+        it.fireEvent.dragStart(firstNode);
+        it.fireEvent.dragOver(secondNode);
+        it.fireEvent.drop(secondNode);
       });
 
       expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({
