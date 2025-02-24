@@ -16,7 +16,7 @@ interface TextEditorProps {
   nodeId: string;
   onDelete?: () => void;
   nodeType?: string;
-  onDropdown?: (value: boolean) => void; 
+  onDropdown?: (value: boolean) => void;
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
@@ -41,7 +41,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   });
 
   const sizes = ['small','normal', 'large', 'huge'];
- 
+
   const handleChange = (newValue: string) => {
     setValue(newValue);
     onContentChange(newValue);
@@ -55,7 +55,6 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     }
   };
 
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -65,13 +64,18 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
       if (onDelete) {
         onDelete();
       }
-    }     
+    }
   };
 
   useEffect(() => {
     setValue(typeof content === 'string' ? content : '');
   }, [content]);
-  
+
+  useEffect(() => {
+    if (quillRef.current) {
+      quillRef.current.focus();
+    }
+  }, []);
 
   const handleBold = () => {
     const quill = quillRef.current?.getEditor();
@@ -160,7 +164,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
         quill.format('size', size);
       }
     }
-    setAnchorEl(null); 
+    setAnchorEl(null);
   };
 
   const handleSelectionChange = useCallback(() => {
@@ -191,7 +195,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
 
   const toggleSizeMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };  
+  };
 
   useEffect(() => {
     const quill = quillRef.current?.getEditor();
@@ -213,10 +217,9 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   useEffect(() => {
     if (containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      setToolbarMaxLeft(containerRect.right - 365); 
+      setToolbarMaxLeft(containerRect.right - 365);
     }
   }, []);
-  
 
   return (
     <div className="text-editor" style={styles}>
@@ -241,7 +244,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
             handleStrikethroughClick={handleStrikethrough}
             handleUnderlinedClick={handleUnderlined}
             handleListClick={handleList}
-            handleSizeClick={toggleSizeMenu} 
+            handleSizeClick={toggleSizeMenu}
           />
         </div>
       )}
