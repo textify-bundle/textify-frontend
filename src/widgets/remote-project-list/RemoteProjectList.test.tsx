@@ -18,7 +18,7 @@ const mockStore = configureStore({
 });
 
 describe('RemoteProjectList', () => {
-    it('должен отображать сообщение при отсутствии проектов', () => {
+    it('should display message when no projects available', () => {
         render(
             <BrowserRouter>
                 <Provider store={mockStore}>
@@ -27,13 +27,13 @@ describe('RemoteProjectList', () => {
             </BrowserRouter>
         );
         
-        expect(screen.getByText('У вас нет удалённых проектов!')).toBeTruthy();
+        expect(screen.getByText('You have no deleted projects!')).toBeTruthy();
     });
 
-    it('должен показывать сообщение об ошибке', () => {
+    it('should display error message', () => {
         const errorStore = configureStore({
             reducer: {
-                pages: (state = { projectData: [], loading: false, error: 'Тестовая ошибка' }) => state
+                pages: (state = { projectData: [], loading: false, error: 'Test error' }) => state
             }
         });
 
@@ -45,6 +45,6 @@ describe('RemoteProjectList', () => {
             </BrowserRouter>
         );
 
-        expect(screen.getByText('Error: Тестовая ошибка')).toBeTruthy();
+        expect(screen.getByText('Error: Test error')).toBeTruthy();
     });
 });

@@ -14,7 +14,7 @@ const mockStore = configureStore({
     reducer: {
         pages: (state = {
             projectData: [
-                { id: 1, name: 'Тестовый проект', isRemoved: false, dateOfChange: new Date().toISOString() }
+                { id: 1, name: 'Test project', isRemoved: false, dateOfChange: new Date().toISOString() }
             ],
             tree: [
                 { id: 1, items: [{ id: 10 }] }
@@ -25,7 +25,7 @@ const mockStore = configureStore({
 });
 
 describe('UserProjectList', () => {
-    it('должен вызывать onProjectsAvailable с правильным значением', () => {
+    it('should call onProjectsAvailable with correct value', () => {
         const onProjectsAvailable = vi.fn();
         
         render(
@@ -40,13 +40,13 @@ describe('UserProjectList', () => {
         expect(screen.getByRole('button')).toBeTruthy();
     });
 
-    it('должен показывать сообщение об ошибке', () => {
+    it('should display error message', () => {
         const errorStore = configureStore({
             reducer: {
                 pages: (state = {
                     projectData: [],
                     tree: [],
-                    error: 'Тестовая ошибка'
+                    error: 'Test error'
                 }) => state
             }
         });
@@ -59,6 +59,6 @@ describe('UserProjectList', () => {
             </BrowserRouter>
         );
 
-        expect(screen.getByText('Error: Тестовая ошибка')).toBeTruthy();
+        expect(screen.getByText('Error: Test error')).toBeTruthy();
     });
 });
