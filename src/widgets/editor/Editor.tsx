@@ -102,12 +102,34 @@ const Editor: React.FC = () => {
     loadData();
   }, [initialPageId, dispatch, token]);
 
+
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (!loading) {
+        try {
+          const updatedNodes = await dispatch(loadNodesFromServer(pageId)).unwrap();
+  
+          dispatch({
+            type: 'nodes/mergeUpdates',
+            payload: updatedNodes,
+          });
+        } catch (error) {
+            console.error('Error updating data:', error);
+        }
+      }
+    }, 3000);
+  
+    return () => clearInterval(interval);
+  }, [pageId, dispatch, loading]);
+
+  // debounced saving
   useEffect(() => {
     if (!canWrite) return;
 
     const debounceTimer = setTimeout(() => {
       dispatch(saveNodesToServer({ pageId, nodes }));
-    }, 1000);
+    }, 10);
     return () => clearTimeout(debounceTimer);
   }, [pageId, nodes, dispatch, canWrite]);
 
