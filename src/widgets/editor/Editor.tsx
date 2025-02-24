@@ -39,6 +39,7 @@ const Editor: React.FC = () => {
   const token = searchParams.get('token');
   const [canWrite, setCanWrite] = useState<boolean>(true);
   const [pageId, setPageId] = useState<number>(initialPageId);
+  const [pageNotFound, setPageNotFound] = useState<boolean>(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -94,6 +95,7 @@ const Editor: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to load nodes from server', error);
+        setPageNotFound(true);
       } finally {
         setLoading(false);
       }
@@ -137,6 +139,14 @@ const Editor: React.FC = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (pageNotFound) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <h2>Page Not Found</h2>
       </Box>
     );
   }

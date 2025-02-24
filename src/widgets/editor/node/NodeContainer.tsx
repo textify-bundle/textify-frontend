@@ -60,7 +60,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
-  const textEditorRef = useRef<HTMLTextAreaElement>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -76,7 +75,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
-    // dispatch(syncNodesToStorage());
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -84,7 +82,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
-    // dispatch(syncNodesToStorage());
   };
 
   const handleAddNode = (currentNodeIndex?: string) => {
@@ -96,7 +93,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       styles: {},
     };
     dispatch(addNode({ node: newNode, index: currentNodeIndex }));
-    // dispatch(syncNodesToStorage());
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -107,7 +103,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
-      // dispatch(syncNodesToStorage());
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(
@@ -146,13 +141,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       }).catch(error => console.error('Error updating clicks:', error));
     }
   };
-
-  // useEffect(() => {
-  //   dispatch(loadNodesFromStorage());
-  //   if (isNewNode && textEditorRef.current) {
-  //     textEditorRef.current.focus();
-  //   }
-  // }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -349,18 +337,18 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           />
         ) : (
           <TextEditor
-            inputId={`node-${node.id}`}
-            ref={textEditorRef}
-            content={node.content}
-            styles={node.styles}
-            onContentChange={handleContentChange}
-            onEnterPress={() => {
-              handleAddNode(node.id);
-            }}
-            nodeId={node.id}
-            onDelete={handleDeleteNode}
-            nodeType={node.type}
-          />
+          inputId={`node-${node.id}`}
+          content={node.content}
+          styles={node.styles}
+          onContentChange={handleContentChange}
+          onEnterPress={() => {
+            handleAddNode(node.id);
+          }}
+          nodeId={node.id}
+          onDelete={handleDeleteNode}
+          nodeType={node.type}
+          onDropdown = {setShowDropdown}
+        />
         )}
       </div>
       <div
