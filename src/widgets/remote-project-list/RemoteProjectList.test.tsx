@@ -41,6 +41,12 @@ const initialState = {
     projects: [],
     loading: false,
     error: null
+  },
+  pages: {
+    projectData: [],
+    loading: false,
+    error: null,
+    tree: null
   }
 };
 
@@ -48,7 +54,8 @@ describe('RemoteProjectList Component', () => {
   it('renders without crashing', () => {
     const store = configureStore({
       reducer: {
-        remoteProjects: (state = initialState.remoteProjects) => state
+        remoteProjects: (state = initialState.remoteProjects) => state,
+        pages: (state = initialState.pages) => state
       },
       preloadedState: initialState
     });
@@ -64,15 +71,17 @@ describe('RemoteProjectList Component', () => {
 
   it('displays error state', () => {
     const errorState = {
-      remoteProjects: {
-        ...initialState.remoteProjects,
+      ...initialState,
+      pages: {
+        ...initialState.pages,
         error: 'Failed to load projects'
       }
     };
 
     const store = configureStore({
       reducer: {
-        remoteProjects: (state = errorState.remoteProjects) => state
+        remoteProjects: (state = errorState.remoteProjects) => state,
+        pages: (state = errorState.pages) => state
       },
       preloadedState: errorState
     });

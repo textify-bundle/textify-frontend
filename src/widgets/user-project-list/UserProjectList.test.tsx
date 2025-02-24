@@ -41,6 +41,12 @@ const initialState = {
     projects: [],
     loading: false,
     error: null
+  },
+  pages: {
+    projectData: [],
+    loading: false,
+    error: null,
+    tree: null
   }
 };
 
@@ -48,7 +54,8 @@ describe('UserProjectList Component', () => {
   it('renders without crashing', () => {
     const store = configureStore({
       reducer: {
-        userProjects: (state = initialState.userProjects) => state
+        userProjects: (state = initialState.userProjects) => state,
+        pages: (state = initialState.pages) => state
       },
       preloadedState: initialState
     });
@@ -65,7 +72,8 @@ describe('UserProjectList Component', () => {
   it('displays empty state message', () => {
     const store = configureStore({
       reducer: {
-        userProjects: (state = initialState.userProjects) => state
+        userProjects: (state = initialState.userProjects) => state,
+        pages: (state = initialState.pages) => state
       },
       preloadedState: initialState
     });

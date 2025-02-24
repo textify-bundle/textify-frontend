@@ -5,6 +5,23 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import ActionBar from './ActionBar';
 
+// Mock supabase client
+vi.mock('../../../utils/client', () => ({
+  supabase: {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          data: { id: 1, name: 'Test User' },
+          error: null
+        })
+      })
+    }),
+    auth: {
+      getUser: () => Promise.resolve({ data: { user: { id: '1' } }, error: null })
+    }
+  }
+}));
+
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async () => {
   const actual = await vi.importActual('react-redux');
@@ -19,6 +36,11 @@ const initialState = {
     nodes: [],
     loading: false,
     error: null
+  },
+  auth: {
+    user: null,
+    loading: false,
+    error: null
   }
 };
 
@@ -26,7 +48,8 @@ describe('ActionBar Component', () => {
   it('renders without crashing', () => {
     const store = configureStore({
       reducer: {
-        nodes: (state = initialState.nodes) => state
+        nodes: (state = initialState.nodes) => state,
+        auth: (state = initialState.auth) => state
       },
       preloadedState: initialState
     });
@@ -43,7 +66,8 @@ describe('ActionBar Component', () => {
   it('dispatches save action on save button click', () => {
     const store = configureStore({
       reducer: {
-        nodes: (state = initialState.nodes) => state
+        nodes: (state = initialState.nodes) => state,
+        auth: (state = initialState.auth) => state
       },
       preloadedState: initialState
     });

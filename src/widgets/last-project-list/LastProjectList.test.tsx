@@ -41,6 +41,12 @@ const initialState = {
     lastProjects: [],
     loading: false,
     error: null
+  },
+  pages: {
+    projectData: [],
+    loading: false,
+    error: null,
+    tree: null
   }
 };
 
@@ -48,7 +54,8 @@ describe('LastProjectList Component', () => {
   it('renders without crashing', () => {
     const store = configureStore({
       reducer: {
-        projects: (state = initialState.projects) => state
+        projects: (state = initialState.projects) => state,
+        pages: (state = initialState.pages) => state
       },
       preloadedState: initialState
     });
@@ -64,15 +71,17 @@ describe('LastProjectList Component', () => {
 
   it('displays loading state', () => {
     const loadingState = {
-      projects: {
-        ...initialState.projects,
+      ...initialState,
+      pages: {
+        ...initialState.pages,
         loading: true
       }
     };
 
     const store = configureStore({
       reducer: {
-        projects: (state = loadingState.projects) => state
+        projects: (state = loadingState.projects) => state,
+        pages: (state = loadingState.pages) => state
       },
       preloadedState: loadingState
     });
