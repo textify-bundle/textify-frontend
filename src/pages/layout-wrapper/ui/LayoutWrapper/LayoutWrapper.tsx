@@ -128,7 +128,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
       clearInterval(visitInterval);
       clearInterval(fetchInterval);
     };
-  }, []);
+  }, [pageId, tokenPageId]);
 
 
   const toggleSidebar = () => {

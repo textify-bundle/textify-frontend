@@ -14,12 +14,6 @@ interface NodeState {
     error: string | null;
 }
 
-interface PagesState {
-    currentPage: number | null;
-    loading: boolean;
-    error: string | null;
-}
-
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async () => {
   const actual = await vi.importActual('react-redux');
