@@ -4,8 +4,10 @@ import 'react-quill/dist/quill.snow.css';
 import { useFloating, flip, shift, autoUpdate, offset } from '@floating-ui/react';
 import { Menu, MenuItem } from '@mui/material';
 import './TextEditor.scss';
-import { NodeContent, NodeStyles } from '../../../../shared/types/editor/node';
+import { NodeContent, NodeStyles, NodeType } from '../../../../shared/types/editor/node';
 import TextFormattingToolbar from '../../../../shared/ui/text-formatting-toolbar/TextFormattingToolbar';
+import { useDispatch } from 'react-redux';
+import { updateNode } from '../../../../store/slices/nodeSlice';
 
 interface TextEditorProps {
   content: NodeContent;
@@ -14,13 +16,13 @@ interface TextEditorProps {
   onEnterPress: () => void;
   inputId?: string;
   nodeId: string;
+  nodeType: NodeType; 
   onDelete?: () => void;
-  nodeType?: string;
   onDropdown?: (value: boolean) => void;
 }
 
 const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
-  content, styles, inputId, onContentChange, onEnterPress, onDelete, onDropdown
+  content, styles, inputId, onContentChange, onEnterPress, onDelete, onDropdown, nodeType
 }) => {
   const [value, setValue] = useState<string>(typeof content === 'string' ? content : '');
   const [isToolbarVisible, setIsToolbarVisible] = useState<boolean>(false);
@@ -29,6 +31,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const quillRef = useRef<ReactQuill | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [, setToolbarMaxLeft] = useState<number>(0);
+  const dispatch = useDispatch();
 
   const { x, y, refs, update } = useFloating({
     placement: 'left',
@@ -53,6 +56,9 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     } else {
       onDropdown?.(false);
     }
+    if (inputId) {
+      dispatch(updateNode({ id: inputId, type: nodeType, content: newValue, styles }));
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -68,15 +74,11 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   };
 
   useEffect(() => {
-    setValue(typeof content === 'string' ? content : '');
-  }, [content]);
-
-  useEffect(() => {
     if (quillRef.current) {
       quillRef.current.focus();
     }
-  }, []);
-
+  }, []); 
+  
   const handleBold = () => {
     const quill = quillRef.current?.getEditor();
     if (quill) {
