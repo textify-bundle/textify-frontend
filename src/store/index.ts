@@ -11,6 +11,15 @@ const store = configureStore({
     settings: settingsReducer,
     nodes: nodeReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          'nodes/loadNodesFromServer/fulfilled',
+          'nodes/saveNodesToServer/fulfilled',
+        ],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
