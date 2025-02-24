@@ -66,30 +66,37 @@ vi.mock('comlink', () => ({
     })
 }));
 
+const initialState = {
+  nodes: {
+    nodes: [],
+    loading: false,
+    error: null
+  },
+  pages: {
+    currentPage: null,
+    loading: false,
+    error: null
+  }
+};
+
 const mockStore = configureStore({
   reducer: {
-    node: (state: NodeState = {
-      nodes: [],
-      loading: false,
-      error: null
-    }) => state,
-    pages: (state: PagesState = {
-      currentPage: null,
-      loading: false,
-      error: null
-    }) => state
+    nodes: (state = initialState.nodes) => state,
+    pages: (state = initialState.pages) => state
   }
 });
 
 describe('Editor Component', () => {
   it('renders without crashing', async () => {
+    const store = mockStore;
+    
     await act(async () => {
       render(
-        <BrowserRouter>
-          <Provider store={mockStore}>
+        <Provider store={store}>
+          <BrowserRouter>
             <Editor />
-          </Provider>
-        </BrowserRouter>
+          </BrowserRouter>
+        </Provider>
       );
     });
   });

@@ -24,9 +24,12 @@ const mockStore = configureStore({
 
 describe('ActionBar', () => {
     it('renders without crashing', () => {
+        const users = ['User1', 'User2', 'User3'];
+        const onClick = vi.fn();
+        
         const { container } = render(
             <Provider store={mockStore}>
-                <ActionBar />
+                <ActionBar users={users} onClick={onClick} />
             </Provider>
         );
         expect(container).toBeTruthy();
