@@ -8,6 +8,7 @@ import './ActionBar.scss';
 import ExportBox from '../../export/Export';
 import Settings from '../settings/settings/Settings';
 import ShareOverlay from '../../overlay/ShareOverlay';
+import { useSearchParams } from 'react-router-dom';
 
 interface ActionBarProps {
   users: string[];
@@ -15,6 +16,7 @@ interface ActionBarProps {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({ users, onClick }) => {
+  const [searchParams] = useSearchParams();
 
   const shuffleArray = (array: string[]) => {
     return [...array].sort(() => Math.random() - 0.5);
@@ -69,7 +71,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ users, onClick }) => {
             ))}
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <ShareOverlay />
+            <ShareOverlay userName={users[0]} pageId={Number(searchParams.get('page'))} />
             <ExportBox />
             <Settings />
           </Box>

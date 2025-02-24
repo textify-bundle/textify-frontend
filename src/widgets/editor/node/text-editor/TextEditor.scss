@@ -2,9 +2,34 @@
     width: 100%;
     &__input{
         width: 100%;
-        // appearance: none; 
-        // outline: 0;
         border: 0;
         padding: 0;
     }
 }
+
+.text-editor ::selection {
+    background-color: rgba(0, 123, 255, 0.3);
+    color: #fff; 
+    position: relative;
+  }
+  
+  .text-editor {
+    user-select: text; 
+  }
+  
+  .text-editor .ql-container {
+    border: none;
+    outline: none;
+  }
+  
+  .text-editor .ql-editor {
+    outline: none; 
+    padding: 0;
+    width: 100%; 
+  }
+.ql-editor.justify p {
+    text-align: justify;
+    text-align-last: justify;
+  }
+
+ 
