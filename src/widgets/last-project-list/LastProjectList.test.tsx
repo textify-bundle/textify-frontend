@@ -5,7 +5,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import LastProjectList from './LastProjectList';
 
-// Mock Worker
+// Определяем глобальный Worker
+global.Worker = class {
+    onmessage: ((this: Worker, ev: MessageEvent) => any) | null = null;
+    postMessage() {}
+    addEventListener() {}
+    removeEventListener() {}
+    terminate() {}
+} as any;
+
+// Мокаем DataWorker
 vi.mock('../../workers/dataWorker', () => ({
     default: class MockWorker {
         postMessage() {}
@@ -13,7 +22,7 @@ vi.mock('../../workers/dataWorker', () => ({
     }
 }));
 
-// Mock wrap function
+// Мокаем wrap из comlink
 vi.mock('comlink', () => ({
     wrap: () => ({
         loadNodesFromServer: vi.fn(),
@@ -26,6 +35,11 @@ const mockStore = configureStore({
     reducer: {
         pages: (state = {
             projectData: [],
+            loading: false,
+            error: null
+        }) => state,
+        nodes: (state = {
+            nodes: [],
             loading: false,
             error: null
         }) => state
