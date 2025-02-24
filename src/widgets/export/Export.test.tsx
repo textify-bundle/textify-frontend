@@ -1,46 +1,20 @@
-import { describe, test, beforeEach, afterEach } from 'vitest';
-import React,{ render,  cleanup } from '@testing-library/react';
-import ExportModal from './Export';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Export from './Export';
 
-describe("ExportBox component", () => {
-    beforeEach(() => {
-        render(<ExportModal />);
+const theme = createTheme();
+
+describe('Export component', () => {
+    it('renders export button', () => {
+        const { container } = render(
+            <ThemeProvider theme={theme}>
+                <Export />
+            </ThemeProvider>
+        );
+        
+        // Проверяем наличие кнопки по классу
+        const button = container.querySelector('.MuiButton-root');
+        expect(button).toBeTruthy();
     });
-
-    afterEach(cleanup);
-
-    test("renders the export text", () => {
-        // const exportText = screen.getByText("Экспортировать");
-        // expect(exportText).toBeInTheDocument();
-    });
-
-    // test("renders the export to HTML button", () => {
-    //     const exportToHTMLButton = screen.getByText("Экспортировать в HTML");
-    //     expect(exportToHTMLButton).toBeInTheDocument();
-    // });
-
-    // test("renders the export to PDF button", () => {
-    //     const exportToPDFButton = screen.getByText("Экспортировать в PDF");
-    //     expect(exportToPDFButton).toBeInTheDocument();
-    // });
-
-    // test("export to HTML button has correct styles", () => {
-    //     const exportToHTMLButton = screen.getByText("Экспортировать в HTML").closest('button');
-    //     expect(exportToHTMLButton).toHaveStyle({
-    //         backgroundColor: 'white',
-    //         color: 'black',
-    //         textAlign: 'left',
-    //         boxShadow: 'none',
-    //     });
-    // });
-
-    // test("export to PDF button has correct styles", () => {
-    //     const exportToPDFButton = screen.getByText("Экспортировать в PDF").closest('button');
-    //     expect(exportToPDFButton).toHaveStyle({
-    //         backgroundColor: 'white',
-    //         color: 'black',
-    //         textAlign: 'left',
-    //         boxShadow: 'none',
-    //     });
-    // });
 });

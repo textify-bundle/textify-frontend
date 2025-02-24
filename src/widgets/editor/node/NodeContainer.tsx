@@ -42,8 +42,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
-  const user = useSelector((state: RootState) => state.auth.user);
-
   const {
     attributes,
     listeners,
@@ -60,6 +58,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLDivElement>(null);
+  const textEditorRef = useRef<HTMLTextAreaElement>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -75,6 +74,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       setShowDropdown(false);
     }
     dispatch(updateNode({ ...node, content: newContent }));
+    // dispatch(syncNodesToStorage());
   };
 
   const handleTypeChange = (event: SelectChangeEvent<NodeType>) => {
@@ -82,6 +82,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     setSelectedType(newType);
     dispatch(updateNode({ ...node, type: newType, content: '', styles: {} }));
     setShowDropdown(false);
+    // dispatch(syncNodesToStorage());
   };
 
   const handleAddNode = (currentNodeIndex?: string) => {
@@ -93,6 +94,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       styles: {},
     };
     dispatch(addNode({ node: newNode, index: currentNodeIndex }));
+    // dispatch(syncNodesToStorage());
     setTimeout(() => {
       document.getElementById(`node-${newNode.id}`)?.focus();
     }, 50);
@@ -103,6 +105,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       const currentIndex = nodes.findIndex((n) => n.id === node.id);
       const previousNodeId = nodes[currentIndex - 1]?.id;
       dispatch(removeNode(node.id));
+      // dispatch(syncNodesToStorage());
       setTimeout(() => {
         if (previousNodeId) {
           const previousNodeElement = document.getElementById(
@@ -121,26 +124,12 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     }
   };
 
-  const handleNodeClick = (e: React.MouseEvent) => {
-    // Не считаем клики по кнопкам управления
-    if (
-      e.target instanceof Element && 
-      (e.target.closest('.node-controls') || 
-       e.target.closest('.dropdown-menu'))
-    ) {
-      return;
-    }
-
-    if (user?.email) {
-      fetch('http://localhost:3000/click', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userName: user.email }),
-      }).catch(error => console.error('Error updating clicks:', error));
-    }
-  };
+  // useEffect(() => {
+  //   dispatch(loadNodesFromStorage());
+  //   if (isNewNode && textEditorRef.current) {
+  //     textEditorRef.current.focus();
+  //   }
+  // }, [isNewNode, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -194,7 +183,6 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       {...attributes}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleNodeClick}
       className={`node-container${isHovered ? ' node-container_hover' : ''}`}
     >
       <div ref={refs.setReference}>
@@ -337,18 +325,18 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
           />
         ) : (
           <TextEditor
-          inputId={`node-${node.id}`}
-          content={node.content}
-          styles={node.styles}
-          onContentChange={handleContentChange}
-          onEnterPress={() => {
-            handleAddNode(node.id);
-          }}
-          nodeId={node.id}
-          onDelete={handleDeleteNode}
-          nodeType={node.type}
-          onDropdown = {setShowDropdown}
-        />
+            inputId={`node-${node.id}`}
+            ref={textEditorRef}
+            content={node.content}
+            styles={node.styles}
+            onContentChange={handleContentChange}
+            onEnterPress={() => {
+              handleAddNode(node.id);
+            }}
+            nodeId={node.id}
+            onDelete={handleDeleteNode}
+            nodeType={node.type}
+          />
         )}
       </div>
       <div
