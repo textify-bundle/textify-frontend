@@ -27,7 +27,7 @@ describe('RemoteProjectList', () => {
             </BrowserRouter>
         );
         
-        expect(screen.getByText('You have no deleted projects!')).toBeTruthy();
+        expect(screen.getByText('У вас нет удалённых проектов!')).toBeTruthy();
     });
 
     it('should display error message', () => {
