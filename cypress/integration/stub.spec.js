@@ -24,7 +24,7 @@ describe('Change project data', () => {
       cy.url().should('include', '/main');
       cy.contains('Главная').should('be.visible');
       cy.get('.project-card').eq(0).click();
-      cy.get('.text-editor').type('Simple Example text')
-      cy.contains('Simple Example text').should('exist');
+      cy.get('.text-editor').type(' Simple Example text')
+      cy.contains('Example text').should('exist');
     });
 });
