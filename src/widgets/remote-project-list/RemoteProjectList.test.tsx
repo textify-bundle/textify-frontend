@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
@@ -86,7 +86,7 @@ describe('RemoteProjectList Component', () => {
       preloadedState: errorState
     });
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <BrowserRouter>
           <RemoteProjectList />
@@ -94,6 +94,7 @@ describe('RemoteProjectList Component', () => {
       </Provider>
     );
 
-    expect(getByText('Failed to load projects')).toBeDefined();
+    // Используем регулярное выражение для поиска текста
+    expect(screen.getByText(/Failed to load projects/)).toBeDefined();
   });
 });

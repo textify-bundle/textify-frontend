@@ -1,46 +1,104 @@
-import { describe, test, beforeEach, afterEach } from 'vitest';
-import React,{ render,  cleanup } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import ExportModal from './Export';
 
-describe("ExportBox component", () => {
-    beforeEach(() => {
-        render(<ExportModal />);
+const mockDispatch = vi.fn();
+vi.mock('react-redux', async () => {
+  const actual = await vi.importActual('react-redux');
+  return {
+    ...actual,
+    useDispatch: () => mockDispatch
+  };
+});
+
+const initialState = {
+  export: {
+    loading: false,
+    error: null,
+    format: 'markdown'
+  }
+};
+
+describe('Export Component', () => {
+  it('renders without crashing', () => {
+    const store = configureStore({
+      reducer: {
+        export: (state = initialState.export) => state
+      },
+      preloadedState: initialState
     });
 
-    afterEach(cleanup);
+    render(
+      <Provider store={store}>
+        <ExportModal />
+      </Provider>
+    );
+  });
 
-    test("renders the export text", () => {
-        // const exportText = screen.getByText("Экспортировать");
-        // expect(exportText).toBeInTheDocument();
+  it('shows export options', () => {
+    const store = configureStore({
+      reducer: {
+        export: (state = initialState.export) => state
+      },
+      preloadedState: initialState
     });
 
-    // test("renders the export to HTML button", () => {
-    //     const exportToHTMLButton = screen.getByText("Экспортировать в HTML");
-    //     expect(exportToHTMLButton).toBeInTheDocument();
-    // });
+    render(
+      <Provider store={store}>
+        <ExportModal />
+      </Provider>
+    );
 
-    // test("renders the export to PDF button", () => {
-    //     const exportToPDFButton = screen.getByText("Экспортировать в PDF");
-    //     expect(exportToPDFButton).toBeInTheDocument();
-    // });
+    expect(screen.getByText('Экспортировать')).toBeDefined();
+    expect(screen.getByText('Экспортировать в HTML')).toBeDefined();
+    expect(screen.getByText('Экспортировать в PDF')).toBeDefined();
+  });
 
-    // test("export to HTML button has correct styles", () => {
-    //     const exportToHTMLButton = screen.getByText("Экспортировать в HTML").closest('button');
-    //     expect(exportToHTMLButton).toHaveStyle({
-    //         backgroundColor: 'white',
-    //         color: 'black',
-    //         textAlign: 'left',
-    //         boxShadow: 'none',
-    //     });
-    // });
+  it('dispatches export action on button click', () => {
+    const store = configureStore({
+      reducer: {
+        export: (state = initialState.export) => state
+      },
+      preloadedState: initialState
+    });
 
-    // test("export to PDF button has correct styles", () => {
-    //     const exportToPDFButton = screen.getByText("Экспортировать в PDF").closest('button');
-    //     expect(exportToPDFButton).toHaveStyle({
-    //         backgroundColor: 'white',
-    //         color: 'black',
-    //         textAlign: 'left',
-    //         boxShadow: 'none',
-    //     });
-    // });
+    render(
+      <Provider store={store}>
+        <ExportModal />
+      </Provider>
+    );
+
+    const exportButton = screen.getByText('Экспортировать в HTML');
+    fireEvent.click(exportButton);
+
+    expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({
+      type: expect.stringContaining('export')
+    }));
+  });
+
+  it('shows loading state', () => {
+    const loadingState = {
+      export: {
+        ...initialState.export,
+        loading: true
+      }
+    };
+
+    const store = configureStore({
+      reducer: {
+        export: (state = loadingState.export) => state
+      },
+      preloadedState: loadingState
+    });
+
+    render(
+      <Provider store={store}>
+        <ExportModal />
+      </Provider>
+    );
+
+    expect(screen.getByTestId('export-loading')).toBeDefined();
+  });
 });

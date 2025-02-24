@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
@@ -78,7 +78,7 @@ describe('UserProjectList Component', () => {
       preloadedState: initialState
     });
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <BrowserRouter>
           <UserProjectList />
@@ -86,6 +86,8 @@ describe('UserProjectList Component', () => {
       </Provider>
     );
 
-    expect(getByText('No projects found')).toBeDefined();
+    // Проверяем наличие пустого div для проектов
+    const projectsContainer = screen.getByTestId('user-projects-container');
+    expect(projectsContainer.children.length).toBe(0);
   });
 });

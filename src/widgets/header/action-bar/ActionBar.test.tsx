@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
@@ -20,6 +20,11 @@ vi.mock('../../../utils/client', () => ({
       getUser: () => Promise.resolve({ data: { user: { id: '1' } }, error: null })
     }
   }
+}));
+
+// Mock the actions array
+vi.mock('../../../shared/config/actions', () => ({
+  actions: ['save', 'export', 'share']
 }));
 
 const mockDispatch = vi.fn();
@@ -72,7 +77,7 @@ describe('ActionBar Component', () => {
       preloadedState: initialState
     });
 
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <BrowserRouter>
           <ActionBar />
@@ -80,7 +85,7 @@ describe('ActionBar Component', () => {
       </Provider>
     );
 
-    const saveButton = getByText('Save');
+    const saveButton = screen.getByText('Save');
     fireEvent.click(saveButton);
 
     expect(mockDispatch).toHaveBeenCalled();
