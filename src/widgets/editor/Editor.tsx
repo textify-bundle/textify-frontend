@@ -108,15 +108,14 @@ const Editor: React.FC = () => {
     const interval = setInterval(async () => {
       if (!loading) {
         try {
-          const { payload: updatedNodes } = await dispatch(loadNodesFromServer(pageId)).unwrap();
+          const updatedNodes = await dispatch(loadNodesFromServer(pageId)).unwrap();
   
-          // Обновляем только если есть новые изменения
           dispatch({
             type: 'nodes/mergeUpdates',
             payload: updatedNodes,
           });
         } catch (error) {
-          console.error('Ошибка при обновлении данных:', error);
+            console.error('Error updating data:', error);
         }
       }
     }, 3000);
