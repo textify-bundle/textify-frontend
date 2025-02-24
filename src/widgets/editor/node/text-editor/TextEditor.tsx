@@ -29,6 +29,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const [, setSelectedSize] = useState<string>('normal');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const quillRef = useRef<ReactQuill | null>(null);
+  const valueRef = useRef(value);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [, setToolbarMaxLeft] = useState<number>(0);
   const dispatch = useDispatch();
@@ -46,6 +47,11 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
   const sizes = ['small','normal', 'large', 'huge'];
 
   const handleChange = (newValue: string) => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    const selection = quill.getSelection();
+    valueRef.current = newValue;
     setValue(newValue);
     onContentChange(newValue);
 
@@ -56,21 +62,47 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
     } else {
       onDropdown?.(false);
     }
+
     if (inputId) {
       dispatch(updateNode({ id: inputId, type: nodeType, content: newValue, styles }));
     }
+
+    setTimeout(() => {
+      if (selection) {
+        quill.setSelection(selection); 
+      }
+    }, 0);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  useEffect(() => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    if (value !== content) {
+      const selection = quill.getSelection();
+      setValue(typeof content === 'string' ? content : '');
+
+      setTimeout(() => {
+        if (selection) {
+          quill.setSelection(selection);
+        }
+      }, 0);
+    }
+  }, [content]);
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const quill = quillRef.current?.getEditor();
+    const plainText = value.replace(/<[^>]+>/g, '').trim();
+    if (!quill) return;
+  
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       onEnterPress();
-    } else if (event.key === 'Backspace' && value === '' && !event.shiftKey) {
+    } else if (event.key === 'Backspace' && plainText === '') {
       event.preventDefault();
-      if (onDelete) {
-        onDelete();
-      }
-    }
+      onDelete?.();
+    } 
   };
 
   useEffect(() => {
@@ -210,11 +242,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
         quill.off('selection-change', handleSelectionChange);
       }
     };
-  }, [handleSelectionChange]);
-
-  useEffect(() => {
-    setValue(typeof content === 'string' ? content : '');
-  }, [content]);
+  }, [handleSelectionChange]); 
 
   useEffect(() => {
     if (containerRef.current) {
@@ -266,7 +294,7 @@ const TextEditor = forwardRef<ReactQuill, TextEditorProps>(({
       <ReactQuill
         ref={quillRef}
         id={inputId}
-        value={value}
+        value={valueRef.current}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         style={{
