@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import store from './store';
 import * as Sentry from '@sentry/react';
-import { YandexMetrika } from './utils/YandexMetrika';
+import { YandexMetrika } from './utils/YandexMetrika';import React from 'react';
+
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
