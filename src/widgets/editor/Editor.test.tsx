@@ -70,13 +70,22 @@ const initialState = {
     currentPage: null,
     loading: false,
     error: null
+  },
+  auth: {
+    user: {
+      id: 'test-user-id',
+      email: 'test@example.com'
+    },
+    loading: false,
+    error: null
   }
 };
 
 const mockStore = configureStore({
   reducer: {
     nodes: (state = initialState.nodes) => state,
-    pages: (state = initialState.pages) => state
+    pages: (state = initialState.pages) => state,
+    auth: (state = initialState.auth) => state
   }
 });
 
@@ -99,15 +108,26 @@ describe('Editor Component', () => {
     const initialState = {
       nodes: {
         nodes: [
-          { id: '1', type: 'text', content: 'Test Node 1', order: 0 },
-          { id: '2', type: 'text', content: 'Test Node 2', order: 1 }
-        ]
+          { id: 1, content: 'Test Node 1', type: 'text' },
+          { id: 2, content: 'Test Node 2', type: 'text' }
+        ],
+        loading: false,
+        error: null
+      },
+      auth: {
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com'
+        },
+        loading: false,
+        error: null
       }
     };
 
     const store = configureStore({
       reducer: {
-        nodes: (state = initialState.nodes) => state
+        nodes: (state = initialState.nodes) => state,
+        auth: (state = initialState.auth) => state
       },
       preloadedState: initialState
     });
@@ -130,15 +150,26 @@ describe('Editor Component', () => {
     const initialState = {
       nodes: {
         nodes: [
-          { id: '1', type: 'text', content: 'Test Node 1', order: 0 },
-          { id: '2', type: 'text', content: 'Test Node 2', order: 1 }
-        ]
+          { id: 1, type: 'text', content: 'Test Node 1', order: 0 },
+          { id: 2, type: 'text', content: 'Test Node 2', order: 1 }
+        ],
+        loading: false,
+        error: null
+      },
+      auth: {
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com'
+        },
+        loading: false,
+        error: null
       }
     };
 
     const store = configureStore({
       reducer: {
-        nodes: (state = initialState.nodes) => state
+        nodes: (state = initialState.nodes) => state,
+        auth: (state = initialState.auth) => state
       },
       preloadedState: initialState
     });
