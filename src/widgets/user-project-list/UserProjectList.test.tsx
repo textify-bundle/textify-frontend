@@ -87,7 +87,7 @@ describe('UserProjectList Component', () => {
     );
 
     // Проверяем наличие пустого контейнера для проектов
-    const projectsContainer = screen.getByRole('list', { name: /projects/i });
+    const projectsContainer = screen.getByTestId('projects-container');
     expect(projectsContainer.children.length).toBe(0);
   });
 });

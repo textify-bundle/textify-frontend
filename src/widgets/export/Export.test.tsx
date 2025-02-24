@@ -4,6 +4,12 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Export from './Export';
 
+// Mock Material-UI components
+vi.mock('@mui/material', () => ({
+  Box: ({ children, ...props }) => <div {...props}>{children}</div>,
+  Button: ({ children, ...props }) => <button {...props}>{children}</button>
+}));
+
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async () => {
   const actual = await vi.importActual('react-redux');
@@ -36,7 +42,8 @@ describe('Export Component', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Экспортировать')).toBeDefined();
+    const button = screen.getByRole('button');
+    expect(button).toHaveTextContent('Экспортировать');
   });
 
   it('dispatches export action on button click', () => {
@@ -53,8 +60,8 @@ describe('Export Component', () => {
       </Provider>
     );
 
-    const exportButton = screen.getByText('Экспортировать');
-    fireEvent.click(exportButton);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
 
     expect(mockDispatch).toHaveBeenCalled();
   });
@@ -80,6 +87,7 @@ describe('Export Component', () => {
       </Provider>
     );
 
-    expect(screen.getByRole('button')).toBeDisabled();
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
   });
 });
