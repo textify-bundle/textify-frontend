@@ -22,9 +22,13 @@ vi.mock('../../../utils/client', () => ({
   }
 }));
 
-// Mock the actions array
+// Mock actions
 vi.mock('../../../shared/config/actions', () => ({
-  actions: ['save', 'export', 'share']
+  actions: {
+    save: { id: 'save', label: 'Save' },
+    export: { id: 'export', label: 'Export' },
+    share: { id: 'share', label: 'Share' }
+  }
 }));
 
 const mockDispatch = vi.fn();
@@ -66,6 +70,8 @@ describe('ActionBar Component', () => {
         </BrowserRouter>
       </Provider>
     );
+
+    expect(screen.getByRole('toolbar')).toBeDefined();
   });
 
   it('dispatches save action on save button click', () => {
@@ -85,7 +91,7 @@ describe('ActionBar Component', () => {
       </Provider>
     );
 
-    const saveButton = screen.getByText('Save');
+    const saveButton = screen.getByRole('button', { name: /save/i });
     fireEvent.click(saveButton);
 
     expect(mockDispatch).toHaveBeenCalled();

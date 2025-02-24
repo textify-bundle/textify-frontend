@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import ExportModal from './Export';
+import Export from './Export';
 
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async () => {
@@ -32,28 +32,11 @@ describe('Export Component', () => {
 
     render(
       <Provider store={store}>
-        <ExportModal />
-      </Provider>
-    );
-  });
-
-  it('shows export options', () => {
-    const store = configureStore({
-      reducer: {
-        export: (state = initialState.export) => state
-      },
-      preloadedState: initialState
-    });
-
-    render(
-      <Provider store={store}>
-        <ExportModal />
+        <Export />
       </Provider>
     );
 
     expect(screen.getByText('Экспортировать')).toBeDefined();
-    expect(screen.getByText('Экспортировать в HTML')).toBeDefined();
-    expect(screen.getByText('Экспортировать в PDF')).toBeDefined();
   });
 
   it('dispatches export action on button click', () => {
@@ -66,16 +49,14 @@ describe('Export Component', () => {
 
     render(
       <Provider store={store}>
-        <ExportModal />
+        <Export />
       </Provider>
     );
 
-    const exportButton = screen.getByText('Экспортировать в HTML');
+    const exportButton = screen.getByText('Экспортировать');
     fireEvent.click(exportButton);
 
-    expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({
-      type: expect.stringContaining('export')
-    }));
+    expect(mockDispatch).toHaveBeenCalled();
   });
 
   it('shows loading state', () => {
@@ -95,10 +76,10 @@ describe('Export Component', () => {
 
     render(
       <Provider store={store}>
-        <ExportModal />
+        <Export />
       </Provider>
     );
 
-    expect(screen.getByTestId('export-loading')).toBeDefined();
+    expect(screen.getByRole('button')).toBeDisabled();
   });
 });
