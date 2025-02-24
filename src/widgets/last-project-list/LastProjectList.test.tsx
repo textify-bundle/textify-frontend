@@ -5,30 +5,36 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import LastProjectList from './LastProjectList';
 
-// Определяем глобальный Worker
-global.Worker = class {
-    onmessage: ((this: Worker, ev: MessageEvent) => any) | null = null;
-    postMessage() {}
-    addEventListener() {}
-    removeEventListener() {}
-    terminate() {}
-} as any;
+// Мок для Worker API
+const mockWorkerApi = {
+    loadNodesFromServer: vi.fn(),
+    saveNodesToServer: vi.fn(),
+    reorderNodes: vi.fn()
+};
+
+// Мокаем nodeSlice
+vi.mock('../../store/slices/nodeSlice', () => {
+    return {
+        default: (state = { nodes: [], loading: false, error: null }) => state,
+        loadNodesFromServer: () => ({ type: 'nodes/loadNodesFromServer' }),
+        saveNodesToServer: () => ({ type: 'nodes/saveNodesToServer' }),
+        reorderNodes: () => ({ type: 'nodes/reorderNodes' })
+    };
+});
 
 // Мокаем DataWorker
-vi.mock('../../workers/dataWorker', () => ({
-    default: class MockWorker {
-        postMessage() {}
-        addEventListener() {}
-    }
-}));
+vi.mock('../../workers/dataWorker?worker', () => {
+    return {
+        default: class MockWorker {
+            postMessage() {}
+            addEventListener() {}
+        }
+    };
+});
 
-// Мокаем wrap из comlink
+// Мокаем comlink
 vi.mock('comlink', () => ({
-    wrap: () => ({
-        loadNodesFromServer: vi.fn(),
-        saveNodesToServer: vi.fn(),
-        reorderNodes: vi.fn()
-    })
+    wrap: () => mockWorkerApi
 }));
 
 const mockStore = configureStore({
