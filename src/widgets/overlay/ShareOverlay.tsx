@@ -1,134 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, 
-  Radio, RadioGroup, FormControlLabel, FormControl, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import './ShareOverlay.scss';
 import TModal from '../../shared/tmodal/TModal';
 import { supabase } from '../../utils/client';
 import { useSearchParams } from 'react-router-dom';
 
-interface Token {
-  id: number;
-  token: string;
-  canWrite: boolean;
-  user_mail?: string; 
-}
-
 interface PageShareProps {
   title?: string;
   link?: string;
-  pageId: number;
-  userName: string;
+  pageId: number; // Add pageId prop
 }
 
-const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", userName }) => {
+const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить" }) => {
   const [selectedItem, setSelectedItem] = useState<string>('Только чтение');
   const [expanded, setExpanded] = useState<string | false>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [generatedLink, setGeneratedLink] = useState<string>('');
   const [searchParams] = useSearchParams();
-  const [tokens, setTokens] = useState<Token[]>([]);
-  const [openUsersDialog, setOpenUsersDialog] = useState<boolean>(false);
-  
-  const isSharedView = searchParams.has("token");
-
-  useEffect(() => {
-    if (openUsersDialog) {
-      fetchTokens();
-    }
-  }, [openUsersDialog]);
-
-  const fetchTokens = async () => {
-    const pageId = searchParams.get("page");
-  
-    if (!pageId) {
-      console.error("Ошибка: отсутствует идентификатор страницы.");
-      return;
-    }
-  
-    const { data: tokensData, error: tokensError } = await supabase
-      .from("notes_tokens")
-      .select("id, token, canWrite")
-      .eq("pageId", pageId);
-  
-    if (tokensError) {
-      console.error("Ошибка при загрузке токенов:", tokensError);
-      return;
-    }
-  
-    setTokens(tokensData || []);
-  };
-  
-  const delToken = async (id: number) => {
-    const { error } = await supabase.from("notes_tokens").delete().eq("id", id);
-  
-    if (error) {
-      console.error("Ошибка при удалении токена:", error);
-      return;
-    }
-  
-    fetchTokens(); 
-  };
-  
-  const columns: GridColDef[] = [
-    { field: "token", headerName: "Токен пользователя", flex: 1 },
-    {
-      field: "canWrite",
-      headerName: "Доступ",
-      flex: 1,
-      renderCell: (params) => (params.value ? "Редактирование" : "Чтение"),
-    },
-    {
-      field: "actions",
-      headerName: "Действие",
-      flex: 1,
-      renderCell: (params) => (
-        <Button color="secondary" onClick={() => delToken(params.row.id)}>
-          Удалить
-        </Button>
-      ),
-    },
-  ];
-  
-  const [clickCount, setClickCount] = useState<number>(0);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    fetch(`${API_URL}/start-session`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userName }),
-    })
-        .then(response => response.json())
-        .then(data => setClickCount(data.clicks))
-        .catch(() => {
-         
-        });
-
-    return () => {
-        fetch(`${API_URL}/end-session`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userName }),
-        }).catch(() => {
-       
-        });
-    };
-  }, [userName, API_URL]);
 
   const generateToken = async () => {
+    // Generate a random token
     const token = Math.random().toString(36).substring(2, 15) + 
                  Math.random().toString(36).substring(2, 15);
+    // Determine write permissions based on selected option
     const canWrite = selectedItem === 'Редактирование';
 
     try {
+      // Insert token into the database
       const { error } = await supabase
         .from('notes_tokens')
         .insert([
@@ -142,6 +42,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
 
       if (error) throw error;
 
+      // Generate shareable link with token
       const shareableLink = `${window.location.origin}/shared/?token=${token}`;
       setGeneratedLink(shareableLink);
       return shareableLink;
@@ -150,24 +51,6 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
       console.error('Error generating share link:', error);
       return null;
     }
-  };
-
-  const handleSendButtonClick = async () => {
-    try {
-        const response = await fetch(`${API_URL}/click`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userName }),
-        });
-        const data = await response.json();
-        setClickCount(data.clicks);
-    } catch {
-        /* Игнорируем ошибку обновления счетчика */
-    }
-
-    setOpenDialog(true);
   };
 
   const handleCopyLink = async () => {
@@ -193,7 +76,7 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
 
   const handleItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedItem(event.target.value);
-    setGeneratedLink('');
+    setGeneratedLink(''); // Reset link when permissions change
   };
 
   const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -202,19 +85,9 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
 
   return (
     <div className='share'>
-      {!isSharedView && <div className="share-button-wrapper">
-        <Button 
-          className="send-button" 
-          onClick={handleSendButtonClick}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          {title}
-        </Button>
-        <div className={`count-tooltip ${showTooltip ? 'visible' : ''}`}>
-          Total Clicks: {clickCount}
-        </div>
-      </div> }
+      <Button className="send-button" onClick={() => setOpenDialog(true)}>
+        {title}
+      </Button>
 
       <TModal isOpen={openDialog} onClose={() => setOpenDialog(false)} title="Поделиться">
         <Box className="share-dialog__access">
@@ -234,14 +107,6 @@ const ShareOverlay: React.FC<PageShareProps> = ({ title = "Отправить", 
         <Button className='share-dialog__copy-btn' variant="contained" onClick={handleCopyLink}>
           {copied ? "Скопировано!" : "Копировать ссылку"}
         </Button>
-        <Button className='share-dialog__user-btn' variant="contained" onClick={() => setOpenUsersDialog(true)}>
-          Токены
-        </Button>
-      </TModal>
-      <TModal isOpen={openUsersDialog} onClose={() => setOpenUsersDialog(false)} title="Токены">
-        <Paper style={{ height: 400, width: '100%' }}>
-          <DataGrid rows={tokens} columns={columns} pageSizeOptions={[5, 10]} />
-        </Paper>
       </TModal>
     </div>
   );

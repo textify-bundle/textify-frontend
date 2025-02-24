@@ -15,7 +15,7 @@ import Paper from '@mui/material/Paper';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import './TextFormattingToolbar.scss';
-import React,{ useState } from 'react';
+import { useState } from 'react';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
@@ -40,7 +40,7 @@ type TextFormattingToolbarProps = {
   handleStrikethroughClick?: () => void;
   handleUnderlinedClick?: () => void;
   handleItalicClick?: () => void;
-  handleSizeClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  handleSizeClick?: () => void;
   handleListClick?: () => void;
 };
 
