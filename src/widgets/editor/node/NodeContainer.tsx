@@ -42,6 +42,8 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
   const [selectedType, setSelectedType] = useState<NodeType>(node.type);
   const dispatch = useDispatch();
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const {
     attributes,
     listeners,
@@ -119,6 +121,27 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
     }
   };
 
+  const handleNodeClick = (e: React.MouseEvent) => {
+    // Не считаем клики по кнопкам управления
+    if (
+      e.target instanceof Element && 
+      (e.target.closest('.node-controls') || 
+       e.target.closest('.dropdown-menu'))
+    ) {
+      return;
+    }
+
+    if (user?.email) {
+      fetch('http://localhost:3000/click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName: user.email }),
+      }).catch(error => console.error('Error updating clicks:', error));
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -171,6 +194,7 @@ const NodeContainer: React.FC<NodeContainerProps> = ({ node }) => {
       {...attributes}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleNodeClick}
       className={`node-container${isHovered ? ' node-container_hover' : ''}`}
     >
       <div ref={refs.setReference}>

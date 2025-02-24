@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&family=Open+Sans&family=Roboto&display=swap');
+@import './global-font.scss';
+
+:root {
+  --app-font-family: 'Varela Round', sans-serif;
+}
 
 body {
     background-color: white;
     height: 100%;
-    font-family: "Varela Round", sans-serif;
+    font-family: var(--app-font-family);
 }

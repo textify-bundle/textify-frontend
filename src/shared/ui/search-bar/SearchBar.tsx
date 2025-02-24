@@ -11,7 +11,6 @@ interface SearchProps {
 }
 
 const NewSearch: React.FC<SearchProps> = ({
-  iconSrc = './src/shared/ui/search-bar/magnifyingGlass.svg',
   onClick,
   onChange,
   placeholder = 'Поиск',
@@ -44,7 +43,7 @@ const NewSearch: React.FC<SearchProps> = ({
             <InputAdornment position="start">
               <img
                 className="search-glass_img"
-                src={iconSrc || '/placeholder.svg'}
+                src='/icons/magnifyingGlass.svg'
                 alt="Search"
               />
             </InputAdornment>

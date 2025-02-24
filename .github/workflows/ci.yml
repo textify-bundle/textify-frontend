@@ -57,7 +57,9 @@ jobs:
       - name: Test Frontend
         run: npm run test
         env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          VITE_SUPABASE_URL: https://fdnzbbyiwwzvandoyopt.supabase.co
+          VITE_SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_KEY }}
+          VITE_SENTRY_DSN: https://4a816694c0f6c51d0258edb9e56a5eb2@o4508337282613248.ingest.us.sentry.io/4508337839865856
 
   e2e:
     runs-on: ubuntu-22.04
