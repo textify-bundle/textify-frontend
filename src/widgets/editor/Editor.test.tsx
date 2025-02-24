@@ -5,6 +5,21 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import Editor from './Editor';
 
+interface NodeState {
+    nodes: Array<{
+        id: number;
+        content: string;
+    }>;
+    loading: boolean;
+    error: string | null;
+}
+
+interface PagesState {
+    currentPage: number | null;
+    loading: boolean;
+    error: string | null;
+}
+
 const mockDispatch = it.fn();
 it.mock('react-redux', async () => {
   const actual = await it.importActual('react-redux');
@@ -15,7 +30,7 @@ it.mock('react-redux', async () => {
 });
 
 it.mock('../../store/slices/nodeSlice', () => ({
-  default: (state = { nodes: [] }, action: any) => state,
+  default: (state: NodeState = { nodes: [], loading: false, error: null }) => state,
   reorderNodes: () => ({ type: 'nodes/reorderNodes' }),
   loadNodesFromServer: () => ({ type: 'nodes/loadNodesFromServer' }),
   saveNodesToServer: () => ({ type: 'nodes/saveNodesToServer' })
@@ -38,12 +53,12 @@ it.mock('../../utils/client', () => ({
 
 const mockStore = configureStore({
   reducer: {
-    node: (state = {
+    node: (state: NodeState = {
       nodes: [],
       loading: false,
       error: null
     }) => state,
-    pages: (state = {
+    pages: (state: PagesState = {
       currentPage: null,
       loading: false,
       error: null
