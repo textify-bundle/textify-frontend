@@ -11,6 +11,7 @@ import { updatePageTitle } from '../../../../store/slices/pagesSlice';
 import './LayoutWrapper.scss';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../../../../utils/client';
+import { Box } from '@mui/material';
 
 const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -28,6 +29,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
   const pageId = parseInt(searchParams.get('page') || '0', 10);
   const token = searchParams.get('token');
   const [canWrite, setCanWrite] = useState<boolean>(true);
+  const [pageNotFound, setPageNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTokenAndPageData = async () => {
@@ -62,7 +64,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        setCanWrite(false);
+        setPageNotFound(true);
       }
     };
 
@@ -120,7 +122,6 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     const visitInterval = setInterval(updateVisit, 10000);
     const fetchInterval = setInterval(fetchRecentVisitors, 2000);
 
-    // Initial calls
     updateVisit();
     fetchRecentVisitors();
 
@@ -128,7 +129,7 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
       clearInterval(visitInterval);
       clearInterval(fetchInterval);
     };
-  }, []);
+  }, [pageId, tokenPageId]);
 
 
   const toggleSidebar = () => {
@@ -205,6 +206,13 @@ const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({ layout }) => {
     return () => window.removeEventListener('popstate', updateTitleFromURL);
   }, [tree, layout]);
 
+  if (pageNotFound) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <h2>Page Not Found</h2>
+      </Box>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', background: 'var(--background-color)' }}>
