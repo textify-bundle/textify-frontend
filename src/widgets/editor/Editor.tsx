@@ -39,6 +39,7 @@ const Editor: React.FC = () => {
   const token = searchParams.get('token');
   const [canWrite, setCanWrite] = useState<boolean>(true);
   const [pageId, setPageId] = useState<number>(initialPageId);
+  const [pageNotFound, setPageNotFound] = useState<boolean>(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -94,6 +95,7 @@ const Editor: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to load nodes from server', error);
+        setPageNotFound(true);
       } finally {
         setLoading(false);
       }
@@ -102,12 +104,34 @@ const Editor: React.FC = () => {
     loadData();
   }, [initialPageId, dispatch, token]);
 
+
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (!loading) {
+        try {
+          const updatedNodes = await dispatch(loadNodesFromServer(pageId)).unwrap();
+  
+          dispatch({
+            type: 'nodes/mergeUpdates',
+            payload: updatedNodes,
+          });
+        } catch (error) {
+            console.error('Error updating data:', error);
+        }
+      }
+    }, 3000);
+  
+    return () => clearInterval(interval);
+  }, [pageId, dispatch, loading]);
+
+  // debounced saving
   useEffect(() => {
     if (!canWrite) return;
 
     const debounceTimer = setTimeout(() => {
       dispatch(saveNodesToServer({ pageId, nodes }));
-    }, 1000);
+    }, 10);
     return () => clearTimeout(debounceTimer);
   }, [pageId, nodes, dispatch, canWrite]);
 
@@ -115,6 +139,14 @@ const Editor: React.FC = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (pageNotFound) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <h2>Page Not Found</h2>
       </Box>
     );
   }

@@ -7,8 +7,8 @@ interface ExportModalProps {
   buttonText?: string;
   modalTitle?: string;
   containerClass?: string;
-  handleExportToHTML?: () => void; 
-  handleExportToPdf?: () => void;   
+  handleExportToHTML?: () => void;
+  handleExportToPdf?: () => void;
 }
 
 const ExportModal: React.FC<ExportModalProps> = ({
@@ -21,16 +21,20 @@ const ExportModal: React.FC<ExportModalProps> = ({
 
   const handleExportToHTML = async () => {
     console.log('Экспорт в HTML');
-
     try {
       if (!element) {
         throw new Error(`Элемент с классом .${containerClass} не найден на странице.`);
       }
 
-      const images = element.querySelectorAll('img[src="./icons/draggable.svg"]');
+      const images2 = element.querySelectorAll('.btn');
+      images2.forEach((img) => img.remove());
+
+      const images = element.querySelectorAll('img[src="/icons/draggable.svg"]');
       images.forEach((img) => img.remove());
 
+      
       const htmlContent = element.outerHTML;
+       
 
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -52,23 +56,48 @@ const ExportModal: React.FC<ExportModalProps> = ({
   const handleExportToPdf = async () => {
     try {
       if (!element) {
-        console.error("Контент не найден");
+        console.error('Контент не найден');
         return;
       }
 
-      const images = element.querySelectorAll('img[src="./icons/draggable.svg"]');
+      const images = element.querySelectorAll('img[src="/icons/draggable.svg"]');
       images.forEach((img) => img.remove());
+
+      const styles = `
+        <style>
+          * { box-sizing: border-box; font-family: Arial, sans-serif; }
+          body { width: 100%; max-width: 800px; margin: 0 auto; }
+          .page-container { width: 100%; padding: 10px; }
+          h1, h2, h3 { break-after: avoid; }
+          hr { border-bottom: 2px solid black !important; width: 100%; }
+          input[type="checkbox"] { width: 12px; height: 12px; }
+        </style>
+      `;
 
       const options = {
         margin: 10,
         filename: 'document.pdf',
-        html2canvas: { scale: 2 },
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 3, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       };
 
-      html2pdf().from(element).set(options).save();
+      const clonedElement = element.cloneNode(true) as HTMLElement;
+      const tempContainer = document.createElement('div');
+      tempContainer.innerHTML = styles;
+      tempContainer.appendChild(clonedElement);
+      document.body.appendChild(tempContainer);
+
+      html2pdf()
+        .from(tempContainer)
+        .set(options)
+        .save()
+        .then(() => {
+          document.body.removeChild(tempContainer);
+        });
     } catch (error) {
-      console.error("Ошибка при экспорте в PDF:", error);
+      console.error('Ошибка при экспорте в PDF:', error);
     }
   };
 

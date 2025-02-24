@@ -12,6 +12,13 @@ export default defineConfig({
   })],
 
   build: {
-    sourcemap: true
+    rollupOptions: {
+      output: {
+        format: 'es'
+      }
+    }
+  },
+  worker: {
+    format: 'es'
   }
 });
