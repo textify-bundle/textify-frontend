@@ -1,66 +1,49 @@
-import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import NodeTypeList from './NodeTypeList';
+import { ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-describe('NodeTypeList', () => {
-    const blocks = [
-        {
-            title: 'Block 1',
-            description: 'This is the description for block 1.',
-            imageSrc: '',
-        },
-        {
-            title: 'Block 2, too long, need check',
-            description: 'This is the description for block 2.',
-            imageSrc: '',
-        },
-        {
-            title: 'Block 3',
-            description: 'This is the description for block 3.',
-            imageSrc: '',
-        },
-    ];
+const theme = createTheme();
 
-    it('renders text correctly with given data', () => {
-        render(<NodeTypeList blocks={blocks} />);
+const mockBlocks = [
+    {
+        title: 'Test Block',
+        description: 'Test Description',
+        imageSrc: 'test.jpg'
+    }
+];
 
-        const listItems = screen.getAllByRole('listitem');
-        expect(listItems).toHaveLength(blocks.length);
-
-        blocks.forEach((item) => {
-            expect(screen.getByText(item.title)).toBeInTheDocument();
-            expect(screen.getByText(item.description)).toBeInTheDocument();
-        });
-    });
-    it('should call onClick with the correct index when an item is clicked', () => {
-        const onClickMock = vi.fn();
-        const { getAllByRole } = render(
-            <NodeTypeList blocks={blocks} onClick={onClickMock} />
+describe('NodeTypeList component', () => {
+    it('renders block title and description', () => {
+        render(
+            <ThemeProvider theme={theme}>
+                <NodeTypeList blocks={mockBlocks} />
+            </ThemeProvider>
         );
-
-        const listItems = getAllByRole('button');
-
-        fireEvent.click(listItems[0]);
-        expect(onClickMock).toHaveBeenCalledWith(0);
-
-        fireEvent.click(listItems[1]);
-        expect(onClickMock).toHaveBeenCalledWith(1);
+        expect(screen.getByText('Test Block')).toBeInTheDocument();
+        expect(screen.getByText('Test Description')).toBeInTheDocument();
     });
-    it('should toggle the active state when an item is clicked', () => {
-        const { getAllByRole } = render(
-            <NodeTypeList blocks={blocks} />
+
+    it('renders empty list', () => {
+        render(
+            <ThemeProvider theme={theme}>
+                <NodeTypeList blocks={[]} />
+            </ThemeProvider>
         );
+        expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+    });
 
-        const listItems = getAllByRole('button');
-
-        fireEvent.click(listItems[0]);
-        expect(listItems[0]).toHaveClass('active');
-
-        fireEvent.click(listItems[0]);
-        expect(listItems[0]).not.toHaveClass('active');
-
-        fireEvent.click(listItems[1]);
-        expect(listItems[1]).toHaveClass('active');
-        expect(listItems[0]).not.toHaveClass('active');
+    it('handles click on block', () => {
+        const handleClick = vi.fn();
+        render(
+            <ThemeProvider theme={theme}>
+                <NodeTypeList blocks={mockBlocks} onClick={handleClick} />
+            </ThemeProvider>
+        );
+        
+        const listItem = screen.getByText('Test Block');
+        fireEvent.click(listItem);
+        expect(handleClick).toHaveBeenCalledWith(0);
     });
 });

@@ -1,46 +1,63 @@
-import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
-import { render, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ShareOverlay from './ShareOverlay';
-import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
+import { BrowserRouter } from 'react-router-dom';
 
-describe("PageShare component", () => {
-    beforeEach(() => {
-        Object.defineProperty(navigator, 'clipboard', {
-            value: {
-                writeText: vi.fn().mockResolvedValueOnce(undefined),
-            },
-            writable: true
-        });
+vi.mock('../../utils/client', () => ({
+    supabase: {
+        from: () => ({
+            insert: () => ({
+                single: () => ({ error: null })
+            })
+        })
+    }
+}));
 
-        render(<ShareOverlay pageId={1} />);
+vi.mock('../../shared/tmodal/TModal', () => ({
+    default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
+}));
+
+const theme = createTheme();
+
+describe('ShareOverlay component', () => {
+    it('renders with default title', () => {
+        render(
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <ShareOverlay pageId={1} />
+                </ThemeProvider>
+            </BrowserRouter>
+        );
+        expect(screen.getByText('Отправить')).toBeInTheDocument();
     });
 
-    afterEach(cleanup);
-
-    test("default", async () => {
-        expect(2+2).toBe(4);
+    it('renders with custom title', () => {
+        render(
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <ShareOverlay pageId={1} title="Custom Title" />
+                </ThemeProvider>
+            </BrowserRouter>
+        );
+        expect(screen.getByText('Custom Title')).toBeInTheDocument();
     });
 
-
-
-
-    // test("Test copy link to clipboard when 'Копировать ссылку' button is clicked", async () => {
-    //     const copyButton = screen.getByText("Копировать ссылку");
-
-    //     fireEvent.click(copyButton);
-
-    //     const expectedLink = `${window.location.origin}/shared`;
-    //     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expectedLink);
-    // });
-
-    
-    // test("Test chenges radio button", async () => {
-    //     const readOnlyRadio = screen.getByLabelText('Только чтение');
-
-    //     // const editRadio = screen.getByDisplayValue(/Редактирование/i);
-
-    //     fireEvent.click(readOnlyRadio);
-    //     expect(readOnlyRadio).toBeChecked();
-
-    // });
+    it('opens dialog and shows sharing options', () => {
+        render(
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <ShareOverlay pageId={1} />
+                </ThemeProvider>
+            </BrowserRouter>
+        );
+        
+        const button = screen.getByText('Отправить');
+        fireEvent.click(button);
+        
+        expect(screen.getByText('У кого есть ссылка')).toBeInTheDocument();
+        expect(screen.getByRole('radio', { name: 'Только чтение' })).toBeInTheDocument();
+        expect(screen.getByRole('radio', { name: 'Редактирование' })).toBeInTheDocument();
+    });
 });
