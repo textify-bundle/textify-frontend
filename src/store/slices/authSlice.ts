@@ -1,10 +1,17 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthService } from '../../shared/api/authorization/AuthorizationService';
-import { User, Session } from '@supabase/supabase-js';
 
 interface AuthState {
-  user: any | null;
-  session: any | null;
+  user: {
+    id: string;
+    email?: string;
+    [key: string]: unknown;
+  } | null;
+  session: {
+    access_token: string;
+    refresh_token: string;
+    [key: string]: unknown;
+  } | null;
   accessToken: string | null;
   refreshToken: string | null;
   lastRefreshTime: number | null;
@@ -143,7 +150,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<any>) => {
+    setUser: (state, action: PayloadAction<AuthState['user']>) => {
       state.user = action.payload;
       state.error = null;
     },
@@ -154,7 +161,7 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.lastRefreshTime = null;
     },
-    setSession: (state, action: PayloadAction<any>) => {
+    setSession: (state, action: PayloadAction<AuthState['session']>) => {
       state.session = action.payload;
     },
     setTokens: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {

@@ -4,6 +4,6 @@ class WorkerMock {
 }
 
 // Глобальный мок для Worker
-global.Worker = WorkerMock as any;
+global.Worker = WorkerMock as typeof Worker;
 
 export default WorkerMock;
