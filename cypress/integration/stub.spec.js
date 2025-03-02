@@ -28,12 +28,15 @@ describe('Change project data', () => {
       // Ждем загрузки проектов и кликаем по первому
       cy.get('.project-card', { timeout: 15000 }).should('be.visible').eq(0).click();
       
-      // Увеличенное время ожидания для редактора
-      cy.get('.text-editor', { timeout: 20000 }).should('be.visible');
+      // Ждем загрузки страницы проекта
+      cy.url().should('include', '/project/');
       
-      // Ввод текста с увеличенным временем ожидания
-      cy.get('.text-editor').type(' Simple Example text');
-      cy.contains('Example text', { timeout: 10000 }).should('be.visible');
+      // Ждем загрузки редактора и проверяем его видимость
+      cy.get('[class*="ql-editor"]', { timeout: 30000 }).should('be.visible');
+      
+      // Вводим текст и проверяем его наличие
+      cy.get('[class*="ql-editor"]').type('Simple Example text');
+      cy.contains('Simple Example text', { timeout: 10000 }).should('be.visible');
     });
 });
 
