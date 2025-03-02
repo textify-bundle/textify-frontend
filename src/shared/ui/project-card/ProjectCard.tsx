@@ -1,7 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Card, CardActionArea, CardContent, CardMedia, Button } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './ProjectCard.scss';
 
@@ -60,6 +60,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
             borderRadius: '46px',
             fontFamily: '"Varela Round", sans-serif',
           }}
+          data-testid="restore-button"
         >
           Восстановить
         </Button>

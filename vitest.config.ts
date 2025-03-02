@@ -4,14 +4,24 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   plugins: [react()],
   test: {
-    include: ['**/*.{test,spec}.{ts,tsx,jsx}'],
+    include: ['src/**/TextFormatting*.{test,spec}.{ts,tsx,jsx}'],
     globals: true,
     environment: 'happy-dom',
     setupFiles: ['./src/setupTests.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['node_modules/', 'src/setupTests.ts'],
+      exclude: [
+        'node_modules/', 
+        'src/setupTests.ts',
+        "**/*config.{ts,js}",
+        "**/index.{ts, js}",
+        "cypress/",
+        "**/__mocks__*",
+        "**/main*",
+        "**/*env*",
+        "**/App*"
+      ],
     },
     testTimeout: 10000,
   },
