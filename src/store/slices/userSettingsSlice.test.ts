@@ -37,7 +37,7 @@ describe('userSettingsSlice', () => {
 
     it('should not allow invalid theme values', () => {
         const initialState = getDefaultState();
-        const actual = userSettingsReducer(initialState, setTheme('invalid' as any));
+        const actual = userSettingsReducer(initialState, setTheme('invalid' as unknown as Theme));
         expect(actual.theme).toBe(initialState.theme);
         expect(saveSettingsToLocalStorage).not.toHaveBeenCalled();
     });
@@ -71,4 +71,3 @@ describe('userSettingsSlice', () => {
         expect(document.documentElement.style.getPropertyValue('--app-font-family')).toBe(savedFontFamily);
     });
 });
-

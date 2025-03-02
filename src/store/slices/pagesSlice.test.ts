@@ -1,13 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import pagesReducer, {
     fetchTreeData,
-    getCardData,
     createNewProjectAndPage,
     restoreProject,
     removePageFromTree,
     updatePageTitle,
 } from './pagesSlice';
-import { createNewProjectAndPage as createNewProjectAndPageApi } from '../../shared/api/sideBar/projectsService';
 
 describe('pagesSlice', () => {
     const initialState = {
