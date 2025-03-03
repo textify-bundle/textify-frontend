@@ -97,6 +97,19 @@
     "vite": "^5.4.10",
     "vitest": "^3.0.7"
   },
+  "vitest": {
+    "coverage": {
+      "provider": "v8",
+      "reporter": ["text", "json", "html"],
+      "exclude": [
+        "node_modules/",
+        "dist/",
+        "**/*.test.{js,jsx,ts,tsx}",
+        "**/*.spec.{js,jsx,ts,tsx}",
+        "cypress/**/*"
+      ]
+    }
+  },
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
