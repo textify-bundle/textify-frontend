@@ -60,6 +60,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
             borderRadius: '46px',
             fontFamily: '"Varela Round", sans-serif',
           }}
+          data-testid="restore-button"
         >
           Восстановить
         </Button>

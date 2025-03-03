@@ -17,19 +17,23 @@ export const allowedFontFamilies: string[] = [
   'Roboto, sans-serif'
 ];
 
-export interface UserSettingsState {
+interface UserSettingsState {
+  theme: 'light' | 'dark';
+  language: 'en' | 'ru';
+  fontSize: number;
   backgroundColor: string;
   barColor: string;
   textColor: string;
-  fontSize: '10px' | '12px' | '16px';
   fontFamily: string;
 }
 
 const initialState: UserSettingsState = {
+  theme: 'light',
+  language: 'en',
+  fontSize: 16,
   barColor: "#0751D8",
   backgroundColor: "#FFF",
   textColor: "#000",
-  fontSize: '12px',
   fontFamily: allowedFontFamilies[0],
 };
 
@@ -42,6 +46,22 @@ const userSettingsSlice = createSlice({
   name: 'userSettings',
   initialState: initialStateFromStorage,
   reducers: {
+    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+      if (action.payload === 'light' || action.payload === 'dark') {
+        state.theme = action.payload;
+        saveSettingsToLocalStorage(state);
+      }
+    },
+    setLanguage: (state, action: PayloadAction<'en' | 'ru'>) => {
+      state.language = action.payload;
+      saveSettingsToLocalStorage(state);
+    },
+    setFontSize: (state, action: PayloadAction<number>) => {
+      if (action.payload >= 12 && action.payload <= 24) {
+        state.fontSize = action.payload;
+        saveSettingsToLocalStorage(state);
+      }
+    },
     setBackgroundColor(state, action: PayloadAction<string>) {
       state.backgroundColor = action.payload;
       saveSettingsToLocalStorage(state);
@@ -52,10 +72,6 @@ const userSettingsSlice = createSlice({
     },
     setTextColor(state, action: PayloadAction<string>) {
       state.textColor = action.payload;
-      saveSettingsToLocalStorage(state);
-    },
-    setFontSize(state, action: PayloadAction<'10px' | '12px' | '16px'>) {
-      state.fontSize = action.payload;
       saveSettingsToLocalStorage(state);
     },
     setFontFamily: (state, action: PayloadAction<string>) => {
@@ -76,6 +92,16 @@ const userSettingsSlice = createSlice({
         saveSettingsToLocalStorage(state);
       }
     },
+    resetSettings: (state) => {
+      state.theme = initialState.theme;
+      state.language = initialState.language;
+      state.fontSize = initialState.fontSize;
+      state.backgroundColor = initialState.backgroundColor;
+      state.barColor = initialState.barColor;
+      state.textColor = initialState.textColor;
+      state.fontFamily = initialState.fontFamily;
+      saveSettingsToLocalStorage(state);
+    },
     initializeUserSettings: (state) => {
       const savedFont = localStorage.getItem('app-font-family');
       if (savedFont && allowedFontFamilies.includes(savedFont)) {
@@ -93,11 +119,14 @@ const userSettingsSlice = createSlice({
 });
 
 export const {
+  setTheme,
+  setLanguage,
+  setFontSize,
   setBackgroundColor,
   setBarColor,
   setTextColor,
-  setFontSize,
   setFontFamily,
+  resetSettings,
   initializeUserSettings
 } = userSettingsSlice.actions;
 

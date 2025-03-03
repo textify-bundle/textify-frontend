@@ -1,24 +1,28 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthService } from '../../shared/api/authorization/AuthorizationService';
-import { User, Session } from '@supabase/supabase-js';
+
 interface AuthState {
-  user: User | null;
-  session: Session | null;
+  user: {
+    id: string;
+    email?: string;
+    [key: string]: unknown;
+  } | null;
+  session: {
+    access_token: string;
+    refresh_token: string;
+    [key: string]: unknown;
+  } | null;
   accessToken: string | null;
   refreshToken: string | null;
-  error: string | null;
   lastRefreshTime: number | null;
+  error: string | null;
 }
 
 const initialState: AuthState = {
-  user: localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')!)
-    : null,
-  session: localStorage.getItem('session')
-    ? JSON.parse(localStorage.getItem('session')!)
-    : null,
-  accessToken: (localStorage.getItem('accessToken') || null) as string | null,
-  refreshToken: (localStorage.getItem('refreshToken') || null) as string | null,
+  user: null,
+  session: null,
+  accessToken: null,
+  refreshToken: null,
   lastRefreshTime: null,
   error: null,
 };
@@ -146,16 +150,27 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: (state) => {
+    setUser: (state, action: PayloadAction<AuthState['user']>) => {
+      state.user = action.payload;
+      state.error = null;
+    },
+    clearUser: (state) => {
       state.user = null;
       state.session = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.lastRefreshTime = null;
-      localStorage.removeItem('user');
-      localStorage.removeItem('session');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+    },
+    setSession: (state, action: PayloadAction<AuthState['session']>) => {
+      state.session = action.payload;
+    },
+    setTokens: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.lastRefreshTime = Date.now();
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -167,10 +182,6 @@ const authSlice = createSlice({
         state.refreshToken = action.payload.refreshToken;
         state.lastRefreshTime = Date.now();
 
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('session', JSON.stringify(action.payload.session));
-        localStorage.setItem('accessToken', action.payload.accessToken || '');
-        localStorage.setItem('refreshToken', action.payload.refreshToken || '');
         state.error = null;
       })
       .addCase(refreshTokens.rejected, (state, action) => {
@@ -181,18 +192,13 @@ const authSlice = createSlice({
         state.session = null;
         state.accessToken = null;
         state.refreshToken = null;
-        localStorage.clear();
+        state.error = 'Session expired';
       })
       .addCase(signIn.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
-        state.accessToken = action.payload.accessToken ?? null;
-        state.refreshToken = action.payload.refreshToken ?? null;
-
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('session', JSON.stringify(action.payload.session));
-        localStorage.setItem('accessToken', action.payload.accessToken ?? '');
-        localStorage.setItem('refreshToken', action.payload.refreshToken ?? '');
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
 
         state.error = null;
       })
@@ -200,25 +206,17 @@ const authSlice = createSlice({
       .addCase(signUp.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.session = action.payload.session;
-        state.accessToken = action.payload.accessToken || null;
-        state.refreshToken = action.payload.refreshToken ?? null;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
 
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('session', JSON.stringify(action.payload.session));
-        localStorage.setItem('accessToken', action.payload.accessToken || '');
-        localStorage.setItem('refreshToken', action.payload.refreshToken || '');
         state.error = null;
       })
       .addCase(restoreSession.fulfilled, (state, action) => {
-        state.user = action.payload.user || null;
-        state.session = action.payload.session || null;
-        state.accessToken = action.payload.accessToken || null;
-        state.refreshToken = action.payload.refreshToken || null;
+        state.user = action.payload.user;
+        state.session = action.payload.session;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
 
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('session', JSON.stringify(action.payload.session));
-        localStorage.setItem('accessToken', action.payload.accessToken || '');
-        localStorage.setItem('refreshToken', action.payload.refreshToken || '');
         state.error = null;
       })
       .addCase(signIn.rejected, (state, action) => {
@@ -236,13 +234,9 @@ const authSlice = createSlice({
         state.accessToken = null;
         state.refreshToken = null;
         state.lastRefreshTime = null;
-        localStorage.removeItem('user');
-        localStorage.removeItem('session');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
       });
   },
 });
 
-export const { logout: logoutAction } = authSlice.actions;
+export const { setUser, clearUser, setSession, setTokens, setError } = authSlice.actions;
 export default authSlice.reducer;

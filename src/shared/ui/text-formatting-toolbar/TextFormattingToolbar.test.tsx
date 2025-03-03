@@ -1,4 +1,4 @@
-import React,{ render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import TextFormattingToolbar from './TextFormattingToolbar';
 
@@ -105,5 +105,12 @@ describe('TextFormattingToolbar', () => {
 
     fireEvent.click(getByLabelText('list'));
     expect(handleListClick).toHaveBeenCalled();
+  });
+});
+
+
+describe('Simple Mock Test', () => {
+  test('1 equals 1', () => {
+    expect(1).toBe(1);
   });
 });

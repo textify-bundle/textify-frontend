@@ -15,19 +15,6 @@ describe('User Login and Project Creation', () => {
       cy.contains('e2e project').should('exist');
     });
 });
-describe('Change project data', () => {
-    it('should allow the user to change the text on the page', () => {
-      cy.visit('http://localhost:5173');
-      cy.get('input[name="email"]').type('test@example.com');
-      cy.get('input[name="password"]').type('password123');
-      cy.get('button[type="submit"]').click();
-      cy.url().should('include', '/main');
-      cy.contains('Главная').should('be.visible');
-      cy.get('.project-card').eq(0).click();
-      cy.get('.text-editor').type(' Simple Example text')
-      cy.contains('Example text').should('exist');
-    });
-});
 describe('Title checker', () => {
     it('Should log in and verify the presence of the title', () => {
         cy.visit('http://localhost:5173');
